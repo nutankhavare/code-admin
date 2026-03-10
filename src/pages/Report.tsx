@@ -1,4 +1,4 @@
-import { Badge, ProgBar } from '../ui/index';
+import { Badge, ProgBar } from '../ui/Index';
 
 /* ══════════ REPORTS ══════════ */
 export const ReportsPage = () => (

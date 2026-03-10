@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { ModalName } from '../types';
-import { Badge, Pagination } from '../ui/index';
+import { Badge, Pagination } from '../ui/Index';
 
 const staff = [
     {

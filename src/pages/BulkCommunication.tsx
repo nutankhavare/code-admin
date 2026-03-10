@@ -1,4 +1,4 @@
-import { Badge } from '../ui/index';
+import { Badge } from '../ui/Index';
 
 /* ══════════ BULK COMMUNICATION ══════════ */
 export const BulkPage = () => (

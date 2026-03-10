@@ -1,194 +1,166 @@
-import { useState } from 'react';
-import { ProgBar, Toggle } from '../ui/index';
+import React, { useState } from "react";
+import { useAlert } from "../Context/AlertContext";
+import "./Setting.css";
 
-/* ══════════ SETTINGS ══════════ */
-export const SettingsPage = () => {
-    const [toggles, setToggles] = useState([true, true, true, false]);
-    const toggle = (i: number) => setToggles((t) => t.map((v, idx) => (idx === i ? !v : v)));
+const SettingPage: React.FC = () => {
+    const { showAlert } = useAlert();
+    const [profile, setProfile] = useState({
+        name: "Admin User",
+        email: "admin@vanloka.com",
+        phone: "+91 9876543210",
+        timezone: "Asia/Kolkata",
+    });
+    const [notifications, setNotifications] = useState({
+        emailAlerts: true,
+        smsAlerts: false,
+        pushNotifs: true,
+        weeklyReport: true,
+    });
+
+    const save = () =>
+        showAlert("success", "Settings saved successfully", "Saved");
+
     return (
-        <>
-            <div className="page-header">
-                <div>
-                    <div className="page-title">
-                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
-                            settings
-                        </span>
-                        System Settings
-                    </div>
-                    <div className="breadcrumb">
-                        Admin <span>/</span> Settings
-                    </div>
-                </div>
-                <div className="header-actions">
-                    <button className="btn btn-secondary">
-                        <span className="material-symbols-outlined ms">undo</span>Discard Changes
-                    </button>
-                    <button className="btn btn-primary">
-                        <span className="material-symbols-outlined ms">save</span>Save Settings
-                    </button>
+        <div className="page-container">
+            <div className="page-header-bar">
+                <div className="breadcrumb-container">
+                    <span className="breadcrumb-current">SETTINGS</span>
                 </div>
             </div>
-            <div className="page-body">
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                    <div className="white-card">
-                        <div className="card-title">
-                            <span
-                                className="material-symbols-outlined"
-                                style={{ fontSize: 16, color: 'var(--primary)' }}
-                            >
-                                business
-                            </span>
-                            Organization Profile
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            <div className="form-grid form-grid-2">
-                                <div>
-                                    <label className="form-label">Organization Name</label>
-                                    <input
-                                        className="form-input"
-                                        defaultValue="Logistics Solutions Inc."
-                                    />
-                                </div>
-                                <div>
-                                    <label className="form-label">Registered ID</label>
-                                    <input className="form-input" defaultValue="LS-99823-FLEET" />
-                                </div>
-                            </div>
-                            <div>
-                                <label className="form-label">Company Email</label>
-                                <input
-                                    className="form-input"
-                                    defaultValue="admin@logisticssolutions.com"
-                                />
-                            </div>
-                            <div>
-                                <label className="form-label">HQ Address</label>
-                                <input
-                                    className="form-input"
-                                    defaultValue="123 Logistics Way, Hindalga, Belagavi, KA 591108"
-                                />
-                            </div>
-                            <div className="form-grid form-grid-2">
-                                <div>
-                                    <label className="form-label">Timezone</label>
-                                    <select className="form-select">
-                                        <option>(GMT+05:30) Mumbai, New Delhi</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="form-label">Currency Display</label>
-                                    <select className="form-select">
-                                        <option>INR (₹)</option>
-                                        <option>USD ($)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+
+            <div className="settings-grid">
+                <div className="card">
+                    <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                        Profile Settings
+                    </h3>
+                    <div className="settings-avatar">
+                        <div className="avatar-circle">A</div>
+                        <button className="btn btn--outline btn--sm">Change Photo</button>
                     </div>
-                    <div className="white-card">
-                        <div className="card-title">
-                            <span
-                                className="material-symbols-outlined"
-                                style={{ fontSize: 16, color: 'var(--primary)' }}
-                            >
-                                tune
-                            </span>
-                            Operational Configuration
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                            {[
-                                {
-                                    label: 'Real-time GPS Tracking',
-                                    sub: 'Update vehicle location every 15 seconds',
-                                },
-                                {
-                                    label: 'Automatic Route Optimization',
-                                    sub: 'Suggest fastest routes based on traffic',
-                                },
-                                {
-                                    label: 'SMS Notifications',
-                                    sub: 'Session reminders via SMS',
-                                },
-                                {
-                                    label: 'Auto Invoice Generation',
-                                    sub: 'Auto-generate on session complete',
-                                },
-                            ].map((item, i) => (
-                                <div key={item.label}>
-                                    {i > 0 && (
-                                        <div
-                                            style={{
-                                                height: 1,
-                                                background: 'var(--border)',
-                                                marginBottom: 14,
-                                            }}
-                                        />
-                                    )}
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <div>
-                                            <div style={{ fontSize: 13, fontWeight: 700 }}>
-                                                {item.label}
-                                            </div>
-                                            <div
-                                                style={{
-                                                    fontSize: 11,
-                                                    color: 'var(--muted)',
-                                                    marginTop: 2,
-                                                }}
-                                            >
-                                                {item.sub}
-                                            </div>
-                                        </div>
-                                        <Toggle checked={toggles[i]} onChange={() => toggle(i)} />
+                    <div className="form-group">
+                        <label className="form-label">Full Name</label>
+                        <input
+                            className="form-input"
+                            value={profile.name}
+                            onChange={(e) =>
+                                setProfile((p) => ({ ...p, name: e.target.value }))
+                            }
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Email</label>
+                        <input
+                            className="form-input"
+                            type="email"
+                            value={profile.email}
+                            onChange={(e) =>
+                                setProfile((p) => ({ ...p, email: e.target.value }))
+                            }
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Phone</label>
+                        <input
+                            className="form-input"
+                            value={profile.phone}
+                            onChange={(e) =>
+                                setProfile((p) => ({ ...p, phone: e.target.value }))
+                            }
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Timezone</label>
+                        <select
+                            className="form-input"
+                            value={profile.timezone}
+                            onChange={(e) =>
+                                setProfile((p) => ({ ...p, timezone: e.target.value }))
+                            }
+                        >
+                            <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">America/New_York</option>
+                        </select>
+                    </div>
+                    <button className="btn btn--primary" onClick={save}>
+                        Save Profile
+                    </button>
+                </div>
+
+                <div>
+                    <div className="card" style={{ marginBottom: "1.5rem" }}>
+                        <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                            Notification Preferences
+                        </h3>
+                        {Object.entries(notifications).map(([key, val]) => (
+                            <div key={key} className="toggle-row">
+                                <div>
+                                    <div className="toggle-label">
+                                        {key.replace(/([A-Z])/g, " $1").trim()}
                                     </div>
                                 </div>
-                            ))}
+                                <label className="toggle-check">
+                                    <input
+                                        type="checkbox"
+                                        checked={val}
+                                        onChange={() =>
+                                            setNotifications((n) => ({ ...n, [key]: !val }))
+                                        }
+                                    />
+                                    <span className="toggle-slider"></span>
+                                </label>
+                            </div>
+                        ))}
+                        <button
+                            className="btn btn--primary"
+                            style={{ marginTop: "1rem" }}
+                            onClick={save}
+                        >
+                            Save Preferences
+                        </button>
+                    </div>
+
+                    <div className="card">
+                        <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                            Security
+                        </h3>
+                        <div className="form-group">
+                            <label className="form-label">Current Password</label>
+                            <input
+                                className="form-input"
+                                type="password"
+                                placeholder="••••••••"
+                            />
                         </div>
-                    </div>
-                </div>
-                <div className="white-card">
-                    <div className="card-title">
-                        <span
-                            className="material-symbols-outlined"
-                            style={{ fontSize: 16, color: 'var(--primary)' }}
+                        <div className="form-group">
+                            <label className="form-label">New Password</label>
+                            <input
+                                className="form-input"
+                                type="password"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">Confirm New Password</label>
+                            <input
+                                className="form-input"
+                                type="password"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                        <button
+                            className="btn btn--primary"
+                            onClick={() =>
+                                showAlert("success", "Password changed successfully")
+                            }
                         >
-                            storage
-                        </span>
-                        Storage Usage
-                    </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginBottom: 8,
-                        }}
-                    >
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#475569' }}>
-                            Storage Used
-                        </span>
-                        <span style={{ fontSize: 12, fontWeight: 800 }}>650 GB / 1 TB</span>
-                    </div>
-                    <ProgBar pct={65} />
-                    <div style={{ marginTop: 8, fontSize: 11, color: 'var(--muted)' }}>
-                        350 GB available · Last backup: Today 3:00 AM ·{' '}
-                        <a
-                            style={{
-                                color: 'var(--primary)',
-                                fontWeight: 700,
-                                cursor: 'pointer',
-                            }}
-                        >
-                            Upgrade Storage
-                        </a>
+                            Change Password
+                        </button>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
+
+export default SettingPage;

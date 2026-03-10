@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { ModalName } from '../types';
-import { Badge, Pagination, Stars } from '../ui/index';
+import { Badge, Pagination, Stars } from '../ui/Index';
 
 /* ══════════ FEEDBACKS ══════════ */
 
@@ -84,7 +84,7 @@ export const FeedbacksPage = ({ openModal }: { openModal: (m: ModalName) => void
                     </button>
                     <button
                         className="btn btn-primary"
-                        onClick={() => navigate('/feedbacks/complaint')}
+                        onClick={() => navigate('/Feedback/complaint')}
                     >
                         <span className="material-symbols-outlined ms">add</span>Submit Complaint
                     </button>
@@ -273,7 +273,7 @@ export const FeedbacksPage = ({ openModal }: { openModal: (m: ModalName) => void
                                                     <button
                                                         className="act-btn act-view"
                                                         onClick={() =>
-                                                            navigate('/feedbacks/resolve')
+                                                            navigate('/Feedback/resolve')
                                                         }
                                                     >
                                                         <span className="material-symbols-outlined ms">
@@ -283,7 +283,7 @@ export const FeedbacksPage = ({ openModal }: { openModal: (m: ModalName) => void
                                                     <button
                                                         className="act-btn act-check"
                                                         onClick={() =>
-                                                            navigate('/feedbacks/resolve')
+                                                            navigate('/Feedback/resolve')
                                                         }
                                                     >
                                                         <span className="material-symbols-outlined ms">

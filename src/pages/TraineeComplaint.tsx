@@ -137,7 +137,7 @@ export const TraineeComplaint = () => {
                                     fontWeight: 700,
                                     marginLeft: 4,
                                 }}
-                                onClick={() => navigate('/feedbacks')}
+                                onClick={() => navigate('/Feedback')}
                             >
                                 Feedbacks &amp; Complaints
                             </span>
@@ -255,7 +255,7 @@ export const TraineeComplaint = () => {
                             </button>
                             <button
                                 className="btn btn-primary"
-                                onClick={() => navigate('/feedbacks')}
+                                onClick={() => navigate('/Feedback')}
                             >
                                 <span className="material-symbols-outlined ms">arrow_back</span>{' '}
                                 Back to Feedbacks
@@ -288,7 +288,7 @@ export const TraineeComplaint = () => {
                                 fontWeight: 700,
                                 marginLeft: 4,
                             }}
-                            onClick={() => navigate('/feedbacks')}
+                            onClick={() => navigate('/Feedback')}
                         >
                             Feedbacks &amp; Complaints
                         </span>
@@ -297,7 +297,7 @@ export const TraineeComplaint = () => {
                 </div>
                 <button
                     className="btn btn-secondary"
-                    onClick={() => navigate('/feedbacks')}
+                    onClick={() => navigate('/Feedback')}
                     style={{ flexShrink: 0 }}
                 >
                     <span className="material-symbols-outlined ms">arrow_back</span> Back to List
@@ -328,7 +328,7 @@ export const TraineeComplaint = () => {
                             }}
                         >
                             <button
-                                onClick={() => navigate('/feedbacks')}
+                                onClick={() => navigate('/Feedback')}
                                 style={{
                                     background: 'none',
                                     border: 'none',
@@ -534,7 +534,7 @@ export const TraineeComplaint = () => {
                             >
                                 <button
                                     className="btn btn-secondary"
-                                    onClick={() => navigate('/feedbacks')}
+                                    onClick={() => navigate('/Feedback')}
                                 >
                                     Cancel
                                 </button>

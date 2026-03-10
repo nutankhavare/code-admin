@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from './index';
+import { Icon } from './Index';
 
 interface ModalProps {
     open: boolean;
