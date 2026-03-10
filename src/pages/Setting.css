@@ -84,7 +84,7 @@
 
 .toggle-slider:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 18px;
     width: 18px;
     left: 3px;
@@ -95,14 +95,14 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.toggle-check input:checked+.toggle-slider {
+.toggle-check input:checked + .toggle-slider {
     background-color: var(--primary);
 }
 
-.toggle-check input:focus+.toggle-slider {
+.toggle-check input:focus + .toggle-slider {
     box-shadow: 0 0 1px var(--primary);
 }
 
-.toggle-check input:checked+.toggle-slider:before {
+.toggle-check input:checked + .toggle-slider:before {
     transform: translateX(20px);
 }

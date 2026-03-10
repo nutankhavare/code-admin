@@ -1,8 +1,13 @@
 // src/components/Organisation/tabs/DocumentsTab.tsx
-import type { InstitutionData, MotorDrivingSchoolData, OfficeData, OnboardingData } from "../organisation.types";
-import { FaFilePdf, FaFileImage, FaExternalLinkAlt, FaEye, FaIdCard } from "react-icons/fa";
-import { BsFileEarmarkTextFill } from "react-icons/bs";
-import EmptyState from "../../../Components/UI/EmptyState";
+import type {
+    InstitutionData,
+    MotorDrivingSchoolData,
+    OfficeData,
+    OnboardingData,
+} from '../organisation.types';
+import { FaFilePdf, FaFileImage, FaExternalLinkAlt, FaEye, FaIdCard } from 'react-icons/fa';
+import { BsFileEarmarkTextFill } from 'react-icons/bs';
+import EmptyState from '../../../Components/UI/EmptyState';
 import { asset } from '../../../Services/apiservice';
 
 interface DocumentsTabProps {
@@ -31,11 +36,7 @@ const DocumentCard = ({ label, path }: { label: string; path: string }) => {
                     />
                 ) : (
                     <div className="flex flex-col items-center justify-center text-slate-300 group-hover:text-purple-500 transition-colors">
-                        {isPdf ? (
-                            <FaFilePdf size={48} />
-                        ) : (
-                            <BsFileEarmarkTextFill size={48} />
-                        )}
+                        {isPdf ? <FaFilePdf size={48} /> : <BsFileEarmarkTextFill size={48} />}
                         <span className="text-xs font-bold mt-2 uppercase tracking-wide text-slate-400">
                             {extension || 'FILE'}
                         </span>
@@ -58,9 +59,13 @@ const DocumentCard = ({ label, path }: { label: string; path: string }) => {
 
             {/* Footer Label */}
             <div className="p-3 bg-white flex  justify-between flex-1">
-                <h4 className="text-xs font-bold text-slate-700 uppercase leading-snug line-clamp-2" title={label}>
+                <h4
+                    className="text-xs font-bold text-slate-700 uppercase leading-snug line-clamp-2"
+                    title={label}
+                >
                     {label}
-                </h4><a
+                </h4>
+                <a
                     href={fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -68,51 +73,66 @@ const DocumentCard = ({ label, path }: { label: string; path: string }) => {
                 >
                     <FaExternalLinkAlt size={13} />
                 </a>
-
             </div>
         </div>
     );
 };
 
 const DocumentsTab = ({ entity }: DocumentsTabProps) => {
-
     // Helper to extract relevant docs based on type
     const getDocuments = () => {
         const docs: { label: string; path: FileList }[] = [];
 
         if (entity.type === 'office') {
             const d = entity as OfficeData;
-            if (d.pan_card_doc) docs.push({ label: "PAN Card", path: d.pan_card_doc });
-            if (d.gst_certificate_doc) docs.push({ label: "GST Certificate", path: d.gst_certificate_doc });
-            if (d.registration_certificate_doc) docs.push({ label: "Registration Cert.", path: d.registration_certificate_doc });
-            if (d.udyam_msme_certificate_doc) docs.push({ label: "UDYAM / MSME Cert.", path: d.udyam_msme_certificate_doc });
-            if (d.safety_sop_doc) docs.push({ label: "Safety SOP", path: d.safety_sop_doc });
-            if (d.transport_policy_doc) docs.push({ label: "Transport Policy", path: d.transport_policy_doc });
-            if (d.insurance_certificate_doc) docs.push({ label: "Insurance Cert.", path: d.insurance_certificate_doc });
-            if (d.driver_vetting_policy_doc) docs.push({ label: "Driver Vetting Policy", path: d.driver_vetting_policy_doc });
-            if (d.subscription_agreement_doc) docs.push({ label: "Subscription Agreement", path: d.subscription_agreement_doc });
-        }
-        else if (entity.type === 'institution') {
+            if (d.pan_card_doc) docs.push({ label: 'PAN Card', path: d.pan_card_doc });
+            if (d.gst_certificate_doc)
+                docs.push({ label: 'GST Certificate', path: d.gst_certificate_doc });
+            if (d.registration_certificate_doc)
+                docs.push({ label: 'Registration Cert.', path: d.registration_certificate_doc });
+            if (d.udyam_msme_certificate_doc)
+                docs.push({ label: 'UDYAM / MSME Cert.', path: d.udyam_msme_certificate_doc });
+            if (d.safety_sop_doc) docs.push({ label: 'Safety SOP', path: d.safety_sop_doc });
+            if (d.transport_policy_doc)
+                docs.push({ label: 'Transport Policy', path: d.transport_policy_doc });
+            if (d.insurance_certificate_doc)
+                docs.push({ label: 'Insurance Cert.', path: d.insurance_certificate_doc });
+            if (d.driver_vetting_policy_doc)
+                docs.push({ label: 'Driver Vetting Policy', path: d.driver_vetting_policy_doc });
+            if (d.subscription_agreement_doc)
+                docs.push({ label: 'Subscription Agreement', path: d.subscription_agreement_doc });
+        } else if (entity.type === 'institution') {
             const d = entity as InstitutionData;
-            if (d.pan_card_doc) docs.push({ label: "PAN Card", path: d.pan_card_doc });
-            if (d.registration_certificate_doc) docs.push({ label: "Registration Cert.", path: d.registration_certificate_doc });
-            if (d.udise_college_code_proof_doc) docs.push({ label: "UDISE / Code Proof", path: d.udise_college_code_proof_doc });
-            if (d.safety_sop_doc) docs.push({ label: "Safety SOP", path: d.safety_sop_doc });
-            if (d.transport_policy_doc) docs.push({ label: "Transport Policy", path: d.transport_policy_doc });
-            if (d.insurance_certificate_doc) docs.push({ label: "Insurance Cert.", path: d.insurance_certificate_doc });
-            if (d.driver_vetting_policy_doc) docs.push({ label: "Driver Vetting Policy", path: d.driver_vetting_policy_doc });
-            if (d.subscription_agreement_doc) docs.push({ label: "Subscription Agreement", path: d.subscription_agreement_doc });
-            if (d.additional_doc) docs.push({ label: "Consent Declaration", path: d.additional_doc });
-        }
-        else if (entity.type === 'motor_driving_school') {
+            if (d.pan_card_doc) docs.push({ label: 'PAN Card', path: d.pan_card_doc });
+            if (d.registration_certificate_doc)
+                docs.push({ label: 'Registration Cert.', path: d.registration_certificate_doc });
+            if (d.udise_college_code_proof_doc)
+                docs.push({ label: 'UDISE / Code Proof', path: d.udise_college_code_proof_doc });
+            if (d.safety_sop_doc) docs.push({ label: 'Safety SOP', path: d.safety_sop_doc });
+            if (d.transport_policy_doc)
+                docs.push({ label: 'Transport Policy', path: d.transport_policy_doc });
+            if (d.insurance_certificate_doc)
+                docs.push({ label: 'Insurance Cert.', path: d.insurance_certificate_doc });
+            if (d.driver_vetting_policy_doc)
+                docs.push({ label: 'Driver Vetting Policy', path: d.driver_vetting_policy_doc });
+            if (d.subscription_agreement_doc)
+                docs.push({ label: 'Subscription Agreement', path: d.subscription_agreement_doc });
+            if (d.additional_doc)
+                docs.push({ label: 'Consent Declaration', path: d.additional_doc });
+        } else if (entity.type === 'motor_driving_school') {
             const d = entity as MotorDrivingSchoolData;
-            if (d.rto_license_copy_doc) docs.push({ label: "RTO License Copy", path: d.rto_license_copy_doc });
-            if (d.pan_card_doc) docs.push({ label: "PAN Card", path: d.pan_card_doc });
-            if (d.registration_certificate_doc) docs.push({ label: "Registration Cert.", path: d.registration_certificate_doc });
-            if (d.safety_sop_doc) docs.push({ label: "Safety SOP", path: d.safety_sop_doc });
-            if (d.instructor_policy_doc) docs.push({ label: "Instructor Policy", path: d.instructor_policy_doc });
-            if (d.subscription_agreement_doc) docs.push({ label: "Subscription Agreement", path: d.subscription_agreement_doc });
-            if (d.additional_doc) docs.push({ label: "Consent Declaration", path: d.additional_doc });
+            if (d.rto_license_copy_doc)
+                docs.push({ label: 'RTO License Copy', path: d.rto_license_copy_doc });
+            if (d.pan_card_doc) docs.push({ label: 'PAN Card', path: d.pan_card_doc });
+            if (d.registration_certificate_doc)
+                docs.push({ label: 'Registration Cert.', path: d.registration_certificate_doc });
+            if (d.safety_sop_doc) docs.push({ label: 'Safety SOP', path: d.safety_sop_doc });
+            if (d.instructor_policy_doc)
+                docs.push({ label: 'Instructor Policy', path: d.instructor_policy_doc });
+            if (d.subscription_agreement_doc)
+                docs.push({ label: 'Subscription Agreement', path: d.subscription_agreement_doc });
+            if (d.additional_doc)
+                docs.push({ label: 'Consent Declaration', path: d.additional_doc });
         }
 
         return docs;
@@ -145,14 +165,19 @@ const DocumentsTab = ({ entity }: DocumentsTabProps) => {
                             </h1>
                             <p className="text-sm text-gray-600 flex items-center gap-2">
                                 <FaIdCard size={14} />
-                                {entity.type === 'office' && (entity as OfficeData).organisation_name}
-                                {entity.type === 'institution' && (entity as InstitutionData).institution_name}
-                                {entity.type === 'motor_driving_school' && (entity as MotorDrivingSchoolData).driving_school_name}
+                                {entity.type === 'office' &&
+                                    (entity as OfficeData).organisation_name}
+                                {entity.type === 'institution' &&
+                                    (entity as InstitutionData).institution_name}
+                                {entity.type === 'motor_driving_school' &&
+                                    (entity as MotorDrivingSchoolData).driving_school_name}
                             </p>
                         </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                        <span className='bg-amber-200 text-amber-800  font-bold text-xs uppercase p-1 rounded-lg'>Total {documents.length}</span>
+                        <span className="bg-amber-200 text-amber-800  font-bold text-xs uppercase p-1 rounded-lg">
+                            Total {documents.length}
+                        </span>
                     </div>
                 </div>
             </div>

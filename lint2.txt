@@ -1,0 +1,106 @@
+﻿[0m
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\fix-lint.js[24m
+  [2m10:25[22m  [31merror[39m    Unexpected control character(s) in regular expression: \x1b  [2mno-control-regex[22m
+  [2m16:82[22m  [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m23:68[22m  [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m40:9[22m   [31merror[39m    'contentLines' is never reassigned. Use 'const' instead      [2mprefer-const[22m
+  [2m68:9[22m   [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+  [2m71:1[22m   [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\App.tsx[24m
+  [2m198:29[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m202:57[22m  [31merror[39m    'id' is defined but never used                                                                         [2m@typescript-eslint/no-unused-vars[22m
+  [2m241:25[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  [2m243:42[22m  [31merror[39m    Unexpected any. Specify a different type                                                               [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\Forms\InstitutionCreateForm.tsx[24m
+   [2m6:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m14:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m17:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+  [2m18:5[22m  [31merror[39m    'FiAward' is defined but never used                                                                   [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\Forms\MotorDrivingSchoolCreateForm.tsx[24m
+  [2m11:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m15:5[22m  [31merror[39m    'FiUser' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m17:5[22m  [31merror[39m    'FiAlignLeft' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m19:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m20:5[22m  [31merror[39m    'FiLock' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m22:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\Forms\OfficeCreateForm.tsx[24m
+  [2m13:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m21:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m24:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\Forms\VendorCreateForm.tsx[24m
+   [2m5:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+   [2m9:5[22m  [31merror[39m    'FiUser' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m10:5[22m  [31merror[39m    'FiSettings' is defined but never used                                                                [2m@typescript-eslint/no-unused-vars[22m
+  [2m11:5[22m  [31merror[39m    'FiAlignLeft' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m14:5[22m  [31merror[39m    'FiLock' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m15:5[22m  [31merror[39m    'FiFolder' is defined but never used                                                                  [2m@typescript-eslint/no-unused-vars[22m
+  [2m16:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\OfficeEditPage.tsx[24m
+  [2m37:61[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManageBeaconDevices.tsx[24m
+  [2m45:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m62:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManageGpsDevices.tsx[24m
+  [2m50:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m67:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManagePickupLocations.tsx[24m
+   [2m84:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m102:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m153:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\Forms\InstitutionCreateForm.tsx[24m
+   [2m6:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m14:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m17:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+  [2m18:5[22m  [31merror[39m    'FiAward' is defined but never used                                                                   [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\Forms\MotorDrivingSchoolCreateForm.tsx[24m
+  [2m11:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m15:5[22m  [31merror[39m    'FiUser' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m17:5[22m  [31merror[39m    'FiAlignLeft' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m19:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m20:5[22m  [31merror[39m    'FiLock' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m22:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\Forms\OfficeCreateForm.tsx[24m
+  [2m13:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  [2m21:5[22m  [31merror[39m    'FiBriefcase' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m24:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\Forms\VendorCreateForm.tsx[24m
+   [2m5:1[22m  [33mwarning[39m  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+   [2m9:5[22m  [31merror[39m    'FiUser' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m10:5[22m  [31merror[39m    'FiSettings' is defined but never used                                                                [2m@typescript-eslint/no-unused-vars[22m
+  [2m11:5[22m  [31merror[39m    'FiAlignLeft' is defined but never used                                                               [2m@typescript-eslint/no-unused-vars[22m
+  [2m14:5[22m  [31merror[39m    'FiLock' is defined but never used                                                                    [2m@typescript-eslint/no-unused-vars[22m
+  [2m15:5[22m  [31merror[39m    'FiFolder' is defined but never used                                                                  [2m@typescript-eslint/no-unused-vars[22m
+  [2m16:5[22m  [31merror[39m    'FiMap' is defined but never used                                                                     [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\OfficeEditPage.tsx[24m
+  [2m37:61[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManageBeaconDevices.tsx[24m
+  [2m45:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m62:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManageGpsDevices.tsx[24m
+  [2m50:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m67:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManagePickupLocations.tsx[24m
+   [2m84:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m102:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m153:25[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[31m[1mΓ£û 66 problems (54 errors, 12 warnings)[22m[39m
+[31m[1m  1 error and 10 warnings potentially fixable with the `--fix` option.[22m[39m
+[0m

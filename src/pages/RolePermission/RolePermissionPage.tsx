@@ -16,37 +16,23 @@ const RolePermissionPage: React.FC = () => {
             createdAt: new Date().toISOString().slice(0, 10),
             ...newRole,
         };
-        setRoles(prev => [...prev, role]);
+        setRoles((prev) => [...prev, role]);
     };
 
     const handleEdit = (id: number, updated: Omit<Role, 'id' | 'createdAt'>) => {
-        setRoles(prev =>
-            prev.map(r => (r.id === id ? { ...r, ...updated } : r)),
-        );
+        setRoles((prev) => prev.map((r) => (r.id === id ? { ...r, ...updated } : r)));
     };
 
     const handleDelete = (id: number) => {
-        setRoles(prev => prev.filter(r => r.id !== id));
+        setRoles((prev) => prev.filter((r) => r.id !== id));
     };
 
     return (
         <Routes>
-            <Route
-                path="/"
-                element={<RolesPermissions roles={roles} onDelete={handleDelete} />}
-            />
-            <Route
-                path="/add"
-                element={<AddRole onAdd={handleAdd} />}
-            />
-            <Route
-                path="/edit/:id"
-                element={<EditRole roles={roles} onEdit={handleEdit} />}
-            />
-            <Route
-                path="/view/:id"
-                element={<ViewRole roles={roles} />}
-            />
+            <Route path="/" element={<RolesPermissions roles={roles} onDelete={handleDelete} />} />
+            <Route path="/add" element={<AddRole onAdd={handleAdd} />} />
+            <Route path="/edit/:id" element={<EditRole roles={roles} onEdit={handleEdit} />} />
+            <Route path="/view/:id" element={<ViewRole roles={roles} />} />
         </Routes>
     );
 };

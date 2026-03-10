@@ -8,7 +8,15 @@ interface LoadingSpinnerProps {
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 24, color = '#6366f1', text }) => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2rem',
+            }}
+        >
             <svg
                 width={size}
                 height={size}
@@ -35,7 +43,18 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ size = 24, color = '#63
                     fill={color}
                 />
             </svg>
-            {text && <span style={{ marginTop: '1rem', color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>{text}</span>}
+            {text && (
+                <span
+                    style={{
+                        marginTop: '1rem',
+                        color: '#6b7280',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                    }}
+                >
+                    {text}
+                </span>
+            )}
         </div>
     );
 };

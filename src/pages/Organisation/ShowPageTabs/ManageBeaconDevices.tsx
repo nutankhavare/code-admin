@@ -1,18 +1,13 @@
-import { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import {
-    FaCheckCircle,
-    FaMicrochip,
-    FaSearch,
-} from "react-icons/fa";
-import { useAlert } from "../../../Context/AlertContext";
-import adminApi from "../../../Services/apiservice";
-import EmptyState from "../../../Components/UI/EmptyState";
-import type { BeaconDevice } from "../organisation.types";
-import SaveButton from "../../../Components/Form/SaveButton";
-import CancelButton from "../../../Components/Form/CancelButton";
-import CirclularLoader from "../../../Components/UI/CircularLoader";
-
+import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { FaCheckCircle, FaMicrochip, FaSearch } from 'react-icons/fa';
+import { useAlert } from '../../../Context/AlertContext';
+import adminApi from '../../../Services/apiservice';
+import EmptyState from '../../../Components/UI/EmptyState';
+import type { BeaconDevice } from '../organisation.types';
+import SaveButton from '../../../Components/Form/SaveButton';
+import CancelButton from '../../../Components/Form/CancelButton';
+import CirclularLoader from '../../../Components/UI/CircularLoader';
 
 const ManageBeaconDevices = () => {
     const { id } = useParams<{ id: string }>();
@@ -23,8 +18,8 @@ const ManageBeaconDevices = () => {
     const [allDevices, setAllDevices] = useState<BeaconDevice[]>([]);
     const [assignedDeviceIds, setAssignedDeviceIds] = useState<number[]>([]);
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -37,7 +32,6 @@ const ManageBeaconDevices = () => {
         fetchAllDevices();
     }, [searchTerm]);
 
-
     const fetchAllDevices = async () => {
         try {
             setLoading(true);
@@ -47,7 +41,7 @@ const ManageBeaconDevices = () => {
             if (response.data.success) {
                 setAllDevices(response.data.data);
             }
-        } catch (error: any) {
+        } catch {
             showAlert('Failed to fetch beacon devices', 'error');
         } finally {
             setLoading(false);
@@ -56,12 +50,14 @@ const ManageBeaconDevices = () => {
 
     const fetchAssignedDevices = async () => {
         try {
-            const response = await adminApi.get(`/Organisation/${id}/assined/beacon/devices?type=${orgType}`);
+            const response = await adminApi.get(
+                `/Organisation/${id}/assined/beacon/devices?type=${orgType}`
+            );
             if (response.data.success) {
                 const ids = response.data.data.map((device: BeaconDevice) => device.id);
                 setAssignedDeviceIds(ids);
             }
-        } catch (error: any) {
+        } catch {
             showAlert('Failed to fetch assigned devices', 'error');
         }
     };
@@ -74,22 +70,23 @@ const ManageBeaconDevices = () => {
         if (statusFilter && statusFilter !== 'all') {
             if (statusFilter === 'assigned') {
                 // Show devices assigned to THIS org
-                devices = devices.filter(d => assignedDeviceIds.includes(d.id));
+                devices = devices.filter((d) => assignedDeviceIds.includes(d.id));
             } else if (statusFilter === 'available') {
-                devices = devices.filter(d => d.status === 'available');
+                devices = devices.filter((d) => d.status === 'available');
             }
         } else {
-            // "All" View: Sort/Group for better visibility? 
+            // "All" View: Sort/Group for better visibility?
             // Currently just returns the list, let's keep it simple as per original
         }
 
         // 2. Apply Search Filter
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase();
-            devices = devices.filter(device =>
-                (device.serial_number?.toLowerCase() || '').includes(lowerTerm) ||
-                (device.device_id?.toLowerCase() || '').includes(lowerTerm) ||
-                (device.imei_number?.toLowerCase() || '').includes(lowerTerm)
+            devices = devices.filter(
+                (device) =>
+                    (device.serial_number?.toLowerCase() || '').includes(lowerTerm) ||
+                    (device.device_id?.toLowerCase() || '').includes(lowerTerm) ||
+                    (device.imei_number?.toLowerCase() || '').includes(lowerTerm)
             );
         }
 
@@ -104,7 +101,7 @@ const ManageBeaconDevices = () => {
     // ---------------------------------------------------------
     const handleDeviceToggle = (deviceId: number, sequenceNumber: number) => {
         const currentlyAssigned = assignedDeviceIds.includes(deviceId);
-        const device = allDevices.find(d => d.id === deviceId);
+        const device = allDevices.find((d) => d.id === deviceId);
 
         if (!device) return;
 
@@ -127,18 +124,20 @@ const ManageBeaconDevices = () => {
 
             // Get all sequence numbers currently assigned to US
             const mySequences = assignedDeviceIds
-                .map(id => allDevices.find(d => d.id === id)?.sequence_number || 0)
+                .map((id) => allDevices.find((d) => d.id === id)?.sequence_number || 0)
                 .sort((a, b) => a - b);
 
             const maxSequence = mySequences[mySequences.length - 1];
 
             if (sequenceNumber !== maxSequence) {
-                showAlert(`You can only deselect the last device in your sequence (#${maxSequence})`, 'error');
+                showAlert(
+                    `You can only deselect the last device in your sequence (#${maxSequence})`,
+                    'error'
+                );
                 return;
             }
 
-            setAssignedDeviceIds(prev => prev.filter(id => id !== deviceId));
-
+            setAssignedDeviceIds((prev) => prev.filter((id) => id !== deviceId));
         } else {
             // SELECTING -----------------------------------------------
 
@@ -154,20 +153,24 @@ const ManageBeaconDevices = () => {
             // 2. Not currently selected by us
             // 3. Sequence number is LESS than the one we just clicked
 
-            const skippedAvailable = allDevices.find(d =>
-                d.status === 'available' &&
-                !assignedDeviceIds.includes(d.id) &&
-                d.sequence_number < sequenceNumber
+            const skippedAvailable = allDevices.find(
+                (d) =>
+                    d.status === 'available' &&
+                    !assignedDeviceIds.includes(d.id) &&
+                    d.sequence_number < sequenceNumber
             );
 
             if (skippedAvailable) {
-                showAlert(`Sequential Error: You must select available device #${skippedAvailable.sequence_number} before selecting #${sequenceNumber}.`, 'error');
+                showAlert(
+                    `Sequential Error: You must select available device #${skippedAvailable.sequence_number} before selecting #${sequenceNumber}.`,
+                    'error'
+                );
                 return;
             }
 
             // If no available devices skipped, we can select it!
             // (Even if we skipped 4-6 assigned to Org B)
-            setAssignedDeviceIds(prev => [...prev, deviceId]);
+            setAssignedDeviceIds((prev) => [...prev, deviceId]);
         }
     };
 
@@ -181,27 +184,30 @@ const ManageBeaconDevices = () => {
             setSaving(true);
 
             // MAP IDS TO HARDWARE IDENTIFIERS for Backend
-            const selectedHardwareIds = assignedDeviceIds.map(id => {
-                const dev = allDevices.find(d => d.id === id);
-                return dev ? dev.device_id : null;
-            }).filter(Boolean); // Remove nulls
+            const selectedHardwareIds = assignedDeviceIds
+                .map((id) => {
+                    const dev = allDevices.find((d) => d.id === id);
+                    return dev ? dev.device_id : null;
+                })
+                .filter(Boolean); // Remove nulls
 
-            const response = await adminApi.post(
-                `/Organisation/${id}/assign/beacon/devices`,
-                {
-                    device_identifiers: selectedHardwareIds, // Sending Strings as requested
-                    type: orgType
-                }
-            );
+            const response = await adminApi.post(`/Organisation/${id}/assign/beacon/devices`, {
+                device_identifiers: selectedHardwareIds, // Sending Strings as requested
+                type: orgType,
+            });
 
             if (response.data.success) {
-                showAlert(`${response.data.count} beacon devices assigned successfully!`, 'success');
+                showAlert(
+                    `${response.data.count} beacon devices assigned successfully!`,
+                    'success'
+                );
 
                 // Refresh everything
 
                 await fetchAssignedDevices();
                 await fetchAllDevices();
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to assign devices';
             showAlert(errorMessage, 'error');
@@ -211,18 +217,16 @@ const ManageBeaconDevices = () => {
     };
 
     const clearFilters = () => {
-        setSearchTerm("");
-        setStatusFilter("all");
+        setSearchTerm('');
+        setStatusFilter('all');
     };
 
     const selectedCount = assignedDeviceIds.length;
-
 
     return (
         <div className="min-h-screen bg-white">
             <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mt-4">
                 <div className="mx-auto space-y-4">
-
                     {/* STATS SECTION */}
                     {/* {statistics && (
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -253,7 +257,10 @@ const ManageBeaconDevices = () => {
                             <div className="flex flex-1 items-center gap-3">
                                 {/* Search Input */}
                                 <div className="relative w-full max-w-xs">
-                                    <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                                    <FaSearch
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                                        size={14}
+                                    />
                                     <input
                                         type="text"
                                         value={searchTerm}
@@ -299,16 +306,23 @@ const ManageBeaconDevices = () => {
                     </div>
 
                     {/* GRID */}
-                    {loading ? <CirclularLoader /> : filteredDevices.length === 0 ? <EmptyState /> : (
+                    {loading ? (
+                        <CirclularLoader />
+                    ) : filteredDevices.length === 0 ? (
+                        <EmptyState />
+                    ) : (
                         <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
                             <div className="max-h-[55vh] overflow-y-auto p-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                                     {filteredDevices.map((device) => {
-                                        const isAssignedToMe = assignedDeviceIds.includes(device.id);
+                                        const isAssignedToMe = assignedDeviceIds.includes(
+                                            device.id
+                                        );
                                         const isAvailable = device.status === 'available';
 
                                         // Visual Logic
-                                        const isAssignedToOther = device.status === 'assigned' && !isAssignedToMe;
+                                        const isAssignedToOther =
+                                            device.status === 'assigned' && !isAssignedToMe;
                                         const isMaintenance = device.status === 'maintenance';
 
                                         // Is this card clickable?
@@ -317,13 +331,20 @@ const ManageBeaconDevices = () => {
                                         return (
                                             <div
                                                 key={device.id}
-                                                onClick={() => isClickable && handleDeviceToggle(device.id, device.sequence_number)}
-                                                className={`relative p-4 border-2 rounded-lg transition-all duration-200 ${isAssignedToMe
-                                                    ? 'bg-blue-50 border-blue-400 cursor-pointer'
-                                                    : isAvailable
-                                                        ? 'bg-white border-slate-200 hover:border-blue-300 cursor-pointer'
-                                                        : 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
-                                                    }`}
+                                                onClick={() =>
+                                                    isClickable &&
+                                                    handleDeviceToggle(
+                                                        device.id,
+                                                        device.sequence_number
+                                                    )
+                                                }
+                                                className={`relative p-4 border-2 rounded-lg transition-all duration-200 ${
+                                                    isAssignedToMe
+                                                        ? 'bg-blue-50 border-blue-400 cursor-pointer'
+                                                        : isAvailable
+                                                          ? 'bg-white border-slate-200 hover:border-blue-300 cursor-pointer'
+                                                          : 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
+                                                }`}
                                             >
                                                 <div className="absolute top-2 left-2">
                                                     <span className="bg-slate-200 text-slate-700 px-2 py-1 rounded-full text-xs font-bold">
@@ -345,18 +366,30 @@ const ManageBeaconDevices = () => {
                                                 <div className="mt-8 space-y-2">
                                                     <div className="flex items-center gap-2">
                                                         <FaMicrochip className="text-indigo-500" />
-                                                        <span className="font-bold text-xs uppercase">{device.serial_number}</span>
+                                                        <span className="font-bold text-xs uppercase">
+                                                            {device.serial_number}
+                                                        </span>
                                                     </div>
-                                                    <p className="text-xs font-mono text-slate-500">{device.device_id}</p>
+                                                    <p className="text-xs font-mono text-slate-500">
+                                                        {device.device_id}
+                                                    </p>
 
-                                                    <span className={`inline-block px-2 py-1 rounded text-[10px] font-bold uppercase ${isAssignedToMe ? 'bg-blue-100 text-blue-700' :
-                                                        isAvailable ? 'bg-green-100 text-green-700' :
-                                                            isMaintenance ? 'bg-amber-100 text-amber-700' :
-                                                                'bg-gray-200 text-gray-600' // Assigned to others
-                                                        }`}>
-                                                        {isAssignedToMe ? 'Assigned (You)' :
-                                                            isAssignedToOther ? 'Assigned (Other)' :
-                                                                device.status}
+                                                    <span
+                                                        className={`inline-block px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                                                            isAssignedToMe
+                                                                ? 'bg-blue-100 text-blue-700'
+                                                                : isAvailable
+                                                                  ? 'bg-green-100 text-green-700'
+                                                                  : isMaintenance
+                                                                    ? 'bg-amber-100 text-amber-700'
+                                                                    : 'bg-gray-200 text-gray-600' // Assigned to others
+                                                        }`}
+                                                    >
+                                                        {isAssignedToMe
+                                                            ? 'Assigned (You)'
+                                                            : isAssignedToOther
+                                                              ? 'Assigned (Other)'
+                                                              : device.status}
                                                     </span>
                                                 </div>
                                             </div>
@@ -368,7 +401,7 @@ const ManageBeaconDevices = () => {
                     )}
 
                     <div className="flex justify-start">
-                        <SaveButton onClick={handleSave} label={saving ? "Saving..." : "Save"} />
+                        <SaveButton onClick={handleSave} label={saving ? 'Saving...' : 'Save'} />
                     </div>
                 </div>
             </div>

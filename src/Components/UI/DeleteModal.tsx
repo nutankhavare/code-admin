@@ -74,8 +74,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     }}
                 >
                     Are you sure you want to delete{' '}
-                    <strong style={{ color: '#111827' }}>{itemName}</strong>?
-                    This action cannot be undone.
+                    <strong style={{ color: '#111827' }}>{itemName}</strong>? This action cannot be
+                    undone.
                 </p>
 
                 <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>

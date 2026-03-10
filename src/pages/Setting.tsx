@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { useAlert } from "../Context/AlertContext";
-import "./Setting.css";
+import React, { useState } from 'react';
+import { useAlert } from '../Context/AlertContext';
+import './Setting.css';
 
 const SettingPage: React.FC = () => {
     const { showAlert } = useAlert();
     const [profile, setProfile] = useState({
-        name: "Admin User",
-        email: "admin@vanloka.com",
-        phone: "+91 9876543210",
-        timezone: "Asia/Kolkata",
+        name: 'Admin User',
+        email: 'admin@vanloka.com',
+        phone: '+91 9876543210',
+        timezone: 'Asia/Kolkata',
     });
     const [notifications, setNotifications] = useState({
         emailAlerts: true,
@@ -17,8 +17,7 @@ const SettingPage: React.FC = () => {
         weeklyReport: true,
     });
 
-    const save = () =>
-        showAlert("success", "Settings saved successfully", "Saved");
+    const save = () => showAlert('success', 'Settings saved successfully', 'Saved');
 
     return (
         <div className="page-container">
@@ -30,7 +29,7 @@ const SettingPage: React.FC = () => {
 
             <div className="settings-grid">
                 <div className="card">
-                    <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                    <h3 className="card-title" style={{ marginBottom: '1.5rem' }}>
                         Profile Settings
                     </h3>
                     <div className="settings-avatar">
@@ -42,9 +41,7 @@ const SettingPage: React.FC = () => {
                         <input
                             className="form-input"
                             value={profile.name}
-                            onChange={(e) =>
-                                setProfile((p) => ({ ...p, name: e.target.value }))
-                            }
+                            onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
                         />
                     </div>
                     <div className="form-group">
@@ -53,9 +50,7 @@ const SettingPage: React.FC = () => {
                             className="form-input"
                             type="email"
                             value={profile.email}
-                            onChange={(e) =>
-                                setProfile((p) => ({ ...p, email: e.target.value }))
-                            }
+                            onChange={(e) => setProfile((p) => ({ ...p, email: e.target.value }))}
                         />
                     </div>
                     <div className="form-group">
@@ -63,9 +58,7 @@ const SettingPage: React.FC = () => {
                         <input
                             className="form-input"
                             value={profile.phone}
-                            onChange={(e) =>
-                                setProfile((p) => ({ ...p, phone: e.target.value }))
-                            }
+                            onChange={(e) => setProfile((p) => ({ ...p, phone: e.target.value }))}
                         />
                     </div>
                     <div className="form-group">
@@ -88,15 +81,15 @@ const SettingPage: React.FC = () => {
                 </div>
 
                 <div>
-                    <div className="card" style={{ marginBottom: "1.5rem" }}>
-                        <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                    <div className="card" style={{ marginBottom: '1.5rem' }}>
+                        <h3 className="card-title" style={{ marginBottom: '1.5rem' }}>
                             Notification Preferences
                         </h3>
                         {Object.entries(notifications).map(([key, val]) => (
                             <div key={key} className="toggle-row">
                                 <div>
                                     <div className="toggle-label">
-                                        {key.replace(/([A-Z])/g, " $1").trim()}
+                                        {key.replace(/([A-Z])/g, ' $1').trim()}
                                     </div>
                                 </div>
                                 <label className="toggle-check">
@@ -113,7 +106,7 @@ const SettingPage: React.FC = () => {
                         ))}
                         <button
                             className="btn btn--primary"
-                            style={{ marginTop: "1rem" }}
+                            style={{ marginTop: '1rem' }}
                             onClick={save}
                         >
                             Save Preferences
@@ -121,38 +114,24 @@ const SettingPage: React.FC = () => {
                     </div>
 
                     <div className="card">
-                        <h3 className="card-title" style={{ marginBottom: "1.5rem" }}>
+                        <h3 className="card-title" style={{ marginBottom: '1.5rem' }}>
                             Security
                         </h3>
                         <div className="form-group">
                             <label className="form-label">Current Password</label>
-                            <input
-                                className="form-input"
-                                type="password"
-                                placeholder="••••••••"
-                            />
+                            <input className="form-input" type="password" placeholder="••••••••" />
                         </div>
                         <div className="form-group">
                             <label className="form-label">New Password</label>
-                            <input
-                                className="form-input"
-                                type="password"
-                                placeholder="••••••••"
-                            />
+                            <input className="form-input" type="password" placeholder="••••••••" />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Confirm New Password</label>
-                            <input
-                                className="form-input"
-                                type="password"
-                                placeholder="••••••••"
-                            />
+                            <input className="form-input" type="password" placeholder="••••••••" />
                         </div>
                         <button
                             className="btn btn--primary"
-                            onClick={() =>
-                                showAlert("success", "Password changed successfully")
-                            }
+                            onClick={() => showAlert('success', 'Password changed successfully')}
                         >
                             Change Password
                         </button>

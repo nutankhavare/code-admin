@@ -238,7 +238,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s, transform 0.1s;
+    transition:
+        background 0.15s,
+        transform 0.1s;
     flex-shrink: 0;
 }
 
@@ -285,7 +287,9 @@
     border-radius: 16px;
     border: 1px solid var(--border);
     overflow: hidden;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition:
+        box-shadow 0.2s,
+        transform 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -486,7 +490,9 @@
     font-family: 'Manrope', sans-serif;
     outline: none;
     color: var(--text);
-    transition: border 0.2s, box-shadow 0.2s;
+    transition:
+        border 0.2s,
+        box-shadow 0.2s;
     resize: vertical;
 }
 

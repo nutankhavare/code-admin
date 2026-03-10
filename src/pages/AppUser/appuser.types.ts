@@ -1,31 +1,31 @@
-export type UserStatus = "Active" | "Inactive" | "Blocked";
-export type UserDevice = "Android" | "iOS";
+export type UserStatus = 'Active' | 'Inactive' | 'Blocked';
+export type UserDevice = 'Android' | 'iOS';
 
 export interface AppUser {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  organisation: string;
-  joinedDate: string;
-  lastActive: string;
-  device: UserDevice;
-  status: UserStatus;
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    organisation: string;
+    joinedDate: string;
+    lastActive: string;
+    device: UserDevice;
+    status: UserStatus;
 }
 
-const names = ["Rahul Sharma", "Priya Mehta", "Amit Kumar", "Sunita Patel", "Vijay Singh"];
-const orgs = ["TechCorp", "InfoSys", "Wipro", "HCL", "TCS"];
-const statuses: UserStatus[] = ["Active", "Active", "Inactive", "Active", "Blocked"];
-const devices: UserDevice[] = ["Android", "iOS"];
+const names = ['Rahul Sharma', 'Priya Mehta', 'Amit Kumar', 'Sunita Patel', 'Vijay Singh'];
+const orgs = ['TechCorp', 'InfoSys', 'Wipro', 'HCL', 'TCS'];
+const statuses: UserStatus[] = ['Active', 'Active', 'Inactive', 'Active', 'Blocked'];
+const devices: UserDevice[] = ['Android', 'iOS'];
 
 export const initialUsers: AppUser[] = Array.from({ length: 25 }, (_, i) => ({
-  id: i + 1,
-  name: names[i % 5],
-  email: `user${i + 1}@example.com`,
-  phone: `+91 ${9800000000 + i}`,
-  organisation: orgs[i % 5],
-  joinedDate: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString("en-IN"),
-  lastActive: `${(i % 59) + 1} min ago`,
-  device: devices[i % 2],
-  status: statuses[i % 5],
+    id: i + 1,
+    name: names[i % 5],
+    email: `user${i + 1}@example.com`,
+    phone: `+91 ${9800000000 + i}`,
+    organisation: orgs[i % 5],
+    joinedDate: new Date(2024, i % 12, (i % 28) + 1).toLocaleDateString('en-IN'),
+    lastActive: `${(i % 59) + 1} min ago`,
+    device: devices[i % 2],
+    status: statuses[i % 5],
 }));

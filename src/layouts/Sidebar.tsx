@@ -123,16 +123,25 @@ export const Sidebar = ({ onLogout, user }: Props) => {
                                 </span>
                                 {hasChildren && (
                                     <span style={{ color: 'inherit', opacity: 0.7, flexShrink: 0 }}>
-                                        {isOpen
-                                            ? <ChevronDown size={14} />
-                                            : <ChevronRight size={14} />}
+                                        {isOpen ? (
+                                            <ChevronDown size={14} />
+                                        ) : (
+                                            <ChevronRight size={14} />
+                                        )}
                                     </span>
                                 )}
                             </div>
 
                             {/* Sub-items */}
                             {hasChildren && isOpen && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 2 }}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 2,
+                                        marginTop: 2,
+                                    }}
+                                >
                                     {item.children!.map((child) => {
                                         const isChildItemActive = pathname.startsWith(child.path);
                                         return (

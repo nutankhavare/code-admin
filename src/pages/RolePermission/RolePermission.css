@@ -238,7 +238,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s, transform 0.1s;
+    transition:
+        background 0.15s,
+        transform 0.1s;
     flex-shrink: 0;
 }
 
@@ -285,7 +287,9 @@
     border-radius: 16px;
     border: 1px solid var(--border);
     overflow: hidden;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition:
+        box-shadow 0.2s,
+        transform 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -486,7 +490,9 @@
     font-family: 'Manrope', sans-serif;
     outline: none;
     color: var(--text);
-    transition: border 0.2s, box-shadow 0.2s;
+    transition:
+        border 0.2s,
+        box-shadow 0.2s;
     resize: vertical;
 }
 
@@ -738,503 +744,503 @@
 
 /* ---- List Page ---- */
 .rp-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
 }
 
 .rp-add-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.5rem 1.5rem;
-  border-radius: 8px;
-  font-family: "Sora", sans-serif;
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: background 0.15s;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.15s;
 }
 .rp-add-btn:hover {
-  background: var(--primary-dark);
+    background: var(--primary-dark);
 }
 
 .rp-search-card {
-  margin-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .rp-search-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
 .rp-search-icon {
-  width: 28px;
-  height: 28px;
-  background: var(--primary);
-  color: white;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
 }
 
 /* ---- Table ---- */
 .rp-table-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
 }
 
 .rp-table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .rp-table thead tr {
-  background: #1e2235;
-  color: white;
+    background: #1e2235;
+    color: white;
 }
 
 .rp-table th {
-  padding: 0.875rem 1.25rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-align: left;
-  white-space: nowrap;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: left;
+    white-space: nowrap;
 }
 
 .rp-table td {
-  padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
-  vertical-align: middle;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    vertical-align: middle;
 }
 
 .rp-table tbody tr:last-child td {
-  border-bottom: none;
+    border-bottom: none;
 }
 .rp-table tbody tr:hover td {
-  background: #faf9ff;
+    background: #faf9ff;
 }
 
 .rp-role-avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--primary-light);
-  font-size: 1rem;
-  flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    font-size: 1rem;
+    flex-shrink: 0;
 }
 
 /* ---- Action Buttons ---- */
 .rp-action-btns {
-  display: flex;
-  gap: 0.375rem;
+    display: flex;
+    gap: 0.375rem;
 }
 
 .rp-action-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 1.5px solid;
-  cursor: pointer;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  transition:
-    opacity 0.15s,
-    transform 0.1s;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1.5px solid;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    transition:
+        opacity 0.15s,
+        transform 0.1s;
 }
 .rp-action-btn:hover {
-  opacity: 0.8;
-  transform: translateY(-1px);
+    opacity: 0.8;
+    transform: translateY(-1px);
 }
 
 .rp-action-view {
-  border-color: #3b82f6;
-  color: #3b82f6;
+    border-color: #3b82f6;
+    color: #3b82f6;
 }
 .rp-action-edit {
-  border-color: var(--primary);
-  color: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 .rp-action-delete {
-  border-color: #ef4444;
-  color: #ef4444;
+    border-color: #ef4444;
+    color: #ef4444;
 }
 
 /* ---- Back Button ---- */
 .rp-back-bar {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .rp-back-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: "Sora", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0;
-  letter-spacing: 0.02em;
-  transition: color 0.15s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
 }
 .rp-back-btn:hover {
-  color: var(--primary);
+    color: var(--primary);
 }
 
 /* ---- Form Card (Add / Edit) ---- */
 .rp-form-wrapper {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .rp-form-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  width: 100%;
-  max-width: 700px;
-  overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
 }
 
 .rp-form-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.125rem 1.5rem;
-  background: #f1f0ff;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 1.5rem;
+    background: #f1f0ff;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
 }
 
 .rp-form-icon {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }
 
 /* ---- Sections ---- */
 .rp-section {
-  border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 .rp-section:last-of-type {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .rp-section-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: #fafafa;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
 }
 
 .rp-section-icon {
-  font-size: 1rem;
+    font-size: 1rem;
 }
 
 .rp-section-body {
-  padding: 1.25rem 1.5rem;
+    padding: 1.25rem 1.5rem;
 }
 
 /* ---- Permissions Grid ---- */
 .rp-perms-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  max-height: 300px;
-  overflow-y: auto;
-  padding-right: 0.25rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-light) transparent;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-light) transparent;
 }
 .rp-perms-grid::-webkit-scrollbar {
-  width: 4px;
+    width: 4px;
 }
 .rp-perms-grid::-webkit-scrollbar-thumb {
-  background: var(--primary-light);
-  border-radius: 4px;
+    background: var(--primary-light);
+    border-radius: 4px;
 }
 
 .rp-perm-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s;
-  background: #fafafa;
-  user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fafafa;
+    user-select: none;
 }
 .rp-perm-checkbox:hover {
-  border-color: var(--primary);
-  background: var(--primary-light);
+    border-color: var(--primary);
+    background: var(--primary-light);
 }
 .rp-perm-checkbox input {
-  accent-color: var(--primary);
-  cursor: pointer;
-  flex-shrink: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .rp-perm-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 1.2;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
 }
 
 .rp-select-all-btn {
-  background: none;
-  border: 1.5px solid var(--primary);
-  color: var(--primary);
-  border-radius: 6px;
-  padding: 0.25rem 0.875rem;
-  font-family: "Sora", sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: all 0.15s;
+    background: none;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 0.25rem 0.875rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.15s;
 }
 .rp-select-all-btn:hover {
-  background: var(--primary);
-  color: white;
+    background: var(--primary);
+    color: white;
 }
 
 /* ---- Form Footer ---- */
 .rp-form-footer {
-  padding: 1.25rem 1.5rem;
-  background: #fafafa;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: #fafafa;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
 }
 
 .rp-save-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: #16a34a;
-  color: white;
-  border: none;
-  padding: 0.625rem 1.5rem;
-  border-radius: 8px;
-  font-family: "Sora", sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 0.625rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.15s;
 }
 .rp-save-btn:hover {
-  background: #15803d;
+    background: #15803d;
 }
 
 .rp-cancel-btn {
-  background: white;
-  color: var(--text-secondary);
-  border: 1.5px solid var(--border);
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
-  font-family: "Sora", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
+    background: white;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
 }
 .rp-cancel-btn:hover {
-  border-color: var(--text-secondary);
-  color: var(--text);
+    border-color: var(--text-secondary);
+    color: var(--text);
 }
 
 /* ---- Input helpers ---- */
 .rp-field-error {
-  border-color: #ef4444 !important;
+    border-color: #ef4444 !important;
 }
 
 .rp-error-msg {
-  font-size: 0.68rem;
-  color: #ef4444;
-  margin-top: 0.25rem;
+    font-size: 0.68rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
 }
 
 .rp-input-hint {
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  margin-top: 0.25rem;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
 }
 
 /* ---- View Page ---- */
 .rp-view-row {
-  display: flex;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border);
-  align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
 }
 .rp-view-row:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .rp-view-label {
-  width: 180px;
-  flex-shrink: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  padding-top: 0.125rem;
+    width: 180px;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding-top: 0.125rem;
 }
 
 .rp-view-value {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
 }
 
 .rp-role-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: var(--primary-light);
-  color: var(--primary);
-  padding: 0.25rem 0.875rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 0.25rem 0.875rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.8rem;
 }
 
 .rp-perms-view-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .rp-perm-tag {
-  background: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
-  padding: 0.25rem 0.625rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    padding: 0.25rem 0.625rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 /* ---- Delete Modal ---- */
 .rp-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.15s ease;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.15s ease;
 }
 
 .rp-modal-box {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  max-width: 420px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.2s ease;
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.2s ease;
 }
 
 .rp-modal-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 .rp-modal-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: var(--text);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text);
 }
 .rp-modal-message {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 .rp-modal-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 @keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
-  .rp-perms-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .rp-form-card {
-    max-width: 100%;
-  }
+    .rp-perms-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .rp-form-card {
+        max-width: 100%;
+    }
 }
 @media (max-width: 480px) {
-  .rp-perms-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .rp-view-label {
-    width: 120px;
-  }
+    .rp-perms-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .rp-view-label {
+        width: 120px;
+    }
 }

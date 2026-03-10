@@ -1,4 +1,4 @@
-declare module "./VendorCreateForm" {
-  const VendorCreateForm: React.FC;
-  export default VendorCreateForm;
+declare module './VendorCreateForm' {
+    const VendorCreateForm: React.FC;
+    export default VendorCreateForm;
 }

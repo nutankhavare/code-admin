@@ -1,18 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import {
-    FaCheckCircle,
-    FaMicrochip,
-    FaSearch,
-} from "react-icons/fa";
-import { useAlert } from "../../../Context/AlertContext";
-import adminApi from "../../../Services/apiservice";
-import EmptyState from "../../../Components/UI/EmptyState";
+import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { FaCheckCircle, FaMicrochip, FaSearch } from 'react-icons/fa';
+import { useAlert } from '../../../Context/AlertContext';
+import adminApi from '../../../Services/apiservice';
+import EmptyState from '../../../Components/UI/EmptyState';
 // Ensure you have a type for GpsDevice or use BeaconDevice if identical
-import type { BeaconDevice as GpsDeviceType } from "../organisation.types";
-import SaveButton from "../../../Components/Form/SaveButton";
-import CancelButton from "../../../Components/Form/CancelButton";
-import CirclularLoader from "../../../Components/UI/CircularLoader";
+import type { BeaconDevice as GpsDeviceType } from '../organisation.types';
+import SaveButton from '../../../Components/Form/SaveButton';
+import CancelButton from '../../../Components/Form/CancelButton';
+import CirclularLoader from '../../../Components/UI/CircularLoader';
 
 const ManageGpsDevices = () => {
     const { id } = useParams<{ id: string }>();
@@ -23,9 +19,8 @@ const ManageGpsDevices = () => {
     const [allDevices, setAllDevices] = useState<GpsDeviceType[]>([]);
     const [assignedDeviceIds, setAssignedDeviceIds] = useState<number[]>([]);
 
-
-    const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -34,12 +29,11 @@ const ManageGpsDevices = () => {
     }, [id]);
 
     useEffect(() => {
-        // When ID or filter changes, we might want to refresh, but usually 
+        // When ID or filter changes, we might want to refresh, but usually
         // we just filter client side for better UX unless data is huge.
         // For now, let's keep search triggering a fetch if that's your API design.
         fetchAllDevices();
     }, [searchTerm]);
-
 
     const fetchAllDevices = async () => {
         try {
@@ -52,7 +46,7 @@ const ManageGpsDevices = () => {
             if (response.data.success) {
                 setAllDevices(response.data.data);
             }
-        } catch (error: any) {
+        } catch {
             showAlert('Failed to fetch gps devices', 'error');
         } finally {
             setLoading(false);
@@ -61,12 +55,14 @@ const ManageGpsDevices = () => {
 
     const fetchAssignedDevices = async () => {
         try {
-            const response = await adminApi.get(`/Organisation/${id}/assined/gps/devices?type=${orgType}`);
+            const response = await adminApi.get(
+                `/Organisation/${id}/assined/gps/devices?type=${orgType}`
+            );
             if (response.data.success) {
                 const ids = response.data.data.map((device: GpsDeviceType) => device.id);
                 setAssignedDeviceIds(ids);
             }
-        } catch (error: any) {
+        } catch {
             showAlert('Failed to fetch assigned devices', 'error');
         }
     };
@@ -76,11 +72,11 @@ const ManageGpsDevices = () => {
 
         if (statusFilter && statusFilter !== 'all') {
             if (statusFilter === 'assigned') {
-                devices = devices.filter(d => assignedDeviceIds.includes(d.id));
+                devices = devices.filter((d) => assignedDeviceIds.includes(d.id));
             } else if (statusFilter === 'available') {
-                devices = devices.filter(d => d.status === 'available');
+                devices = devices.filter((d) => d.status === 'available');
             } else if (statusFilter === 'maintenance') {
-                devices = devices.filter(d => d.status === 'maintenance');
+                devices = devices.filter((d) => d.status === 'maintenance');
             }
         }
 
@@ -89,10 +85,11 @@ const ManageGpsDevices = () => {
 
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase();
-            devices = devices.filter(device =>
-                (device.serial_number?.toLowerCase() || '').includes(lowerTerm) ||
-                (device.device_id?.toLowerCase() || '').includes(lowerTerm) ||
-                (device.imei_number?.toLowerCase() || '').includes(lowerTerm)
+            devices = devices.filter(
+                (device) =>
+                    (device.serial_number?.toLowerCase() || '').includes(lowerTerm) ||
+                    (device.device_id?.toLowerCase() || '').includes(lowerTerm) ||
+                    (device.imei_number?.toLowerCase() || '').includes(lowerTerm)
             );
         }
 
@@ -106,7 +103,7 @@ const ManageGpsDevices = () => {
     // ---------------------------------------------------------
     const handleDeviceToggle = (deviceId: number, sequenceNumber: number) => {
         const currentlyAssigned = assignedDeviceIds.includes(deviceId);
-        const device = allDevices.find(d => d.id === deviceId);
+        const device = allDevices.find((d) => d.id === deviceId);
 
         if (!device) return;
 
@@ -126,17 +123,20 @@ const ManageGpsDevices = () => {
             // DESELECTING ---------------------------------------------
             // Only allow from end of sequence
             const assignedSequences = assignedDeviceIds
-                .map(id => allDevices.find(d => d.id === id)?.sequence_number || 0)
+                .map((id) => allDevices.find((d) => d.id === id)?.sequence_number || 0)
                 .sort((a, b) => a - b);
 
             const maxSequence = assignedSequences[assignedSequences.length - 1];
 
             if (sequenceNumber !== maxSequence) {
-                showAlert(`You can only deselect devices from the end of the sequence (#${maxSequence})`, 'error');
+                showAlert(
+                    `You can only deselect devices from the end of the sequence (#${maxSequence})`,
+                    'error'
+                );
                 return;
             }
 
-            setAssignedDeviceIds(prev => prev.filter(id => id !== deviceId));
+            setAssignedDeviceIds((prev) => prev.filter((id) => id !== deviceId));
         } else {
             // SELECTING -----------------------------------------------
 
@@ -148,19 +148,23 @@ const ManageGpsDevices = () => {
 
             // B. Gap Check
             // Find any device that is AVAILABLE, NOT SELECTED, and LOWER SEQUENCE than current
-            const skippedAvailable = allDevices.find(d =>
-                d.status === 'available' &&
-                !assignedDeviceIds.includes(d.id) &&
-                d.sequence_number < sequenceNumber
+            const skippedAvailable = allDevices.find(
+                (d) =>
+                    d.status === 'available' &&
+                    !assignedDeviceIds.includes(d.id) &&
+                    d.sequence_number < sequenceNumber
             );
 
             if (skippedAvailable) {
-                showAlert(`Sequential Error: You must select available device #${skippedAvailable.sequence_number} before selecting #${sequenceNumber}.`, 'error');
+                showAlert(
+                    `Sequential Error: You must select available device #${skippedAvailable.sequence_number} before selecting #${sequenceNumber}.`,
+                    'error'
+                );
                 return;
             }
 
             // If we passed checks, add it (even if we skipped "Assigned to Other" devices)
-            setAssignedDeviceIds(prev => [...prev, deviceId]);
+            setAssignedDeviceIds((prev) => [...prev, deviceId]);
         }
     };
 
@@ -174,19 +178,18 @@ const ManageGpsDevices = () => {
             setSaving(true);
 
             // 1. Map IDs to Device Identifiers (Strings)
-            const selectedHardwareIds = assignedDeviceIds.map(id => {
-                const dev = allDevices.find(d => d.id === id);
-                return dev ? dev.device_id : null;
-            }).filter(Boolean);
+            const selectedHardwareIds = assignedDeviceIds
+                .map((id) => {
+                    const dev = allDevices.find((d) => d.id === id);
+                    return dev ? dev.device_id : null;
+                })
+                .filter(Boolean);
 
             // 2. Send payload
-            const response = await adminApi.post(
-                `/Organisation/${id}/assign/gps/devices`,
-                {
-                    device_identifiers: selectedHardwareIds, // Sending Strings
-                    type: orgType
-                }
-            );
+            const response = await adminApi.post(`/Organisation/${id}/assign/gps/devices`, {
+                device_identifiers: selectedHardwareIds, // Sending Strings
+                type: orgType,
+            });
 
             if (response.data.success) {
                 showAlert(`${response.data.count} GPS devices assigned successfully!`, 'success');
@@ -195,6 +198,7 @@ const ManageGpsDevices = () => {
                 await fetchAssignedDevices();
                 await fetchAllDevices();
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || 'Failed to assign devices';
             showAlert(errorMessage, 'error');
@@ -204,8 +208,8 @@ const ManageGpsDevices = () => {
     };
 
     const clearFilters = () => {
-        setSearchTerm("");
-        setStatusFilter("all");
+        setSearchTerm('');
+        setStatusFilter('all');
     };
 
     const selectedCount = assignedDeviceIds.length;
@@ -240,12 +244,14 @@ const ManageGpsDevices = () => {
                     {/* Search & Filter Toolbar */}
                     <div className="bg-gray-50 rounded-lg shadow-sm border border-slate-200 p-6">
                         <div className="flex flex-wrap items-center justify-between gap-4">
-
                             {/* Left Side: Inputs & Actions */}
                             <div className="flex flex-1 items-center gap-3">
                                 {/* Search Input - Fixed width or flex-grow */}
                                 <div className="relative w-full max-w-xs">
-                                    <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                                    <FaSearch
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                                        size={14}
+                                    />
                                     <input
                                         type="text"
                                         value={searchTerm}
@@ -300,11 +306,14 @@ const ManageGpsDevices = () => {
                             <div className="max-h-[70vh] overflow-y-auto p-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                                     {filteredDevices.map((device) => {
-                                        const isAssignedToMe = assignedDeviceIds.includes(device.id);
+                                        const isAssignedToMe = assignedDeviceIds.includes(
+                                            device.id
+                                        );
                                         const isAvailable = device.status === 'available';
 
                                         // Status checks for UI state
-                                        const isAssignedToOther = device.status === 'assigned' && !isAssignedToMe;
+                                        const isAssignedToOther =
+                                            device.status === 'assigned' && !isAssignedToMe;
                                         const isMaintenance = device.status === 'maintenance';
 
                                         // Interaction allowed?
@@ -313,13 +322,20 @@ const ManageGpsDevices = () => {
                                         return (
                                             <div
                                                 key={device.id}
-                                                onClick={() => isClickable && handleDeviceToggle(device.id, device.sequence_number)}
-                                                className={`relative p-4 border-2 rounded-lg transition-all duration-200 ${isAssignedToMe
-                                                    ? 'bg-blue-50 border-blue-400 cursor-pointer'
-                                                    : isAvailable
-                                                        ? 'bg-white border-slate-200 hover:border-blue-300 cursor-pointer'
-                                                        : 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
-                                                    }`}
+                                                onClick={() =>
+                                                    isClickable &&
+                                                    handleDeviceToggle(
+                                                        device.id,
+                                                        device.sequence_number
+                                                    )
+                                                }
+                                                className={`relative p-4 border-2 rounded-lg transition-all duration-200 ${
+                                                    isAssignedToMe
+                                                        ? 'bg-blue-50 border-blue-400 cursor-pointer'
+                                                        : isAvailable
+                                                          ? 'bg-white border-slate-200 hover:border-blue-300 cursor-pointer'
+                                                          : 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
+                                                }`}
                                             >
                                                 <div className="absolute top-2 left-2">
                                                     <span className="bg-slate-200 text-slate-700 px-2 py-1 rounded-full text-xs font-bold">
@@ -341,19 +357,33 @@ const ManageGpsDevices = () => {
                                                 <div className="mt-8 space-y-2">
                                                     <div className="flex items-center gap-2">
                                                         <FaMicrochip className="text-indigo-500" />
-                                                        <span className="font-bold text-xs uppercase">{device.serial_number}</span>
+                                                        <span className="font-bold text-xs uppercase">
+                                                            {device.serial_number}
+                                                        </span>
                                                     </div>
-                                                    <p className="text-xs font-mono text-slate-500">{device.device_id}</p>
-                                                    <p className="text-xs font-mono text-slate-500">{device.imei_number}</p>
+                                                    <p className="text-xs font-mono text-slate-500">
+                                                        {device.device_id}
+                                                    </p>
+                                                    <p className="text-xs font-mono text-slate-500">
+                                                        {device.imei_number}
+                                                    </p>
 
-                                                    <span className={`inline-block px-2 py-1 rounded text-[10px] font-bold uppercase ${isAssignedToMe ? 'bg-blue-100 text-blue-700' :
-                                                        isAvailable ? 'bg-green-100 text-green-700' :
-                                                            isMaintenance ? 'bg-amber-100 text-amber-700' :
-                                                                'bg-gray-200 text-gray-600'
-                                                        }`}>
-                                                        {isAssignedToMe ? 'Assigned (You)' :
-                                                            isAssignedToOther ? 'Assigned (Other)' :
-                                                                device.status}
+                                                    <span
+                                                        className={`inline-block px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                                                            isAssignedToMe
+                                                                ? 'bg-blue-100 text-blue-700'
+                                                                : isAvailable
+                                                                  ? 'bg-green-100 text-green-700'
+                                                                  : isMaintenance
+                                                                    ? 'bg-amber-100 text-amber-700'
+                                                                    : 'bg-gray-200 text-gray-600'
+                                                        }`}
+                                                    >
+                                                        {isAssignedToMe
+                                                            ? 'Assigned (You)'
+                                                            : isAssignedToOther
+                                                              ? 'Assigned (Other)'
+                                                              : device.status}
                                                     </span>
                                                 </div>
                                             </div>
@@ -365,7 +395,7 @@ const ManageGpsDevices = () => {
                     )}
 
                     <div className="flex items-center justify-start">
-                        <SaveButton onClick={handleSave} label={saving ? "Saving..." : "Save"} />
+                        <SaveButton onClick={handleSave} label={saving ? 'Saving...' : 'Save'} />
                     </div>
                 </div>
             </div>

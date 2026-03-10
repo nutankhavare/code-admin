@@ -1,0 +1,54 @@
+﻿[0m
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\fix-lint.js[24m
+  [2m10:25[22m  [31merror[39m    Unexpected control character(s) in regular expression: \x1b  [2mno-control-regex[22m
+  [2m16:82[22m  [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m23:68[22m  [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m68:9[22m   [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+  [2m71:1[22m   [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\fix-lint2.js[24m
+  [2m10:25[22m   [31merror[39m    Unexpected control character(s) in regular expression: \x1b  [2mno-control-regex[22m
+  [2m23:86[22m   [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m23:133[22m  [31merror[39m    Unnecessary escape character: \/                             [2mno-useless-escape[22m
+  [2m44:11[22m   [31merror[39m    'lastHandledRemoveLine' is assigned a value but never used   [2m@typescript-eslint/no-unused-vars[22m
+  [2m76:9[22m    [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+  [2m79:1[22m    [33mwarning[39m  Unexpected console statement                                 [2mno-console[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\fix-lint5.js[24m
+   [2m1:12[22m  [31merror[39m    A `require()` style import is forbidden  [2m@typescript-eslint/no-require-imports[22m
+  [2m36:1[22m   [33mwarning[39m  Unexpected console statement             [2mno-console[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\OfficeEditPage.tsx[24m
+  [2m37:61[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManageBeaconDevices.tsx[24m
+  [2m46:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m64:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManageGpsDevices.tsx[24m
+  [2m51:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m69:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisation\ShowPageTabs\ManagePickupLocations.tsx[24m
+   [2m85:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m104:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m156:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\OfficeEditPage.tsx[24m
+  [2m37:61[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManageBeaconDevices.tsx[24m
+  [2m46:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m64:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManageGpsDevices.tsx[24m
+  [2m51:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m69:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[4mC:\Users\lenovo\Desktop\code vanloka\VanLoka-Admin-Web\src\pages\Organisations\ShowPageTabs\ManagePickupLocations.tsx[24m
+   [2m85:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m104:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m156:18[22m  [31merror[39m  'error' is defined but never used  [2m@typescript-eslint/no-unused-vars[22m
+
+[31m[1mΓ£û 29 problems (24 errors, 5 warnings)[22m[39m
+[0m
