@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Building2, School, Car, Handshake, ChevronRight, ChevronLeft } from 'lucide-react';
 import './Organisation.css';
-import './OrgCreate.css';
 import { type OrgType, ORG_TYPE_LABELS } from './organisation.types';
 
 import OfficeCreateForm from './Forms/OfficeCreateForm';
@@ -16,7 +15,7 @@ const ORG_OPTIONS: {
     type: OrgType;
     label: string;
     description: string;
-    icon: React.ReactNode;
+    icon: React.ReactElement; // Using React.ReactElement for cloneElement compatibility
     color: string;
 }[] = [
     {
@@ -24,7 +23,7 @@ const ORG_OPTIONS: {
         label: 'Office / Corporate',
         description: 'Registered corporate office, company or business entity',
         icon: <Building2 size={32} />,
-        color: '#7c3aed',
+        color: '#6366f1',
     },
     {
         type: 'INSTITUTION',
@@ -49,7 +48,6 @@ const ORG_OPTIONS: {
     },
 ];
 
-/* ─────────────────────────────────────────────────────── */
 const OrgCreatePage: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState<1 | 2>(1);
@@ -64,7 +62,6 @@ const OrgCreatePage: React.FC = () => {
     };
 
     const handleSave = methods.handleSubmit((data) => {
-        // eslint-disable-next-line no-console
         console.log('Organisation Saved:', { type: selectedType, ...data });
         navigate('/Organisation');
     });
@@ -81,24 +78,23 @@ const OrgCreatePage: React.FC = () => {
                             className="breadcrumb-link"
                             onClick={() => navigate('/Organisation')}
                         >
-                            Organisations
+                            ORGANISATIONS
                         </button>
-                        <span className="breadcrumb-sep">›</span>
-                        <span className="breadcrumb-current">Select Type</span>
+                        <span className="breadcrumb-sep">/</span>
+                        <span className="breadcrumb-current">SELECT TYPE</span>
                     </div>
                     <button className="btn btn--back" onClick={() => navigate('/Organisation')}>
-                        <ChevronLeft size={16} /> Back
+                        <ChevronLeft size={16} /> BACK
                     </button>
                 </div>
 
                 <div className="org-type-step">
                     <div className="org-type-header">
                         <h1 className="org-type-heading">
-                            What type of organisation are you onboarding?
+                            Onboarding New Organisation
                         </h1>
                         <p className="org-type-subheading">
-                            Select the category that best describes the organisation. You'll then
-                            fill in the relevant details.
+                            Choose the category that matches your entity to begin the onboarding process.
                         </p>
                     </div>
 
@@ -112,14 +108,14 @@ const OrgCreatePage: React.FC = () => {
                             >
                                 <div
                                     className="org-type-icon"
-                                    style={{ color: opt.color, background: opt.color + '15' }}
+                                    style={{ color: opt.color, background: opt.color + '12' }}
                                 >
                                     {opt.icon}
                                 </div>
                                 <div className="org-type-card-label">{opt.label}</div>
                                 <div className="org-type-card-desc">{opt.description}</div>
                                 <div className="org-type-card-arrow">
-                                    <ChevronRight size={20} color={opt.color} />
+                                    <ChevronRight size={24} color={opt.color} />
                                 </div>
                             </button>
                         ))}
@@ -132,96 +128,87 @@ const OrgCreatePage: React.FC = () => {
     /* ──────────────────── STEP 2 ──────────────────────── */
     return (
         <div className="page-container">
-            {/* Breadcrumb + Back */}
             <div className="page-header-bar">
                 <div className="breadcrumb-container">
                     <button className="breadcrumb-link" onClick={() => navigate('/Organisation')}>
-                        Organisations
+                        ORGANISATIONS
                     </button>
-                    <span className="breadcrumb-sep">›</span>
+                    <span className="breadcrumb-sep">/</span>
                     <button className="breadcrumb-link" onClick={() => setStep(1)}>
-                        Select Type
+                        SELECT TYPE
                     </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">{selectedOption?.label}</span>
+                    <span className="breadcrumb-sep">/</span>
+                    <span className="breadcrumb-current">CREATE {selectedOption?.label.toUpperCase()}</span>
                 </div>
                 <button className="btn btn--back" onClick={() => setStep(1)}>
-                    <ChevronLeft size={16} /> Back
+                    <ChevronLeft size={16} /> BACK
                 </button>
             </div>
 
-            {/* Form header badge */}
-            <div
-                className="rp-form-header"
-                style={{
-                    borderLeft: `4px solid ${selectedOption?.color}`,
-                    marginBottom: '1.5rem',
-                    borderRadius: '10px',
-                    background: '#fff',
-                    padding: '1rem 1.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    boxShadow: '0 1px 4px #e5e7eb',
-                }}
-            >
-                <span className="rp-form-icon" style={{ color: selectedOption?.color }}>
-                    {selectedOption?.icon}
-                </span>
-                <div>
-                    <div style={{ fontWeight: 700, fontSize: '1rem' }}>
-                        CREATE {selectedType ? ORG_TYPE_LABELS[selectedType].toUpperCase() : ''}
+            <div className="org-form-wrapper" style={{ paddingBottom: '40px' }}>
+                <div className="org-form-card" style={{ maxWidth: 880 }}>
+                    <div
+                        className="org-form-header"
+                        style={{
+                            borderLeft: `5px solid ${selectedOption?.color}`,
+                            padding: '24px 32px',
+                            background: '#f8fafc'
+                        }}
+                    >
+                        <span className="org-form-icon" style={{ 
+                            color: selectedOption?.color, 
+                            background: selectedOption?.color + '12',
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            {selectedOption ? React.cloneElement(selectedOption.icon as any, { size: 24 }) : null}
+                        </span>
+                        <div>
+                            <div style={{ fontWeight: 900, fontSize: '14px', letterSpacing: '0.02em' }}>
+                                NEW {selectedType ? ORG_TYPE_LABELS[selectedType].toUpperCase() : ''} ONBOARDING
+                            </div>
+                            <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600, marginTop: '2px' }}>
+                                {selectedOption?.description}
+                            </div>
+                        </div>
                     </div>
-                    <div style={{ fontSize: '0.72rem', opacity: 0.7 }}>
-                        {selectedOption?.description}
-                    </div>
+
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSave}>
+                            <div style={{ padding: '32px' }}>
+                                {selectedType === 'OFFICE' && <OfficeCreateForm />}
+                                {selectedType === 'INSTITUTION' && <InstitutionCreateForm />}
+                                {selectedType === 'MOTOR_DRIVING_SCHOOL' && <MotorDrivingSchoolCreateForm />}
+                                {selectedType === 'VENDOR' && <VendorCreateForm />}
+                            </div>
+
+                            <div className="org-form-footer" style={{ padding: '24px 32px' }}>
+                                <button
+                                    type="button"
+                                    className="btn btn--outline"
+                                    onClick={() => setStep(1)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="btn btn--primary"
+                                    style={{
+                                        background: selectedOption?.color || 'var(--primary)',
+                                        boxShadow: `0 8px 20px ${selectedOption?.color}40`,
+                                    }}
+                                >
+                                    Complete Onboarding
+                                </button>
+                            </div>
+                        </form>
+                    </FormProvider>
                 </div>
             </div>
-
-            {/* Type-specific form wrapped in FormProvider */}
-            <FormProvider {...methods}>
-                <form onSubmit={handleSave}>
-                    {selectedType === 'OFFICE' && <OfficeCreateForm />}
-                    {selectedType === 'INSTITUTION' && <InstitutionCreateForm />}
-                    {selectedType === 'MOTOR_DRIVING_SCHOOL' && <MotorDrivingSchoolCreateForm />}
-                    {selectedType === 'VENDOR' && <VendorCreateForm />}
-
-                    {/* Footer buttons */}
-                    <div className="rp-form-footer" style={{ marginTop: '3rem' }}>
-                        <button
-                            type="button"
-                            className="btn btn--outline"
-                            onClick={() => setStep(1)}
-                            style={{ fontWeight: 700, letterSpacing: '0.05em' }}
-                        >
-                            ❌ CANCEL
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn--outline"
-                            onClick={() => methods.reset()}
-                            style={{ fontWeight: 700, letterSpacing: '0.05em' }}
-                        >
-                            🔄 RESET
-                        </button>
-                        <button
-                            type="submit"
-                            className="btn rp-save-btn"
-                            style={{
-                                background: selectedOption?.color || '#7c3aed',
-                                borderColor: selectedOption?.color || '#7c3aed',
-                                padding: '0.8rem 2.5rem',
-                                fontSize: '0.9rem',
-                            }}
-                        >
-                            💾 SAVE{' '}
-                            {selectedType
-                                ? ORG_TYPE_LABELS[selectedType].toUpperCase()
-                                : 'ORGANISATION'}
-                        </button>
-                    </div>
-                </form>
-            </FormProvider>
         </div>
     );
 };

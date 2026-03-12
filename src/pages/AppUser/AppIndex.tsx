@@ -13,6 +13,12 @@ const statusColors: Record<string, string> = {
     Blocked: '#ef4444',
 };
 
+const orgTypeColors: Record<string, string> = {
+    Office: '#2563eb',
+    Institute: '#7c3aed',
+    'Motor Driving School': '#f97316',
+};
+
 const AppIndex: React.FC = () => {
     const navigate = useNavigate();
 
@@ -74,7 +80,25 @@ const AppIndex: React.FC = () => {
         },
 
         { key: 'phone', label: 'Phone' },
+
         { key: 'organisation', label: 'Organisation' },
+
+        {
+            key: 'orgType',
+            label: 'Org Type',
+            render: (val) => (
+                <span
+                    className="status-badge"
+                    style={{
+                        background: orgTypeColors[val as keyof typeof orgTypeColors] + '20',
+                        color: orgTypeColors[val as keyof typeof orgTypeColors],
+                        border: `1px solid ${orgTypeColors[val as keyof typeof orgTypeColors]}40`,
+                    }}
+                >
+                    {String(val)}
+                </span>
+            ),
+        },
 
         {
             key: 'device',

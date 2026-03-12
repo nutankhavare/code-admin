@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -17,39 +18,45 @@ const AddPlan: React.FC = () => {
     });
 
     const [features, setFeatures] = useState<
-        { name: string; type: string; value: string; [key: string]: string }[]
-    >([{ name: '', type: 'text', value: '' }]);
+        { name: string; description: string }[]
+    >([{ name: '', description: '' }]);
 
     const [error, setError] = useState('');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChange = (e: any) => {
+    const featureDescriptions: Record<string, string> = {
+        basic: 'Normal report + Normal dashboard + 2 roles',
+        advanced: 'Basic features + Advanced reports + 5 roles',
+        premium: 'Advanced features + Analytics dashboard + Unlimited roles',
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
         setError('');
     };
 
-    const handleFeatureChange = (index: number, field: string, value: string) => {
+    const handleFeatureChange = (index: number, value: string) => {
         const updated = [...features];
-        updated[index][field] = value;
+
+        updated[index].name = value;
+        updated[index].description = featureDescriptions[value] || '';
+
         setFeatures(updated);
     };
 
     const addFeature = () => {
-        setFeatures([...features, { name: '', type: 'text', value: '' }]);
+        setFeatures([...features, { name: '', description: '' }]);
     };
 
     const removeFeature = (index: number) => {
         setFeatures(features.filter((_, i) => i !== index));
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleSave = () => {
         if (!form.name.trim() || !form.type) {
             setError('Plan name and type are required');
             return;
         }
 
-        // eslint-disable-next-line no-console
         console.log({
             ...form,
             features,
@@ -75,6 +82,7 @@ const AddPlan: React.FC = () => {
 
             <div className="rp-form-wrapper">
                 <div className="rp-form-card">
+
                     {/* HEADER */}
                     <div className="rp-form-header">
                         <span className="rp-form-icon">💳</span>
@@ -84,9 +92,7 @@ const AddPlan: React.FC = () => {
                     {/* PRICING */}
                     <div className="rp-section">
                         <div className="rp-section-title">
-                            <span className="rp-section-icon" style={{ color: '#10b981' }}>
-                                ₹
-                            </span>
+                            <span className="rp-section-icon" style={{ color: '#10b981' }}>₹</span>
                             PRICING STRATEGY
                         </div>
 
@@ -120,9 +126,7 @@ const AddPlan: React.FC = () => {
                     {/* PLAN DETAILS */}
                     <div className="rp-section">
                         <div className="rp-section-title">
-                            <span className="rp-section-icon" style={{ color: '#ef4444' }}>
-                                📄
-                            </span>
+                            <span className="rp-section-icon" style={{ color: '#ef4444' }}>📄</span>
                             PLAN DETAILS
                         </div>
 
@@ -132,7 +136,7 @@ const AddPlan: React.FC = () => {
                                     PLAN NAME <span className="required-mark">*</span>
                                 </label>
                                 <input
-                                    className={`form-input ${error ? 'input-error' : ''}`}
+                                    className={`form - input ${error ? 'input-error' : ''} `}
                                     placeholder="e.g. Pro, Enterprise"
                                     name="name"
                                     value={form.name}
@@ -195,12 +199,10 @@ const AddPlan: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* FEATURES */}
+                    {/* PLAN FEATURES */}
                     <div className="rp-section">
                         <div className="rp-section-title">
-                            <span className="rp-section-icon" style={{ color: '#f59e0b' }}>
-                                ⭐
-                            </span>
+                            <span className="rp-section-icon" style={{ color: '#f59e0b' }}>⭐</span>
                             PLAN FEATURES
                         </div>
 
@@ -210,39 +212,30 @@ const AddPlan: React.FC = () => {
                                     key={index}
                                     style={{
                                         display: 'grid',
-                                        gridTemplateColumns: '1fr 120px 120px auto',
+                                        gridTemplateColumns: '200px 1fr auto',
                                         gap: '10px',
                                         marginBottom: '10px',
                                     }}
                                 >
-                                    <input
-                                        className="form-input"
-                                        placeholder="Feature Name"
-                                        value={feature.name}
-                                        onChange={(e) =>
-                                            handleFeatureChange(index, 'name', e.target.value)
-                                        }
-                                    />
 
                                     <select
                                         className="form-input"
-                                        value={feature.type}
+                                        value={feature.name}
                                         onChange={(e) =>
-                                            handleFeatureChange(index, 'type', e.target.value)
+                                            handleFeatureChange(index, e.target.value)
                                         }
                                     >
-                                        <option value="text">Text</option>
-                                        <option value="number">Number</option>
-                                        <option value="boolean">Boolean</option>
+                                        <option value="">Select Feature Level</option>
+                                        <option value="basic">Basic</option>
+                                        <option value="advanced">Advanced</option>
+                                        <option value="premium">Premium</option>
                                     </select>
 
-                                    <input
+                                    <textarea
                                         className="form-input"
-                                        placeholder="Value"
-                                        value={feature.value}
-                                        onChange={(e) =>
-                                            handleFeatureChange(index, 'value', e.target.value)
-                                        }
+                                        rows={2}
+                                        value={feature.description}
+                                        readOnly
                                     />
 
                                     <button
@@ -252,6 +245,7 @@ const AddPlan: React.FC = () => {
                                     >
                                         Remove
                                     </button>
+
                                 </div>
                             ))}
 
@@ -285,14 +279,17 @@ const AddPlan: React.FC = () => {
                                     description: '',
                                 });
 
-                                setFeatures([{ name: '', type: 'text', value: '' }]);
+                                setFeatures([{ name: '', description: '' }]);
                             }}
                         >
                             Reset
                         </button>
 
-                        <button className="btn btn--primary">Save Plan</button>
+                        <button className="btn btn--primary" onClick={handleSave}>
+                            Save Plan
+                        </button>
                     </div>
+
                 </div>
             </div>
         </div>

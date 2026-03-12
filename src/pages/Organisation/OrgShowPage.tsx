@@ -1,111 +1,139 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Trash2, LayoutDashboard, Users, Car, Radio, MapPin, CreditCard, Plane } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import './Organisation.css';
-import './OrgCreate.css';
-import type { Organisation } from './organisation.types';
-
-interface OrgShowPageProps {
-    organisations: Organisation[];
-    onDelete: (id: number) => void;
-}
+import { initialOrganisations } from './organisation.types';
 
 type Tab = 'overview' | 'staff' | 'vehicles' | 'beacons' | 'gps' | 'plans' | 'travellers';
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
-    { key: 'overview', label: 'Overview', icon: '🏢' },
-    { key: 'staff', label: 'Staff', icon: '👥' },
-    { key: 'vehicles', label: 'Vehicles', icon: '🚌' },
-    { key: 'beacons', label: 'Beacons', icon: '📡' },
-    { key: 'gps', label: 'GPS Devices', icon: '📍' },
-    { key: 'plans', label: 'Plans', icon: '💳' },
-    { key: 'travellers', label: 'Travellers', icon: '✈️' },
+const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
+    { key: 'overview', label: 'OVERVIEW', icon: <LayoutDashboard size={18} /> },
+    { key: 'staff', label: 'STAFF', icon: <Users size={18} /> },
+    { key: 'vehicles', label: 'VEHICLES', icon: <Car size={18} /> },
+    { key: 'beacons', label: 'BEACONS', icon: <Radio size={18} /> },
+    { key: 'gps', label: 'GPS DEVICES', icon: <MapPin size={18} /> },
+    { key: 'plans', label: 'PLANS', icon: <CreditCard size={18} /> },
+    { key: 'travellers', label: 'TRAVELLERS', icon: <Plane size={18} /> },
 ];
 
-const OrgShowPage: React.FC<OrgShowPageProps> = ({ organisations, onDelete }) => {
+const OrgShowPage: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const { id } = useParams<{ id: string }>();
-    const org = organisations.find((o) => o.id === Number(id));
+    const org = initialOrganisations.find((o) => o.id === Number(id));
     const [activeTab, setActiveTab] = useState<Tab>('overview');
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    const handleDeleteClick = () => {
-        if (user?.role !== 'Super Admin') {
-            alert('Only Super Admin can delete organisations.');
-            return;
-        }
-        setShowDeleteModal(true);
-    };
-
-    const handleDeleteConfirm = () => {
-        if (!org) return;
-        onDelete(org.id);
-        setShowDeleteModal(false);
-        navigate('/Organisation');
-    };
 
     if (!org) {
         return (
             <div className="page-container">
-                <p style={{ color: 'var(--text-secondary)' }}>
-                    Organisation not found.{' '}
-                    <button className="org-back-btn" onClick={() => navigate('/Organisation')}>
-                        ← Back
+                <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)', marginBottom: '1rem' }}>Organisation not found</div>
+                    <button className="btn btn--outline" onClick={() => navigate('/Organisation')}>
+                        <ChevronLeft size={16} /> BACK TO LIST
                     </button>
-                </p>
+                </div>
             </div>
         );
     }
+
+    const handleDelete = () => {
+        if (user?.role !== 'Super Admin') {
+            alert('Only Super Admin can delete organisations.');
+            return;
+        }
+        if (window.confirm(`Are you sure you want to delete ${org.name}?`)) {
+            console.log('Deleting org:', org.id);
+            navigate('/Organisation');
+        }
+    };
 
     return (
         <div className="page-container">
             <div className="page-header-bar">
                 <div className="breadcrumb-container">
                     <button className="breadcrumb-link" onClick={() => navigate('/Organisation')}>
-                        Organisations
+                        ORGANISATIONS
                     </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">{org.name}</span>
+                    <span className="breadcrumb-sep">/</span>
+                    <span className="breadcrumb-current">{org.name.toUpperCase()}</span>
                 </div>
                 <button className="btn btn--back" onClick={() => navigate('/Organisation')}>
-                    <ChevronLeft size={16} /> Back
+                    <ChevronLeft size={16} /> BACK
                 </button>
             </div>
 
-            {/* Header card */}
-            <div className="org-show-header">
-                <div className="org-show-identity">
-                    <div className="org-show-avatar">{org.name.charAt(0)}</div>
-                    <div>
-                        <div className="org-show-name">{org.name}</div>
-                        <div className="org-show-meta">
-                            <span className="org-type-badge">🏢 {org.type.replace(/_/g, ' ')}</span>
-                            <span className="org-show-meta-item">
-                                📍 {org.city}, {org.state}
-                            </span>
-                            <span className="org-domain-tag">{org.domain}</span>
-                            <span
-                                className={`org-status-badge ${org.status === 'Active' ? 'org-status-active' : 'org-status-inactive'}`}
-                            >
-                                {org.status}
-                            </span>
+            {/* Header Identity Card */}
+            <div className="card" style={{ padding: '24px 32px', marginBottom: '20px', background: '#f8fafc', borderLeft: '5px solid var(--primary)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                        <div style={{ 
+                            width: '72px', 
+                            height: '72px', 
+                            borderRadius: '16px', 
+                            background: 'var(--primary)', 
+                            color: 'white', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            fontSize: '28px',
+                            fontWeight: 900,
+                            boxShadow: '0 8px 16px rgba(99, 102, 241, 0.2)'
+                        }}>
+                            {org.name.charAt(0)}
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '24px', fontWeight: 900, color: 'var(--text)', letterSpacing: '-0.02em', marginBottom: '4px' }}>{org.name}</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                <span style={{ 
+                                    fontSize: '11px', 
+                                    fontWeight: 800, 
+                                    padding: '4px 10px', 
+                                    borderRadius: '6px', 
+                                    background: 'var(--white)', 
+                                    color: 'var(--primary)',
+                                    border: '1px solid var(--border)',
+                                    textTransform: 'uppercase'
+                                }}>
+                                    {org.type.replace(/_/g, ' ')}
+                                </span>
+                                <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>📍 {org.city}, {org.state}</span>
+                                <span style={{ fontSize: '12px', color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}>{org.domain}</span>
+                                <span className="status-badge" style={{ 
+                                    background: org.status === 'Active' ? '#10b98115' : '#ef444415',
+                                    color: org.status === 'Active' ? '#10b981' : '#ef4444'
+                                }}>{org.status}</span>
+                            </div>
                         </div>
                     </div>
+                    <button className="btn btn--danger" onClick={handleDelete}>
+                        <Trash2 size={16} /> DELETE ORGANISATION
+                    </button>
                 </div>
-                <button className="org-onboard-btn" onClick={handleDeleteClick}>
-                    🗑️ DELETE
-                </button>
             </div>
 
-            {/* Tabs */}
-            <div className="org-tabs-bar">
+            {/* Premium Tabs */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '4px' }}>
                 {TABS.map((tab) => (
                     <button
                         key={tab.key}
-                        className={`org-tab-btn ${activeTab === tab.key ? 'active' : ''}`}
                         onClick={() => setActiveTab(tab.key)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '12px 20px',
+                            borderRadius: '12px',
+                            border: 'none',
+                            background: activeTab === tab.key ? 'var(--primary)' : 'var(--white)',
+                            color: activeTab === tab.key ? 'white' : 'var(--muted)',
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            boxShadow: activeTab === tab.key ? '0 8px 16px rgba(99, 102, 241, 0.25)' : 'none',
+                            whiteSpace: 'nowrap'
+                        }}
                     >
                         {tab.icon} {tab.label}
                     </button>
@@ -113,198 +141,70 @@ const OrgShowPage: React.FC<OrgShowPageProps> = ({ organisations, onDelete }) =>
             </div>
 
             {/* Tab Content */}
-            <div className="org-tab-content">
-                {activeTab === 'overview' && <OverviewTab org={org} />}
-                {activeTab === 'staff' && <EmptyTab icon="👥" label="Staff" />}
-                {activeTab === 'vehicles' && <EmptyTab icon="🚌" label="Vehicles" />}
-                {activeTab === 'beacons' && <EmptyTab icon="📡" label="Beacons" />}
-                {activeTab === 'gps' && <EmptyTab icon="📍" label="GPS Devices" />}
-                {activeTab === 'plans' && <EmptyTab icon="💳" label="Plans" />}
-                {activeTab === 'travellers' && <EmptyTab icon="✈️" label="Travellers" />}
-            </div>
+            <div className="card">
+                {activeTab === 'overview' ? (
+                    <div style={{ padding: '32px' }}>
+                        {/* Summary Grid */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '40px' }}>
+                            {[
+                                { label: 'TOTAL STAFF', value: 0, color: '#6366f1' },
+                                { label: 'ACTIVE VEHICLES', value: 0, color: '#f59e0b' },
+                                { label: 'GPS DEVICES', value: 0, color: '#10b981' },
+                                { label: 'BEACONS', value: 0, color: '#ef4444' }
+                            ].map(stat => (
+                                <div key={stat.label} style={{ padding: '20px', borderRadius: '16px', background: '#f8fafc', border: '1px solid var(--border)' }}>
+                                    <div style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 800, marginBottom: '8px' }}>{stat.label}</div>
+                                    <div style={{ fontSize: '24px', fontWeight: 900, color: stat.color }}>{stat.value}</div>
+                                </div>
+                            ))}
+                        </div>
 
-            {/* Delete Confirmation Modal */}
-            {showDeleteModal && (
-                <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <h3>Delete Organisation</h3>
+                        <div style={{ marginBottom: '32px' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 900, color: 'var(--text)', marginBottom: '20px', paddingBottom: '8px', borderBottom: '1.5px solid var(--border)', display: 'inline-block' }}>BASIC INFORMATION</div>
+                            <div className="form-row">
+                                <div className="org-view-row">
+                                    <div className="org-view-label">ORGANISATION NAME</div>
+                                    <div className="org-view-value">{org.name}</div>
+                                </div>
+                                <div className="org-view-row">
+                                    <div className="org-view-label">REGISTRATION NUMBER</div>
+                                    <div className="org-view-value" style={{ fontFamily: 'monospace' }}>{org.regNumber}</div>
+                                </div>
+                                <div className="org-view-row">
+                                    <div className="org-view-label">PRIMARY EMAIL</div>
+                                    <div className="org-view-value">{org.email || 'N/A'}</div>
+                                </div>
+                                <div className="org-view-row">
+                                    <div className="org-view-label">PHONE NUMBER</div>
+                                    <div className="org-view-value">{org.phone || 'N/A'}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="modal-body">
-                            <p>Are you sure you want to delete "{org.name}"?</p>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                                This action cannot be undone.
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                className="btn modal-cancel-btn"
-                                onClick={() => setShowDeleteModal(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button className="btn modal-delete-btn" onClick={handleDeleteConfirm}>
-                                Delete
-                            </button>
+
+                        <div>
+                            <div style={{ fontSize: '12px', fontWeight: 900, color: 'var(--text)', marginBottom: '20px', paddingBottom: '8px', borderBottom: '1.5px solid var(--border)', display: 'inline-block' }}>ACCOUNT DETAILS</div>
+                            <div className="form-row">
+                                <div className="org-view-row">
+                                    <div className="org-view-label">ACCOUNT STATUS</div>
+                                    <div className="org-view-value">{org.status}</div>
+                                </div>
+                                <div className="org-view-row">
+                                    <div className="org-view-label">ONBOARDED ON</div>
+                                    <div className="org-view-value">{org.createdAt}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                ) : (
+                    <div style={{ padding: '80px 32px', textAlign: 'center' }}>
+                        <div style={{ fontSize: '48px', marginBottom: '16px' }}>{TABS.find(t => t.key === activeTab)?.icon}</div>
+                        <div style={{ fontSize: '18px', fontWeight: 900, color: 'var(--text)', marginBottom: '8px' }}>No {activeTab} available</div>
+                        <div style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 500 }}>Currently there are no {activeTab} assigned to this organization.</div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
-
-/* ---- Overview Tab ---- */
-const OverviewTab: React.FC<{ org: Organisation }> = ({ org }) => (
-    <div>
-        {/* Quick Stats */}
-        <div className="org-info-grid" style={{ marginBottom: '2rem' }}>
-            <div className="org-info-item">
-                <div className="org-info-label">Total Staff</div>
-                <div
-                    className="org-info-value"
-                    style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: 'var(--primary)',
-                    }}
-                >
-                    0
-                </div>
-            </div>
-            <div className="org-info-item">
-                <div className="org-info-label">Active Vehicles</div>
-                <div
-                    className="org-info-value"
-                    style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: 'var(--primary)',
-                    }}
-                >
-                    0
-                </div>
-            </div>
-            <div className="org-info-item">
-                <div className="org-info-label">GPS Devices</div>
-                <div
-                    className="org-info-value"
-                    style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: 'var(--primary)',
-                    }}
-                >
-                    0
-                </div>
-            </div>
-            <div className="org-info-item">
-                <div className="org-info-label">Beacon Devices</div>
-                <div
-                    className="org-info-value"
-                    style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        color: 'var(--primary)',
-                    }}
-                >
-                    0
-                </div>
-            </div>
-        </div>
-
-        <hr className="org-section-divider" />
-
-        <div
-            style={{
-                fontWeight: 700,
-                fontSize: '0.8rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                color: 'var(--text-secondary)',
-                marginBottom: '1rem',
-            }}
-        >
-            Basic Information
-        </div>
-        <div className="org-info-grid">
-            <InfoItem label="Organisation Name" value={org.name} />
-            <InfoItem label="Type" value={org.type.replace(/_/g, ' ')} />
-            <InfoItem label="Registration Number" value={org.regNumber} mono />
-            <InfoItem label="Domain" value={org.domain} mono />
-            <InfoItem label="City" value={org.city} />
-            <InfoItem label="State" value={org.state} />
-            {org.email && <InfoItem label="Email" value={org.email} />}
-            {org.phone && <InfoItem label="Phone" value={org.phone} />}
-        </div>
-
-        {org.address && (
-            <>
-                <hr className="org-section-divider" />
-                <div
-                    style={{
-                        fontWeight: 700,
-                        fontSize: '0.8rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.06em',
-                        color: 'var(--text-secondary)',
-                        marginBottom: '1rem',
-                    }}
-                >
-                    Address
-                </div>
-                <div className="org-info-item">
-                    <div className="org-info-label">Full Address</div>
-                    <div className="org-info-value">{org.address}</div>
-                </div>
-            </>
-        )}
-
-        <hr className="org-section-divider" />
-        <div
-            style={{
-                fontWeight: 700,
-                fontSize: '0.8rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.06em',
-                color: 'var(--text-secondary)',
-                marginBottom: '1rem',
-            }}
-        >
-            Account Details
-        </div>
-        <div className="org-info-grid">
-            <InfoItem label="Status" value={org.status} />
-            <InfoItem label="Created At" value={org.createdAt} />
-        </div>
-    </div>
-);
-
-const InfoItem: React.FC<{ label: string; value: string; mono?: boolean }> = ({
-    label,
-    value,
-    mono,
-}) => (
-    <div className="org-info-item">
-        <div className="org-info-label">{label}</div>
-        <div
-            className="org-info-value"
-            style={mono ? { fontFamily: "'JetBrains Mono', monospace", fontSize: '0.82rem' } : {}}
-        >
-            {value}
-        </div>
-    </div>
-);
-
-/* ---- Empty Tab placeholder ---- */
-const EmptyTab: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
-    <div className="org-empty-tab">
-        <div className="org-empty-tab-icon">{icon}</div>
-        <div style={{ fontWeight: 600, marginBottom: '0.375rem' }}>No {label} yet</div>
-        <div style={{ fontSize: '0.8rem' }}>
-            {label} assigned to this organisation will appear here.
-        </div>
-    </div>
-);
 
 export default OrgShowPage;

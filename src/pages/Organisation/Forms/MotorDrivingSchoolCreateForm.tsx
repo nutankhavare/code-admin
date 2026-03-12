@@ -1,43 +1,51 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import FileInputField from '../../../Components/Form/FileInputField';
 import InputField from '../../../Components/Form/InputField';
 import SelectField from '../../../Components/Form/SelectField';
 
-import { useAlert } from '../../../Context/AlertContext';
-import adminApi from '../../../Services/apiservice';
-
 import {
     FiFileText,
     FiMapPin,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiUser,
     FiSettings,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiAlignLeft,
     FiInfo,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiBriefcase,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiLock,
     FiFolder,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiMap,
     FiPhone,
     FiCheckCircle,
 } from 'react-icons/fi';
 
-import type { FormDropdown, StateDistrict, MotorDrivingSchoolData } from '../organisation.types';
-import type { Plan } from '../../Plan/plan.types';
+import type { MotorDrivingSchoolData } from '../organisation.types';
 
 import '../../Organisation/Organisation.css';
 
-const MotorDrivingSchoolCreateForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const navigate = useNavigate();
+// Hardcoded Dummy Data
+const dummyPlans = [
+    { label: 'Basic MDS Plan', value: '1' },
+    { label: 'Pro MDS Plan', value: '2' },
+];
 
+const dummyRegistrationTypes = [
+    { label: 'Sole Proprietorship', value: 'Sole Proprietorship' },
+    { label: 'Partnership', value: 'Partnership' },
+    { label: 'Private Limited', value: 'Private Limited' }
+];
+
+const dummyStates = [
+    { state: 'Karnataka', district: '' },
+    { state: 'Maharashtra', district: '' },
+    { state: 'Delhi', district: '' },
+    { state: 'Tamil Nadu', district: '' }
+];
+
+const dummyDistrictsMap: Record<string, {district: string}[]> = {
+    'Karnataka': [{ district: 'Bangalore' }, { district: 'Mysore' }, { district: 'Hubli' }],
+    'Maharashtra': [{ district: 'Mumbai' }, { district: 'Pune' }, { district: 'Nagpur' }],
+    'Delhi': [{ district: 'North Delhi' }, { district: 'South Delhi' }, { district: 'New Delhi' }],
+    'Tamil Nadu': [{ district: 'Chennai' }, { district: 'Coimbatore' }, { district: 'Madurai' }]
+};
+
+const MotorDrivingSchoolCreateForm = () => {
     const {
         register,
         control,
@@ -45,67 +53,20 @@ const MotorDrivingSchoolCreateForm = () => {
         formState: { errors },
     } = useFormContext<MotorDrivingSchoolData>();
 
-    const { showAlert } = useAlert();
-
-    const [plans, setPlans] = useState<Plan[]>([]);
-    const [registrationTypes, setRegistrationTypes] = useState<FormDropdown[]>([]);
-    const [states, setStates] = useState<StateDistrict[]>([]);
-    const [districts, setDistricts] = useState<StateDistrict[]>([]);
-    const [loading, setLoading] = useState(true);
-
     const selectedState = useWatch({ control, name: 'state' });
+
+     // Handle District Reset on State Change
+     useEffect(() => {
+        setValue('district', '');
+    }, [selectedState, setValue]);
+
+    const currentDistricts = selectedState ? dummyDistrictsMap[selectedState] || [] : [];
+
 
     useEffect(() => {
         setValue('consent_timestamp', new Date().toISOString());
     }, [setValue]);
 
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                const [plansRes, regTypesRes, statesRes] = await Promise.all([
-                    adminApi.get('/plans-by-type?type=motor_driving_school'),
-                    adminApi.get(
-                        '/masters/forms/dropdowns/fields?type=motor_driving_school&field=registration_type'
-                    ),
-                    adminApi.get('/masters/forms/dropdowns/states'),
-                ]);
-
-                setPlans(plansRes.data.data || []);
-                setRegistrationTypes(regTypesRes.data || []);
-                setStates(statesRes.data || []);
-            } catch {
-                showAlert('Failed to load form data', 'error');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchInitialData();
-    }, [showAlert]);
-
-    useEffect(() => {
-        const fetchDistricts = async () => {
-            if (!selectedState) {
-                setDistricts([]);
-                setValue('district', '');
-                return;
-            }
-
-            try {
-                const res = await adminApi.get(
-                    `/masters/forms/dropdowns/districts/${selectedState}`
-                );
-                setDistricts(res.data || []);
-                setValue('district', '');
-            } catch {
-                setDistricts([]);
-            }
-        };
-
-        fetchDistricts();
-    }, [selectedState, setValue]);
-
-    if (loading) return <div className="p-10 text-center">Loading...</div>;
 
     const uploadFields = [
         { label: 'RTO License Copy', name: 'license_certificate_doc' },
@@ -123,10 +84,10 @@ const MotorDrivingSchoolCreateForm = () => {
     ];
 
     return (
-        <div className="rp-form-card rp-form-wide">
+        <div className="org-section-body">
             {/* 0. Info Banner */}
-            <div className="rp-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                <div className="rp-section-body">
+            <div className="org-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                <div className="org-section-body">
                     <div
                         style={{
                             background: '#eff6ff',
@@ -168,13 +129,13 @@ const MotorDrivingSchoolCreateForm = () => {
             </div>
 
             {/* 1. BASIC INFORMATION */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiFileText className="rp-section-icon" style={{ color: '#6366f1' }} /> BASIC
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFileText className="org-section-icon" style={{ color: '#6366f1' }} /> BASIC
                     INFORMATION
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Driving School Name"
                             name="driving_school_name"
@@ -189,7 +150,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             errors={errors}
                             required
                         />
-                        <InputField
+                         <InputField
                             label="License Issue Date"
                             name="license_issue_date"
                             type="date"
@@ -210,7 +171,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             name="registration_type"
                             register={register}
                             errors={errors}
-                            options={registrationTypes}
+                            options={dummyRegistrationTypes}
                             required
                         />
                         <InputField
@@ -226,12 +187,14 @@ const MotorDrivingSchoolCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, message: 'Invalid PAN format' } }}
                         />
                         <InputField
                             label="GST Number"
                             name="gst_number"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, message: 'Invalid GST format' } }}
                         />
                         <InputField
                             label="UDYAM / MSME Number"
@@ -244,7 +207,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             name="subscription_plan"
                             register={register}
                             errors={errors}
-                            options={plans.map((p) => ({ label: p.name, value: p.id }))}
+                            options={dummyPlans}
                             required
                         />
                     </div>
@@ -252,13 +215,13 @@ const MotorDrivingSchoolCreateForm = () => {
             </div>
 
             {/* 2. CONTACT DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiPhone className="rp-section-icon" style={{ color: '#f59e0b' }} /> CONTACT
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiPhone className="org-section-icon" style={{ color: '#f59e0b' }} /> CONTACT
                     DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Contact Person Name"
                             name="primary_person_name"
@@ -272,6 +235,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Contact Email"
@@ -280,6 +244,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Emergency Contact Name"
@@ -294,19 +259,20 @@ const MotorDrivingSchoolCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 3. ADDRESS DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiMapPin className="rp-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiMapPin className="org-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
                     DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Address Line 1"
                             name="address_line_1"
@@ -327,12 +293,12 @@ const MotorDrivingSchoolCreateForm = () => {
                             errors={errors}
                             required
                         />
-                        <SelectField
+                         <SelectField
                             label="State"
                             name="state"
                             register={register}
                             errors={errors}
-                            options={states.map((s) => ({ label: s.state, value: s.state }))}
+                            options={dummyStates.map((s) => ({ label: s.state, value: s.state }))}
                             required
                         />
                         <SelectField
@@ -340,7 +306,7 @@ const MotorDrivingSchoolCreateForm = () => {
                             name="district"
                             register={register}
                             errors={errors}
-                            options={districts.map((d) => ({
+                            options={currentDistricts.map((d) => ({
                                 label: d.district,
                                 value: d.district,
                             }))}
@@ -359,19 +325,20 @@ const MotorDrivingSchoolCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{6}$/, message: 'Must be exactly 6 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 4. OPERATIONAL DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiSettings className="rp-section-icon" style={{ color: '#8b5cf6' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiSettings className="org-section-icon" style={{ color: '#8b5cf6' }} />{' '}
                     OPERATIONAL & SAFETY MAPPING
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Training Vehicles Count"
                             name="training_vehicle_count"
@@ -416,16 +383,21 @@ const MotorDrivingSchoolCreateForm = () => {
             </div>
 
             {/* 5. DOCUMENTS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiFolder className="rp-section-icon" style={{ color: '#f43f5e' }} /> DOCUMENTS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFolder className="org-section-icon" style={{ color: '#f43f5e' }} /> DOCUMENTS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
                         {uploadFields.map((doc) => (
-                            <div key={doc.name} className="rp-upload-box">
-                                <div className="rp-upload-icon">⬆️</div>
-                                <div className="rp-upload-label">{doc.label}</div>
+                             <div key={doc.name} style={{
+                                padding: '1rem',
+                                border: '1px dashed #cbd5e1',
+                                borderRadius: '8px',
+                                textAlign: 'center',
+                                background: '#f8fafc'
+                            }}>
+                                <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>{doc.label}</div>
                                 <FileInputField
                                     label=""
                                     name={doc.name}
@@ -439,28 +411,46 @@ const MotorDrivingSchoolCreateForm = () => {
             </div>
 
             {/* 6. REMARKS & CONSENT */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiCheckCircle className="rp-section-icon" style={{ color: '#64748b' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiCheckCircle className="org-section-icon" style={{ color: '#64748b' }} />{' '}
                     REMARKS & CONSENT
                 </div>
-                <div className="rp-section-body">
+                <div className="org-section-body">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div className="rp-consent-box">
-                            <label className="rp-consent-label">
+                        <div style={{ 
+                            background: '#f8fafc', 
+                            padding: '1rem', 
+                            borderRadius: '8px', 
+                            border: '1px solid #e2e8f0',
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            gap: '0.5rem' 
+                        }}>
+                            <label style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                                color: '#334155'
+                            }}>
                                 <input
                                     type="checkbox"
-                                    className="rp-consent-checkbox"
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    style={{
+                                        width: '1.25rem',
+                                        height: '1.25rem',
+                                        accentColor: '#3b82f6',
+                                        cursor: 'pointer'
+                                    }}
                                     {...register('consent_checkbox' as any, {
                                         required: 'Consent is required',
                                     })}
                                 />
-                                I agree to VanLoka's safety and compliance onboarding rules and
-                                policies
+                                I agree to VanLoka's safety and compliance onboarding rules and policies
                             </label>
                             {errors.consent_checkbox && (
-                                <div className="rp-consent-error">Consent is required!</div>
+                                <div style={{ color: '#ef4444', fontSize: '0.8rem', paddingLeft: '2rem' }}>Consent is required!</div>
                             )}
                         </div>
 

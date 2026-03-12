@@ -1,5 +1,7 @@
-import { useFormContext } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+
+// Components
 import FileInputField from '../../../Components/Form/FileInputField';
 import InputField from '../../../Components/Form/InputField';
 import SelectField from '../../../Components/Form/SelectField';
@@ -11,31 +13,56 @@ import {
     FiSettings,
     FiAlignLeft,
     FiInfo,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiBriefcase,
     FiLock,
     FiFolder,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiMap,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiAward,
 } from 'react-icons/fi';
+
 import type { InstitutionData } from '../organisation.types';
 
+// Hardcoded Dummy Data
+const dummyPlans = [
+    { label: 'Basic', value: '1' },
+    { label: 'Premium', value: '2' },
+];
+
+const dummyRegistrationTypes = [
+    { label: 'Trust', value: 'Trust' },
+    { label: 'Society', value: 'Society' },
+    { label: 'Section 8 Company', value: 'Section 8 Company' }
+];
+
+const dummyStates = [
+    { state: 'Karnataka', district: '' },
+    { state: 'Maharashtra', district: '' },
+    { state: 'Delhi', district: '' },
+    { state: 'Tamil Nadu', district: '' }
+];
+
+const dummyDistrictsMap: Record<string, {district: string}[]> = {
+    'Karnataka': [{ district: 'Bangalore' }, { district: 'Mysore' }, { district: 'Hubli' }],
+    'Maharashtra': [{ district: 'Mumbai' }, { district: 'Pune' }, { district: 'Nagpur' }],
+    'Delhi': [{ district: 'North Delhi' }, { district: 'South Delhi' }, { district: 'New Delhi' }],
+    'Tamil Nadu': [{ district: 'Chennai' }, { district: 'Coimbatore' }, { district: 'Madurai' }]
+};
+
 const InstitutionCreateForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const navigate = useNavigate();
     const {
         register,
-        formState: { errors },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         control,
+        setValue,
+        formState: { errors },
     } = useFormContext<InstitutionData>();
 
-    const plans = [
-        { label: 'Basic', value: 1 },
-        { label: 'Premium', value: 2 },
-    ];
+    // Watch State Selection
+    const selectedState = useWatch({ control, name: 'state' });
+
+     // Handle District Reset on State Change
+     useEffect(() => {
+        setValue('district', '');
+    }, [selectedState, setValue]);
+
+    const currentDistricts = selectedState ? dummyDistrictsMap[selectedState] || [] : [];
+
 
     const uploadFields = [
         { label: 'Registration Certificate', name: 'registration_certificate_doc' },
@@ -54,10 +81,10 @@ const InstitutionCreateForm = () => {
     ];
 
     return (
-        <div className="rp-form-card rp-form-wide">
+        <div className="org-section-body">
             {/* 0. Info Banner */}
-            <div className="form-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                <div className="form-section-body">
+            <div className="org-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                <div className="org-section-body">
                     <div
                         style={{
                             background: '#eff6ff',
@@ -99,13 +126,13 @@ const InstitutionCreateForm = () => {
             </div>
 
             {/* 1. Basic Information */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiFileText className="rp-section-icon" style={{ color: '#6366f1' }} /> BASIC
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFileText className="org-section-icon" style={{ color: '#6366f1' }} /> BASIC
                     INFORMATION
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Institution Name"
                             name="institution_name"
@@ -113,18 +140,18 @@ const InstitutionCreateForm = () => {
                             errors={errors}
                             required
                         />
-                        {/* Removed redundant Institution Type field as per user request */}
                         <InputField
                             label="Affiliation Board / University"
                             name="affiliation_board_university"
                             register={register}
                             errors={errors}
                         />
-                        <InputField
+                        <SelectField
                             label="Registration Type"
                             name="registration_type"
                             register={register}
                             errors={errors}
+                            options={dummyRegistrationTypes}
                             required
                         />
                         <InputField
@@ -153,12 +180,14 @@ const InstitutionCreateForm = () => {
                             name="gst_number"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, message: 'Invalid GST format' } }}
                         />
                         <InputField
                             label="PAN Number"
                             name="pan_number"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, message: 'Invalid PAN format' } }}
                         />
                         <InputField
                             label="Institution Email"
@@ -167,6 +196,7 @@ const InstitutionCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Institution Phone Number"
@@ -174,6 +204,7 @@ const InstitutionCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Website Domain"
@@ -187,7 +218,7 @@ const InstitutionCreateForm = () => {
                             name="subscription_plan"
                             register={register}
                             errors={errors}
-                            options={plans}
+                            options={dummyPlans}
                             placeholder="Select Plan"
                             required
                         />
@@ -196,13 +227,13 @@ const InstitutionCreateForm = () => {
             </div>
 
             {/* 2. Operational Details */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiSettings className="rp-section-icon" style={{ color: '#f59e0b' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiSettings className="org-section-icon" style={{ color: '#f59e0b' }} />{' '}
                     OPERATIONAL DETAILS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Number of Students"
                             name="number_of_students"
@@ -250,13 +281,13 @@ const InstitutionCreateForm = () => {
             </div>
 
             {/* 3. Address Details */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiMapPin className="rp-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiMapPin className="org-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
                     DETAILS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                     <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Address Line 1"
                             name="address_line_1"
@@ -270,11 +301,25 @@ const InstitutionCreateForm = () => {
                             register={register}
                             errors={errors}
                         />
-                        <InputField
-                            label="Landmark"
-                            name="landmark"
+                         <SelectField
+                            label="State"
+                            name="state"
                             register={register}
                             errors={errors}
+                            options={dummyStates.map((s) => ({ label: s.state, value: s.state }))}
+                            required
+                        />
+                        <SelectField
+                            label="District"
+                            name="district"
+                            register={register}
+                            errors={errors}
+                            options={currentDistricts.map((d) => ({
+                                label: d.district,
+                                value: d.district,
+                            }))}
+                            disabled={!selectedState}
+                            required
                         />
                         <InputField
                             label="City"
@@ -283,42 +328,35 @@ const InstitutionCreateForm = () => {
                             errors={errors}
                             required
                         />
-                        <InputField
-                            label="District"
-                            name="district"
-                            register={register}
-                            errors={errors}
-                            required
-                        />
-                        <InputField
-                            label="State"
-                            name="state"
-                            register={register}
-                            errors={errors}
-                            required
-                        />
-                        <InputField
-                            label="PIN Code"
+                         <InputField
+                            label="Pincode"
                             name="pin_code"
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{6}$/, message: 'Must be exactly 6 digits' } }}
+                        />
+                        <InputField
+                            label="Landmark"
+                            name="landmark"
+                            register={register}
+                            errors={errors}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 4. Contact Persons */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiUser className="rp-section-icon" style={{ color: '#3b82f6' }} /> CONTACT
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiUser className="org-section-icon" style={{ color: '#3b82f6' }} /> CONTACT
                     PERSONS
                 </div>
-                <div className="form-section-body">
+                <div className="org-section-body">
                     <div style={{ marginBottom: '1rem' }}>
-                        <b>Primary</b>
+                         <b style={{ fontSize: '13px' }}>Primary Contact</b>
                     </div>
-                    <div className="form-grid">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Full Name"
                             name="primary_person_name"
@@ -333,6 +371,7 @@ const InstitutionCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Primary Phone"
@@ -340,18 +379,20 @@ const InstitutionCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Secondary Phone"
                             name="primary_person_phone_2"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                     <div style={{ margin: '1.5rem 0 1rem 0' }}>
-                        <b>Secondary</b>
+                         <b style={{ fontSize: '13px' }}>Secondary Contact</b>
                     </div>
-                    <div className="form-grid">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Full Name"
                             name="secondary_person_name"
@@ -364,31 +405,34 @@ const InstitutionCreateForm = () => {
                             type="email"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Primary Phone"
                             name="secondary_person_phone_1"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Secondary Phone"
                             name="secondary_person_phone_2"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
-            {/* 5. Login Credentials */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiLock className="rp-section-icon" style={{ color: '#10b981' }} /> LOGIN
+             {/* 5. Login Credentials */}
+             <div className="org-section">
+                <div className="org-section-title">
+                    <FiLock className="org-section-icon" style={{ color: '#10b981' }} /> LOGIN
                     CREDENTIALS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Email (Username)"
                             name="email"
@@ -397,6 +441,7 @@ const InstitutionCreateForm = () => {
                             errors={errors}
                             required
                             placeholder="admin@admin.com"
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Password"
@@ -408,12 +453,19 @@ const InstitutionCreateForm = () => {
                             placeholder="••••••••"
                         />
                     </div>
-                    <div
-                        className="rp-info-banner"
-                        style={{ background: '#fef3c7', color: '#92400e', marginTop: '1rem' }}
+                     <div
+                        style={{
+                            background: '#fef3c7',
+                            borderRadius: '8px',
+                            padding: '0.75rem',
+                            marginTop: '1rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                        }}
                     >
                         <span style={{ color: '#f59e0b', fontSize: '1.25rem' }}>⚠️</span>
-                        <span className="rp-info-text">
+                        <span style={{ fontSize: '0.9rem', color: '#92400e' }}>
                             Ensure the password is strong and shared securely with the institution
                             admin.
                         </span>
@@ -422,27 +474,21 @@ const InstitutionCreateForm = () => {
             </div>
 
             {/* 6. Documents Section */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiFolder className="rp-section-icon" style={{ color: '#a855f7' }} /> DOCUMENTS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFolder className="org-section-icon" style={{ color: '#a855f7' }} /> DOCUMENTS
                 </div>
-                <div className="form-section-body">
-                    <div
-                        className="rp-info-banner"
-                        style={{ background: '#e0f2fe', color: '#0369a1', marginBottom: '1.5rem' }}
-                    >
-                        <span className="rp-info-icon">ℹ️</span>
-                        <span className="rp-info-text">
-                            <b>Document Upload Guidelines</b> Accepted formats: PDF, JPG, PNG (Max
-                            5MB per file). Ensure all documents are clear and readable.
-                        </span>
-                    </div>
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
                         {uploadFields.map((field) => (
-                            <div key={field.name} className="rp-upload-box">
-                                <div className="rp-upload-icon">⬆️</div>
-                                <div className="rp-upload-label">{field.label}</div>
-                                <div className="rp-upload-desc">Click to upload</div>
+                            <div key={field.name} style={{
+                                padding: '1rem',
+                                border: '1px dashed #cbd5e1',
+                                borderRadius: '8px',
+                                textAlign: 'center',
+                                background: '#f8fafc'
+                            }}>
+                                <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>{field.label}</div>
                                 <FileInputField
                                     label=""
                                     name={field.name}
@@ -456,12 +502,12 @@ const InstitutionCreateForm = () => {
             </div>
 
             {/* 7. Remarks Section */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiAlignLeft className="rp-section-icon" style={{ color: '#64748b' }} /> REMARKS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiAlignLeft className="org-section-icon" style={{ color: '#64748b' }} /> REMARKS
                     / NOTES
                 </div>
-                <div className="form-section-body">
+                <div className="org-section-body">
                     <textarea
                         className="form-input"
                         rows={3}

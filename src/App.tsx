@@ -18,7 +18,7 @@ import { ReportsPage } from './pages/Report';
 
 import AppUsers from './pages/AppUser/AppIndex';
 import { FeedbacksPage as Feedbacks } from './pages/Feedback';
-import Staffs from './pages/Staff/Staff';
+import Staff from "./pages/Staff/Staff"
 
 // Roles
 import AddRole from './pages/RolePermission/AddRole';
@@ -45,6 +45,10 @@ import EditPlan from './pages/Plan/EditPlan';
 import Plans from './pages/Plan/Plan';
 import ViewPlan from './pages/Plan/ViewPlan';
 
+//staff
+
+import StaffCreate from './pages/Staff/StaffCreate';
+
 // Organisations
 import OrgCreatePage from './pages/Organisation/OrgCreatePage';
 import OfficeEditPage from './pages/Organisation/OfficeEditPage';
@@ -54,6 +58,12 @@ import VendorEditPage from './pages/Organisation/VendorEditPage';
 import Organisations from './pages/Organisation/OrgIndexPage';
 import OrgShowPage from './pages/Organisation/OrgShowPage';
 import { initialOrganisations, type Organisation } from './pages/Organisation/organisation.types';
+
+
+//supplier
+import SupplierManagementIndex from "./pages/Supplier/SupIndex";
+import SupplierManagementCreate from "./pages/Supplier/SupCreate";
+import SupplierDevicesPage from "./pages/Supplier/SupDevice";
 
 // users
 import EditUser from './pages/AppUser/EditUser';
@@ -138,7 +148,7 @@ const ProtectedLayout = () => {
                         {/* Dashboard */}
                         <Route
                             path="/dashboard"
-                            element={<DashboardPage onViewSessions={() => {}} />}
+                            element={<DashboardPage onViewSessions={() => { }} />}
                         />
 
                         {/* Roles */}
@@ -177,6 +187,11 @@ const ProtectedLayout = () => {
                         <Route path="/masters/gps-devices/edit/:id" element={<EditGpsDevice />} />
                         <Route path="/masters/gps-devices/view/:id" element={<ViewGpsDevice />} />
 
+                        {/* Staff */}
+                        <Route path="/staff" element={<Staff />} />
+                        <Route path="/staff/create" element={<StaffCreate />} />
+                        <Route path="/staff/edit/:id" element={<StaffCreate />} />
+
                         {/* Plans */}
                         <Route path="/Plan" element={<Plans />} />
                         <Route path="/Plan/add" element={<AddPlan />} />
@@ -193,28 +208,36 @@ const ProtectedLayout = () => {
                         />
                         <Route path="/Organisation/edit/mds/:id" element={<MDSEditPage />} />
                         <Route path="/Organisation/edit/vendor/:id" element={<VendorEditPage />} />
+                        <Route path="/Organisation/view/:id" element={<OrgShowPage />} />
+
+                        {/* Supplier */}
+                        <Route path="/suppliers" element={<SupplierManagementIndex />} />
+
+                        {/* <Route
+                            path="/suppliers"
+                            element={<SupplierManagementIndex />}
+                        /> */}
+
                         <Route
-                            path="/Organisation/view/:id"
-                            element={
-                                <OrgShowPage
-                                    organisations={[]}
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                    onDelete={function (id: number): void {
-                                        throw new Error('Function not implemented.');
-                                    }}
-                                />
-                            }
+                            path="/suppliers/create"
+                            element={<SupplierManagementCreate />}
+                        />
+
+                        <Route
+                            path="/suppliers/:id/devices"
+                            element={<SupplierDevicesPage />}
                         />
 
                         {/* users */}
                         <Route path="/app-users/view/:id" element={<ViewUser />} />
                         <Route path="/app-users/edit/:id" element={<EditUser />} />
 
+
                         {/* Other Pages */}
-                        <Route path="/Staff" element={<Staffs />} />
+
                         <Route path="/app-users" element={<AppUsers />} />
 
-                        <Route path="/Feedback" element={<Feedbacks openModal={() => {}} />} />
+                        <Route path="/Feedback" element={<Feedbacks openModal={() => { }} />} />
                         <Route path="/reports" element={<ReportsPage />} />
                         <Route path="/settings" element={<SettingPage />} />
 

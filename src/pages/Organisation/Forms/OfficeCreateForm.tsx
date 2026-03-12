@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react';
-import adminApi from '../../../Services/apiservice';
+import { useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 // Components
 import DaysCheckboxGroup from '../../../Components/Form/DaysCheckboxGroup';
 import FileInputField from '../../../Components/Form/FileInputField';
 import InputField from '../../../Components/Form/InputField';
 import SelectField from '../../../Components/Form/SelectField';
-
-import { useAlert } from '../../../Context/AlertContext';
 
 import {
     FiFileText,
@@ -18,21 +14,42 @@ import {
     FiSettings,
     FiAlignLeft,
     FiInfo,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiBriefcase,
     FiLock,
     FiFolder,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiMap,
 } from 'react-icons/fi';
 
-// Types
-import type { FormDropdown, StateDistrict, OfficeData } from '../organisation.types';
-import type { Plan } from '../../Plan/plan.types';
+import type { OfficeData } from '../organisation.types';
+
+// Hardcoded Dummy Data
+const dummyPlans = [
+    { id: 1, name: 'Starter', price: 999 },
+    { id: 2, name: 'Professional', price: 2999 },
+    { id: 3, name: 'Enterprise', price: 9999 }
+];
+
+const dummyRegistrationTypes = [
+    { label: 'Private Limited', value: 'Private Limited' },
+    { label: 'Public Limited', value: 'Public Limited' },
+    { label: 'Partnership', value: 'Partnership' },
+    { label: 'Proprietorship', value: 'Proprietorship' },
+    { label: 'LLP', value: 'LLP' }
+];
+
+const dummyStates = [
+    { state: 'Karnataka', district: '' },
+    { state: 'Maharashtra', district: '' },
+    { state: 'Delhi', district: '' },
+    { state: 'Tamil Nadu', district: '' }
+];
+
+const dummyDistrictsMap: Record<string, {district: string}[]> = {
+    'Karnataka': [{ district: 'Bangalore' }, { district: 'Mysore' }, { district: 'Hubli' }],
+    'Maharashtra': [{ district: 'Mumbai' }, { district: 'Pune' }, { district: 'Nagpur' }],
+    'Delhi': [{ district: 'North Delhi' }, { district: 'South Delhi' }, { district: 'New Delhi' }],
+    'Tamil Nadu': [{ district: 'Chennai' }, { district: 'Coimbatore' }, { district: 'Madurai' }]
+};
 
 const OfficeCreateForm = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const navigate = useNavigate();
     const {
         register,
         control,
@@ -40,105 +57,15 @@ const OfficeCreateForm = () => {
         formState: { errors },
     } = useFormContext<OfficeData>();
 
-    const { showAlert } = useAlert();
-
-    // Data State
-    const [plans, setPlans] = useState<Plan[]>([]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [organisationTypes, setOrganisationTypes] = useState<FormDropdown[]>([]);
-    const [registrationTypes, setRegistrationTypes] = useState<FormDropdown[]>([]);
-    const [states, setStates] = useState<StateDistrict[]>([]);
-    const [districts, setDistricts] = useState<StateDistrict[]>([]);
-    const [loading, setLoading] = useState(true);
-
     // Watch State Selection
     const selectedState = useWatch({ control, name: 'state' });
 
-    // 1. Fetch Initial Data
+    // Handle District Reset on State Change
     useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                setLoading(true);
-                const [plansRes, orgTypesRes, regTypesRes, statesRes] = await Promise.all([
-                    adminApi.get('/plans-by-type?type=office'),
-                    adminApi.get(
-                        `/masters/forms/dropdowns/fields?type=office&field=organisation_type`
-                    ),
-                    adminApi.get(
-                        `/masters/forms/dropdowns/fields?type=office&field=registration_type`
-                    ),
-                    adminApi.get(`/masters/forms/dropdowns/states`),
-                ]);
-
-                setPlans(plansRes.data.data || []);
-                setOrganisationTypes(orgTypesRes.data || []);
-                setRegistrationTypes(regTypesRes.data || []);
-                setStates(statesRes.data || []);
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error('Error fetching form data:', error);
-                showAlert('error', 'Failed to load form data - using fallback data.');
-                // Fallback data for demonstration without backend
-                setPlans([
-                    {
-                        id: 1,
-                        name: 'Starter',
-                        price: 999,
-                        billing: 'Monthly',
-                        users: 10,
-                        features: [],
-                        status: 'Active',
-                        subscribers: 0,
-                    },
-                ]);
-                setOrganisationTypes([{ label: 'Private Limited', value: 'Private Limited' }]);
-                setRegistrationTypes([
-                    { label: 'Company', value: 'Company' },
-                    { label: 'Partnership', value: 'Partnership' },
-                ]);
-                setStates([
-                    { state: 'Karnataka', district: '' },
-                    { state: 'Maharashtra', district: '' },
-                ]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchInitialData();
-    }, [showAlert]);
-
-    // 2. Fetch Districts on State Change
-    useEffect(() => {
-        const fetchDistricts = async () => {
-            if (!selectedState) {
-                setDistricts([]);
-                setValue('district', '');
-                return;
-            }
-
-            try {
-                const response = await adminApi.get(
-                    `/masters/forms/dropdowns/districts/${selectedState}`
-                );
-                setDistricts(response.data || []);
-                setValue('district', '');
-            } catch (err) {
-                // eslint-disable-next-line no-console
-                console.error('Error loading districts', err);
-                setDistricts([]);
-            }
-        };
-
-        fetchDistricts();
+        setValue('district', '');
     }, [selectedState, setValue]);
 
-    if (loading)
-        return (
-            <div className="p-10 flex justify-center">
-                <div>Loading...</div>
-            </div>
-        );
+    const currentDistricts = selectedState ? dummyDistrictsMap[selectedState] || [] : [];
 
     const uploadFields = [
         { label: 'Registration Certificate', name: 'registration_certificate_doc' },
@@ -155,10 +82,10 @@ const OfficeCreateForm = () => {
     ];
 
     return (
-        <div className="rp-form-card rp-form-wide">
+        <div className="org-section-body">
             {/* 0. Info Banner */}
-            <div className="form-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                <div className="form-section-body">
+            <div className="org-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                <div className="org-section-body">
                     <div
                         style={{
                             background: '#eff6ff',
@@ -200,13 +127,13 @@ const OfficeCreateForm = () => {
             </div>
 
             {/* 1. Basic Information */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiFileText className="rp-section-icon" style={{ color: '#6366f1' }} /> BASIC
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFileText className="org-section-icon" style={{ color: '#6366f1' }} /> BASIC
                     INFORMATION
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Organisation Name"
                             name="organisation_name"
@@ -214,16 +141,12 @@ const OfficeCreateForm = () => {
                             errors={errors}
                             required
                         />
-                        {/* Removed redundant Organisation Type field */}
                         <SelectField
                             label="Registration Type"
                             name="registration_type"
                             register={register}
                             errors={errors}
-                            options={registrationTypes.map((d) => ({
-                                label: d.value,
-                                value: d.value,
-                            }))}
+                            options={dummyRegistrationTypes}
                             required
                         />
                         <InputField
@@ -252,12 +175,14 @@ const OfficeCreateForm = () => {
                             name="gst_number"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, message: 'Invalid GST format' } }}
                         />
                         <InputField
                             label="PAN Number"
                             name="pan_number"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, message: 'Invalid PAN format' } }}
                         />
                         <InputField
                             label="Tan Number"
@@ -272,6 +197,7 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Organisation Phone"
@@ -279,6 +205,7 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Website / Domain"
@@ -292,7 +219,7 @@ const OfficeCreateForm = () => {
                             name="subscription_plan"
                             register={register}
                             errors={errors}
-                            options={plans.map((p) => ({ label: p.name, value: p.id }))}
+                            options={dummyPlans.map((p) => ({ label: p.name, value: String(p.id) }))}
                             required
                         />
                     </div>
@@ -300,13 +227,13 @@ const OfficeCreateForm = () => {
             </div>
 
             {/* 2. Operational Details */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiSettings className="rp-section-icon" style={{ color: '#f59e0b' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiSettings className="org-section-icon" style={{ color: '#f59e0b' }} />{' '}
                     OPERATIONAL DETAILS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Total Employees"
                             name="number_of_employees"
@@ -369,13 +296,13 @@ const OfficeCreateForm = () => {
             </div>
 
             {/* 3. Address Details */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiMapPin className="rp-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiMapPin className="org-section-icon" style={{ color: '#ef4444' }} /> ADDRESS
                     DETAILS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Address Line 1"
                             name="address_line_1"
@@ -394,7 +321,7 @@ const OfficeCreateForm = () => {
                             name="state"
                             register={register}
                             errors={errors}
-                            options={states.map((s) => ({ label: s.state, value: s.state }))}
+                            options={dummyStates.map((s) => ({ label: s.state, value: s.state }))}
                             required
                         />
                         <SelectField
@@ -402,7 +329,7 @@ const OfficeCreateForm = () => {
                             name="district"
                             register={register}
                             errors={errors}
-                            options={districts.map((d) => ({
+                            options={currentDistricts.map((d) => ({
                                 label: d.district,
                                 value: d.district,
                             }))}
@@ -422,6 +349,7 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{6}$/, message: 'Must be exactly 6 digits' } }}
                         />
                         <InputField
                             label="Landmark"
@@ -434,16 +362,16 @@ const OfficeCreateForm = () => {
             </div>
 
             {/* 4. Contact Persons */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiUser className="rp-section-icon" style={{ color: '#3b82f6' }} /> CONTACT
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiUser className="org-section-icon" style={{ color: '#3b82f6' }} /> CONTACT
                     PERSONS
                 </div>
-                <div className="form-section-body">
+                <div className="org-section-body">
                     <div style={{ marginBottom: '1rem' }}>
-                        <b>Primary</b>
+                        <b style={{ fontSize: '13px' }}>Primary Contact</b>
                     </div>
-                    <div className="form-grid">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Full Name"
                             name="primary_person_name"
@@ -458,6 +386,7 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Phone 1"
@@ -465,18 +394,20 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Phone 2"
                             name="primary_person_phone_2"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                     <div style={{ margin: '1.5rem 0 1rem 0' }}>
-                        <b>Secondary</b>
+                        <b style={{ fontSize: '13px' }}>Secondary Contact</b>
                     </div>
-                    <div className="form-grid">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Full Name"
                             name="secondary_person_name"
@@ -489,31 +420,34 @@ const OfficeCreateForm = () => {
                             type="email"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Phone 1"
                             name="secondary_person_phone_1"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Phone 2"
                             name="secondary_person_phone_2"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 5. Login Credentials */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiLock className="rp-section-icon" style={{ color: '#10b981' }} /> LOGIN
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiLock className="org-section-icon" style={{ color: '#10b981' }} /> LOGIN
                     CREDENTIALS
                 </div>
-                <div className="form-section-body">
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Admin Email (Username)"
                             name="email"
@@ -521,6 +455,7 @@ const OfficeCreateForm = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Password"
@@ -531,48 +466,25 @@ const OfficeCreateForm = () => {
                             required
                         />
                     </div>
-                    <div
-                        style={{
-                            background: '#fef3c7',
-                            borderRadius: '8px',
-                            padding: '0.75rem',
-                            marginTop: '1rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                        }}
-                    >
-                        <span style={{ color: '#f59e0b', fontSize: '1.25rem' }}>⚠️</span>
-                        <span style={{ fontSize: '0.9rem', color: '#92400e' }}>
-                            Ensure the password is strong and shared securely with the organization
-                            admin.
-                        </span>
-                    </div>
                 </div>
             </div>
 
             {/* 6. Documents Section */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiFolder className="rp-section-icon" style={{ color: '#a855f7' }} /> DOCUMENTS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFolder className="org-section-icon" style={{ color: '#a855f7' }} /> DOCUMENTS
                 </div>
-                <div className="form-section-body">
-                    <div
-                        className="rp-info-banner"
-                        style={{ background: '#e0f2fe', color: '#0369a1', marginBottom: '1.5rem' }}
-                    >
-                        <span className="rp-info-icon">ℹ️</span>
-                        <span className="rp-info-text">
-                            <b>Document Upload Guidelines</b> Accepted formats: PDF, JPG, PNG (Max
-                            5MB per file). Ensure all documents are clear and readable.
-                        </span>
-                    </div>
-                    <div className="form-grid">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
                         {uploadFields.map((field) => (
-                            <div key={field.name} className="rp-upload-box">
-                                <div className="rp-upload-icon">⬆️</div>
-                                <div className="rp-upload-label">{field.label}</div>
-                                <div className="rp-upload-desc">Click to upload</div>
+                            <div key={field.name} style={{
+                                padding: '1rem',
+                                border: '1px dashed #cbd5e1',
+                                borderRadius: '8px',
+                                textAlign: 'center',
+                                background: '#f8fafc'
+                            }}>
+                                <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>{field.label}</div>
                                 <FileInputField
                                     label=""
                                     name={field.name}
@@ -586,12 +498,12 @@ const OfficeCreateForm = () => {
             </div>
 
             {/* 7. Remarks Section */}
-            <div className="form-section">
-                <div className="rp-section-title">
-                    <FiAlignLeft className="rp-section-icon" style={{ color: '#64748b' }} /> REMARKS
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiAlignLeft className="org-section-icon" style={{ color: '#64748b' }} /> REMARKS
                     / NOTES
                 </div>
-                <div className="form-section-body">
+                <div className="org-section-body">
                     <textarea
                         className="form-input"
                         rows={3}

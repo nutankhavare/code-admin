@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { FieldErrors, UseFormRegister, RegisterOptions } from 'react-hook-form';
 
 interface FileInputFieldProps {
     label: string;
@@ -10,6 +10,7 @@ interface FileInputFieldProps {
     existingFile?: string;
     accept?: string;
     required?: boolean;
+    validation?: RegisterOptions;
 }
 
 const FileInputField: React.FC<FileInputFieldProps> = ({
@@ -20,6 +21,7 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
     existingFile,
     accept = '.pdf,.jpg,.jpeg,.png,.doc,.docx',
     required = false,
+    validation = {},
 }) => {
     const [fileName, setFileName] = useState<string>('');
 
@@ -30,6 +32,11 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
         } else {
             setFileName('');
         }
+    };
+
+    const rules = {
+        ...validation,
+        ...(required && !validation.required ? { required: 'This file is required' } : {}),
     };
 
     return (
@@ -48,7 +55,7 @@ const FileInputField: React.FC<FileInputFieldProps> = ({
                 <input
                     id={name}
                     type="file"
-                    {...register(name)}
+                    {...register(name, rules)}
                     accept={accept}
                     onChange={handleFileChange}
                     className="hidden"

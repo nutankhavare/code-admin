@@ -1,48 +1,35 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+
 import InputField from '../../../Components/Form/InputField';
 
 import {
     FiFileText,
     FiMapPin,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiUser,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiSettings,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiAlignLeft,
     FiInfo,
-    FiBriefcase,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiLock,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiFolder,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    FiMap,
     FiPhone,
     FiCheckCircle,
     FiShoppingCart,
     FiCreditCard,
     FiTruck,
+    FiBriefcase,
 } from 'react-icons/fi';
+
 import type { VendorData } from '../organisation.types';
 
 import '../../Organisation/Organisation.css';
 
 const VendorCreateForm: React.FC = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const navigate = useNavigate();
     const {
         register,
         formState: { errors },
     } = useFormContext<VendorData>();
 
     return (
-        <div className="rp-form-card rp-form-wide">
+        <div className="org-section-body">
             {/* 0. Info Banner */}
-            <div className="rp-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                <div className="rp-section-body">
+            <div className="org-section" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                <div className="org-section-body">
                     <div
                         style={{
                             background: '#eff6ff',
@@ -84,13 +71,13 @@ const VendorCreateForm: React.FC = () => {
             </div>
 
             {/* 1. Vendor Details */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiShoppingCart className="rp-section-icon" style={{ color: '#8b5cf6' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiShoppingCart className="org-section-icon" style={{ color: '#8b5cf6' }} />{' '}
                     VENDOR DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-2">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Vendor Name"
                             name="organisation_name"
@@ -98,19 +85,18 @@ const VendorCreateForm: React.FC = () => {
                             errors={errors}
                             required
                         />
-                        {/* Removed redundant Vendor Type field */}
                     </div>
                 </div>
             </div>
 
             {/* 2. CONTACT DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiPhone className="rp-section-icon" style={{ color: '#f59e0b' }} /> CONTACT
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiPhone className="org-section-icon" style={{ color: '#f59e0b' }} /> CONTACT
                     DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Contact Person Name"
                             name="primary_person_name"
@@ -124,6 +110,7 @@ const VendorCreateForm: React.FC = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                         <InputField
                             label="Contact Email"
@@ -131,6 +118,7 @@ const VendorCreateForm: React.FC = () => {
                             type="email"
                             register={register}
                             errors={errors}
+                            validation={{ pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Invalid email address' } }}
                         />
                         <InputField
                             label="Emergency Contact Name"
@@ -145,19 +133,20 @@ const VendorCreateForm: React.FC = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{10}$/, message: 'Must be exactly 10 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 3. OFFICE ADDRESS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiMapPin className="rp-section-icon" style={{ color: '#10b981' }} /> OFFICE
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiMapPin className="org-section-icon" style={{ color: '#10b981' }} /> OFFICE
                     ADDRESS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Address Line 1"
                             name="address_line_1"
@@ -205,25 +194,27 @@ const VendorCreateForm: React.FC = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{6}$/, message: 'Must be exactly 6 digits' } }}
                         />
                     </div>
                 </div>
             </div>
 
             {/* 4. COMPLIANCE DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiFileText className="rp-section-icon" style={{ color: '#3b82f6' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiFileText className="org-section-icon" style={{ color: '#3b82f6' }} />{' '}
                     COMPLIANCE DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-2">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="GST Number"
                             name="gst_number"
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/, message: 'Invalid GST format' } }}
                         />
                         <InputField
                             label="PAN Number"
@@ -231,6 +222,7 @@ const VendorCreateForm: React.FC = () => {
                             register={register}
                             errors={errors}
                             required
+                            validation={{ pattern: { value: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, message: 'Invalid PAN format' } }}
                         />
                         <InputField
                             label="Aadhaar Number (if Individual)"
@@ -249,13 +241,13 @@ const VendorCreateForm: React.FC = () => {
             </div>
 
             {/* 5. BANK DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiCreditCard className="rp-section-icon" style={{ color: '#059669' }} /> BANK
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiCreditCard className="org-section-icon" style={{ color: '#059669' }} /> BANK
                     DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Bank Account Number"
                             name="bank_account_number"
@@ -282,13 +274,13 @@ const VendorCreateForm: React.FC = () => {
             </div>
 
             {/* 6. CONTRACT DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiBriefcase className="rp-section-icon" style={{ color: '#eab308' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiBriefcase className="org-section-icon" style={{ color: '#eab308' }} />{' '}
                     CONTRACT DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Contract Start Date"
                             name="contract_start_date"
@@ -318,13 +310,13 @@ const VendorCreateForm: React.FC = () => {
             </div>
 
             {/* 7. VEHICLE DETAILS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiTruck className="rp-section-icon" style={{ color: '#dc2626' }} /> VEHICLE
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiTruck className="org-section-icon" style={{ color: '#dc2626' }} /> VEHICLE
                     DETAILS
                 </div>
-                <div className="rp-section-body">
-                    <div className="rp-grid-3">
+                <div className="org-section-body">
+                    <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                         <InputField
                             label="Vehicle Count"
                             name="vehicle_count"
@@ -354,27 +346,46 @@ const VendorCreateForm: React.FC = () => {
             </div>
 
             {/* 8. CONSENT & REMARKS */}
-            <div className="rp-section">
-                <div className="rp-section-title">
-                    <FiCheckCircle className="rp-section-icon" style={{ color: '#64748b' }} />{' '}
+            <div className="org-section">
+                <div className="org-section-title">
+                    <FiCheckCircle className="org-section-icon" style={{ color: '#64748b' }} />{' '}
                     CONSENT & REMARKS
                 </div>
-                <div className="rp-section-body">
+                <div className="org-section-body">
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                        <div className="rp-consent-box">
-                            <label className="rp-consent-label">
+                        <div style={{ 
+                            background: '#f8fafc', 
+                            padding: '1rem', 
+                            borderRadius: '8px', 
+                            border: '1px solid #e2e8f0',
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            gap: '0.5rem' 
+                        }}>
+                            <label style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.75rem',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem',
+                                color: '#334155'
+                            }}>
                                 <input
                                     type="checkbox"
-                                    className="rp-consent-checkbox"
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                                    {...register('consent' as any, {
+                                    style={{
+                                        width: '1.25rem',
+                                        height: '1.25rem',
+                                        accentColor: '#3b82f6',
+                                        cursor: 'pointer'
+                                    }}
+                                    {...register('consent_checkbox' as any, {
                                         required: 'Consent is required',
                                     })}
                                 />
                                 I agree to compliance and safety protocols
                             </label>
-                            {errors.consent && (
-                                <div className="rp-consent-error">Consent is required!</div>
+                            {errors.consent_checkbox && (
+                                <div style={{ color: '#ef4444', fontSize: '0.8rem', paddingLeft: '2rem' }}>Consent is required!</div>
                             )}
                         </div>
 

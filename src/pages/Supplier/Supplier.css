@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════
-   PLANS MODULE — Plan.css
+   SUPPLIER MODULE — Supplier.css
    Follows the global design system in index.css
    Variables: --primary, --primary-light, --primary-dark,
               --bg, --border, --text, --muted, --surface, --white
@@ -394,15 +394,15 @@
 
 /* ════════════════════════════════════════════
    FORM PAGES — Add / Edit / View
-   Prefix: pl- (Plans)
+   Prefix: sp- (Supplier)
 ════════════════════════════════════════════ */
 
-.pl-form-wrapper {
+.sp-form-wrapper {
     display: flex;
     justify-content: center;
 }
 
-.pl-form-card {
+.sp-form-card {
     background: var(--white);
     border-radius: 16px;
     border: 1px solid var(--border);
@@ -411,7 +411,7 @@
     overflow: hidden;
 }
 
-.pl-form-header {
+.sp-form-header {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -425,16 +425,16 @@
     background: var(--surface);
 }
 
-.pl-form-icon {
+.sp-form-icon {
     font-size: 18px;
     line-height: 1;
 }
 
-.pl-section {
+.sp-section {
     padding: 20px 24px 0;
 }
 
-.pl-section-title {
+.sp-section-title {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -448,12 +448,12 @@
     border-bottom: 1px solid var(--border);
 }
 
-.pl-section-icon {
+.sp-section-icon {
     font-size: 14px;
     line-height: 1;
 }
 
-.pl-section-body {
+.sp-section-body {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -514,7 +514,7 @@
 }
 
 /* ── View rows ── */
-.pl-view-row {
+.sp-view-row {
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -522,11 +522,11 @@
     border-bottom: 1px solid #f8fafc;
 }
 
-.pl-view-row:last-child {
+.sp-view-row:last-child {
     border-bottom: none;
 }
 
-.pl-view-label {
+.sp-view-label {
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
@@ -534,14 +534,14 @@
     color: var(--muted);
 }
 
-.pl-view-value {
+.sp-view-value {
     font-size: 13.5px;
     font-weight: 600;
     color: var(--text);
 }
 
 /* ── Add Feature button ── */
-.pl-add-feature-btn {
+.sp-add-feature-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -558,12 +558,12 @@
     margin-top: 4px;
 }
 
-.pl-add-feature-btn:hover {
+.sp-add-feature-btn:hover {
     background: #ede9fe;
 }
 
 /* ── Form Footer ── */
-.pl-form-footer {
+.sp-form-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -573,24 +573,24 @@
     background: var(--surface);
 }
 
-.pl-cancel-btn {
+.sp-cancel-btn {
     background: #fee2e2;
     color: #dc2626;
     border: none;
 }
 
-.pl-cancel-btn:hover {
+.sp-cancel-btn:hover {
     background: #fecaca;
 }
 
-.pl-save-btn {
+.sp-save-btn {
     background: var(--primary);
     color: #fff;
     border: none;
     box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
 }
 
-.pl-save-btn:hover {
+.sp-save-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
 }

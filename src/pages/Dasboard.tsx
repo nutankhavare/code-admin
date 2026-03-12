@@ -360,7 +360,7 @@ export const Dashboard = ({ onViewSessions }: Props) => {
                 <div
                     style={{
                         display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 1fr',
+                        gridTemplateColumns: '1fr 1fr 1fr 1fr',
                         gap: 14,
                     }}
                 >
@@ -371,6 +371,19 @@ export const Dashboard = ({ onViewSessions }: Props) => {
                         </div>
                         <div>
                             <div className="stat-label">Total Vehicles</div>
+                            <div className="stat-value">0</div>
+                        </div>
+                    </div>
+
+                    {/* Total Organizations */}
+                    <div className="stat-card">
+                        <div className="stat-icon" style={{ background: '#FCE7F3' }}>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M9 13h6M9 17h6" stroke="#DB2777" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div className="stat-label">Total Organizations</div>
                             <div className="stat-value">0</div>
                         </div>
                     </div>

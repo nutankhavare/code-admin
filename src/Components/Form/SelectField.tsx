@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { FieldErrors, UseFormRegister, RegisterOptions } from 'react-hook-form';
 
 interface Option {
     label: string;
@@ -16,6 +16,7 @@ interface SelectFieldProps {
     placeholder?: string;
     required?: boolean;
     disabled?: boolean;
+    validation?: RegisterOptions;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -27,7 +28,13 @@ const SelectField: React.FC<SelectFieldProps> = ({
     placeholder = 'Select an option',
     required = false,
     disabled = false,
+    validation = {},
 }) => {
+    const rules = {
+        ...validation,
+        ...(required && !validation.required ? { required: 'This field is required' } : {}),
+    };
+
     return (
         <div className="form-group">
             <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
@@ -35,7 +42,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
             </label>
             <select
                 id={name}
-                {...register(name)}
+                {...register(name, rules)}
                 disabled={disabled}
                 className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     errors[name] ? 'border-red-500' : 'border-gray-300'

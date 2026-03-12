@@ -41,7 +41,7 @@ const navItems: NavItem[] = [
     },
     { label: 'Plan Management', path: '/Plan', icon: <CreditCard size={16} /> },
     { label: 'Staff Management', path: '/Staff', icon: <Users size={16} /> },
-    { label: 'Supplier Management', path: '/dashboard', icon: <Users size={16} /> },
+    { label: 'Supplier Management', path: '/suppliers', icon: <Users size={16} /> },
     { label: 'App Users', path: '/app-users', icon: <Smartphone size={16} /> },
     { label: 'Feedbacks', path: '/Feedback', icon: <MessageSquare size={16} /> },
     { label: 'Reports', path: '/reports', icon: <BarChart2 size={16} /> },

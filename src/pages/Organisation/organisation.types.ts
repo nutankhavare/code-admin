@@ -124,6 +124,7 @@ interface BaseOrgData {
 
     // Consent
     consent_timestamp?: string;
+    consent_checkbox?: boolean;
 }
 
 export interface MotorDrivingSchoolData extends BaseOrgData {

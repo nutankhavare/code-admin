@@ -200,10 +200,10 @@ export const StaffCreate = () => {
     /* field helpers */
     const f =
         (key: keyof Form) =>
-        (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-            setForm((v) => ({ ...v, [key]: e.target.value }));
-            setErrs((v) => ({ ...v, [key]: undefined }));
-        };
+            (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+                setForm((v) => ({ ...v, [key]: e.target.value }));
+                setErrs((v) => ({ ...v, [key]: undefined }));
+            };
 
     const toggleRole = (r: string) =>
         setForm((v) => ({
