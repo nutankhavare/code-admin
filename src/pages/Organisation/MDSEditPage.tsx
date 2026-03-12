@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
 import MotorDrivingSchoolEditForm from './Forms/MotorDrivingSchoolEditForm';
 import './Organisation.css';
 import { initialOrganisations } from './organisation.types';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
 
 const MDSEditPage: React.FC = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const org = initialOrganisations.find((o) => o.id === Number(id));
-    
+
     const methods = useForm({ mode: 'onChange' });
+    const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
+    const [formData, setFormData] = useState<any>(null);
 
     useEffect(() => {
         if (org) {
@@ -19,18 +21,24 @@ const MDSEditPage: React.FC = () => {
         }
     }, [org, methods]);
 
-    const handleUpdate = methods.handleSubmit((data) => {
-        console.log('MDS Updated:', data);
-        navigate('/Organisation');
+    const handleUpdateClick = methods.handleSubmit((data) => {
+        setFormData(data);
+        setShowUpdateConfirm(true);
     });
+
+    const handleConfirmUpdate = () => {
+        console.log('MDS Updated:', formData);
+        setShowUpdateConfirm(false);
+        navigate('/Organisation');
+    };
 
     if (!org) {
         return (
             <div className="page-container">
                 <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)', marginBottom: '1rem' }}>Organisation not found</div>
-                    <button className="btn btn--outline" onClick={() => navigate('/Organisation')}>
-                        <ChevronLeft size={16} /> BACK TO LIST
+                    <button className="btn btn-secondary" onClick={() => navigate('/Organisation')}>
+                        <span className="material-symbols-outlined ms">arrow_back</span> BACK TO LIST
                     </button>
                 </div>
             </div>
@@ -39,73 +47,114 @@ const MDSEditPage: React.FC = () => {
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button className="breadcrumb-link" onClick={() => navigate('/Organisation')}>
-                        ORGANISATIONS
-                    </button>
-                    <span className="breadcrumb-sep">/</span>
-                    <span className="breadcrumb-current">EDIT {org.name.toUpperCase()}</span>
+            {showUpdateConfirm && (
+                <ConfirmationModal
+                    title="Update MDS Profile?"
+                    message={`Are you sure you want to save changes for ${org.name}?`}
+                    confirmLabel="Update"
+                    onConfirm={handleConfirmUpdate}
+                    onCancel={() => setShowUpdateConfirm(false)}
+                    type="update"
+                />
+            )}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            edit_square
+                        </span>
+                        EDIT {org.name.toUpperCase()}
+                    </div>
+                    <div className="breadcrumb">
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                            onClick={() => navigate('/Organisation')}
+                        >
+                            ORGANISATIONS
+                        </span>
+                        <span>/</span> EDIT MOTOR DRIVING SCHOOL
+                    </div>
                 </div>
-                <button className="btn btn--back" onClick={() => navigate('/Organisation')}>
-                    <ChevronLeft size={16} /> BACK
+                <button className="btn btn-secondary" onClick={() => navigate('/Organisation')}>
+                    <span className="material-symbols-outlined ms">arrow_back</span> BACK
                 </button>
             </div>
 
-            <div className="org-form-wrapper" style={{ paddingBottom: '40px' }}>
-                <div className="org-form-card" style={{ maxWidth: 880 }}>
-                    <div
-                        className="org-form-header"
-                        style={{
-                            borderLeft: `5px solid #10b981`,
-                            padding: '24px 32px',
-                            background: '#f8fafc'
-                        }}
-                    >
-                        <div>
-                            <div style={{ fontWeight: 900, fontSize: '14px', letterSpacing: '0.02em', color: 'var(--text)' }}>
-                                EDIT DRIVING SCHOOL PROFILE
-                            </div>
-                            <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600, marginTop: '2px' }}>
-                                Update license details and academy metrics.
+            <div className="page-body">
+                <div className="org-form-wrapper" style={{ paddingBottom: '40px' }}>
+                    <div className="org-form-card" style={{ maxWidth: 880, margin: '0 auto' }}>
+                        <div
+                            className="org-form-header"
+                            style={{
+                                borderLeft: `5px solid #f97316`,
+                                padding: '24px 32px',
+                                background: '#f8fafc'
+                            }}
+                        >
+                            <span className="org-form-icon" style={{
+                                color: '#f97316',
+                                background: '#f97316' + '12',
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <span className="material-symbols-outlined ms" style={{ fontSize: 24 }}>directions_car</span>
+                            </span>
+                            <div>
+                                <div style={{ fontWeight: 900, fontSize: '14px', letterSpacing: '0.02em', color: 'var(--text)' }}>
+                                    EDIT MDS PROFILE
+                                </div>
+                                <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600, marginTop: '2px' }}>
+                                    Update school details and training metrics.
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleUpdate}>
-                            <div style={{ padding: '32px' }}>
-                                <MotorDrivingSchoolEditForm organisationData={org as any} />
-                            </div>
+                        <FormProvider {...methods}>
+                            <form onSubmit={(e) => { e.preventDefault(); handleUpdateClick(); }}>
+                                <div style={{ padding: '32px' }}>
+                                    <MotorDrivingSchoolEditForm />
+                                </div>
 
-                            <div className="org-form-footer" style={{ padding: '24px 32px' }}>
-                                <button
-                                    type="button"
-                                    className="btn btn--outline"
-                                    onClick={() => navigate('/Organisation')}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn--outline"
-                                    onClick={() => methods.reset(org)}
-                                >
-                                    Reset Changes
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="btn btn--primary"
+                                <div
+                                    className="org-form-footer"
                                     style={{
-                                        background: '#10b981',
-                                        boxShadow: `0 8px 20px rgba(16, 185, 129, 0.3)`,
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
+                                        gap: 12,
+                                        paddingBottom: 8,
+                                        borderTop: '1.5px solid var(--border)',
+                                        padding: '24px 32px'
                                     }}
                                 >
-                                    Update Academy
-                                </button>
-                            </div>
-                        </form>
-                    </FormProvider>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => navigate('/Organisation')}
+                                    >
+                                        CANCEL
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => methods.reset(org)}
+                                    >
+                                        RESET CHANGES
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        style={{ minWidth: 200, background: '#f97316' }}
+                                    >
+                                        <span className="material-symbols-outlined ms">save</span> UPDATE MDS
+                                    </button>
+                                </div>
+                            </form>
+                        </FormProvider>
+                    </div>
                 </div>
             </div>
         </div>

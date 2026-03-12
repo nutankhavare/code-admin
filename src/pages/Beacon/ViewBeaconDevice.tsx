@@ -1,7 +1,39 @@
 import React from 'react';
-import { ChevronLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Beacon.css';
+
+/* ── StaffCreate style helpers ────────────────────────── */
+const SectionHeader = ({ icon, title }: { icon: string; title: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, paddingBottom: 12, borderBottom: '1.5px solid var(--border)' }}>
+        <span className="material-symbols-outlined ms" style={{ color: 'var(--primary)', fontSize: 24 }}>{icon}</span>
+        <span style={{ fontWeight: 900, fontSize: 13, letterSpacing: '0.02em', color: 'var(--text)' }}>{title}</span>
+    </div>
+);
+
+const Card = ({ children }: { children: React.ReactNode }) => (
+    <div className="card" style={{ marginBottom: 24, padding: 32, borderRadius: 16, border: '1.5px solid var(--border)', background: '#fff' }}>
+        {children}
+    </div>
+);
+
+const Body = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ padding: '0 8px', ...style }}>{children}</div>
+);
+
+const Grid = ({ cols, children, style }: { cols: string; children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ display: 'grid', gridTemplateColumns: cols, gap: '24px 32px', ...style }}>{children}</div>
+);
+
+const Label = ({ children }: { children: React.ReactNode }) => (
+    <div className="form-label" style={{ marginBottom: 8, fontWeight: 700, fontSize: 11, color: 'var(--text-muted)' }}>{children}</div>
+);
+
+const ViewField = ({ label, value }: { label: string; value: string | React.ReactNode }) => (
+    <div className="form-group">
+        <Label>{label}</Label>
+        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)', padding: '8px 0' }}>{value}</div>
+    </div>
+);
 
 const ViewBeaconDevice: React.FC = () => {
     const navigate = useNavigate();
@@ -19,100 +51,99 @@ const ViewBeaconDevice: React.FC = () => {
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button
-                        className="breadcrumb-link"
-                        onClick={() => navigate('/masters/beacon-devices')}
-                    >
-                        Beacon Devices
-                    </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">{device.deviceId}</span>
-                </div>
-                <button
-                    className="btn btn--back"
-                    onClick={() => navigate('/masters/beacon-devices')}
-                >
-                    <ChevronLeft size={16} /> Back
-                </button>
-            </div>
-
-            <div className="bd-form-wrapper">
-                <div className="bd-form-card">
-                    <div className="bd-form-header">
-                        <span className="bd-form-icon">📡</span>
-                        <span>BEACON DEVICE DETAILS</span>
+            {/* ── HEADER & BREADCRUMBS ── */}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            sensors
+                        </span>
+                        View Beacon Device
                     </div>
-
-                    {/* DEVICE INFO */}
-                    <div className="bd-section">
-                        <div className="bd-section-title">
-                            <span className="bd-section-icon" style={{ color: '#ef4444' }}>
-                                📋
-                            </span>
-                            DEVICE INFORMATION
-                        </div>
-
-                        <div className="bd-section-body">
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">DEVICE ID</div>
-                                <div className="bd-view-value">{device.deviceId}</div>
-                            </div>
-
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">DEVICE NAME</div>
-                                <div className="bd-view-value">{device.name}</div>
-                            </div>
-
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">MAC ADDRESS</div>
-                                <div className="bd-view-value">{device.macAddress}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* DEVICE STATUS */}
-                    <div className="bd-section">
-                        <div className="bd-section-title">
-                            <span className="bd-section-icon" style={{ color: '#f59e0b' }}>
-                                ⚙️
-                            </span>
-                            DEVICE STATUS
-                        </div>
-
-                        <div className="bd-section-body">
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">ORGANISATION</div>
-                                <div className="bd-view-value">{device.organisation}</div>
-                            </div>
-
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">BATTERY</div>
-                                <div className="bd-view-value">{device.battery}</div>
-                            </div>
-
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">STATUS</div>
-                                <div className="bd-view-value">
-                                    <span className="bd-status-chip">{device.status}</span>
-                                </div>
-                            </div>
-
-                            <div className="bd-view-row">
-                                <div className="bd-view-label">DESCRIPTION</div>
-                                <div className="bd-view-value">{device.description}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* FOOTER */}
-                    <div className="bd-form-footer">
-                        <button
-                            className="btn btn--outline"
+                    <div className="breadcrumb">
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
                             onClick={() => navigate('/masters/beacon-devices')}
                         >
-                            BACK
+                            BEACON DEVICES
+                        </span>
+                        <span>/</span> {device.deviceId.toUpperCase()}
+                    </div>
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <button className="btn btn-secondary" onClick={() => navigate('/masters/beacon-devices')}>
+                        <span className="material-symbols-outlined ms">arrow_back</span> BACK
+                    </button>
+                    <button className="btn btn-primary" onClick={() => navigate(`/masters/beacon-devices/edit/${id}`)}>
+                        <span className="material-symbols-outlined ms">edit</span> EDIT DEVICE
+                    </button>
+                </div>
+            </div>
+
+            {/* ── PAGE BODY ── */}
+            <div className="page-body">
+                <div style={{ maxWidth: 860, width: '100%', margin: '0 auto', paddingBottom: 40 }}>
+
+                    {/* ── DEVICE INFORMATION ── */}
+                    <Card>
+                        <SectionHeader icon="inventory" title="DEVICE INFORMATION" />
+                        <Body>
+                            <Grid cols="1fr 1fr 1fr">
+                                <ViewField label="DEVICE ID" value={device.deviceId} />
+                                <ViewField label="DEVICE NAME" value={device.name} />
+                                <ViewField label="MAC ADDRESS" value={device.macAddress} />
+                            </Grid>
+                        </Body>
+                    </Card>
+
+                    {/* ── DEVICE DETAILS ── */}
+                    <Card>
+                        <SectionHeader icon="settings_suggest" title="DEVICE DETAILS" />
+                        <Body>
+                            <Grid cols="1fr 1fr">
+                                <ViewField label="ORGANISATION" value={device.organisation} />
+                                <ViewField label="BATTERY LEVEL" value={device.battery} />
+                            </Grid>
+
+                            <Grid cols="1fr" style={{ marginTop: 24 }}>
+                                <ViewField
+                                    label="CURRENT STATUS"
+                                    value={
+                                        <span style={{
+                                            background: '#ECFDF5',
+                                            color: '#059669',
+                                            padding: '4px 12px',
+                                            borderRadius: 20,
+                                            fontSize: 12,
+                                            fontWeight: 800,
+                                            border: '1px solid #10B98133'
+                                        }}>
+                                            {device.status}
+                                        </span>
+                                    }
+                                />
+
+                                <div style={{ marginTop: 24 }}>
+                                    <ViewField label="DESCRIPTION" value={device.description} />
+                                </div>
+                            </Grid>
+                        </Body>
+                    </Card>
+
+                    {/* ── FOOTER ── */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => navigate('/masters/beacon-devices')}
+                        >
+                            RETURN TO LIST
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            style={{ minWidth: 160 }}
+                            onClick={() => navigate(`/masters/beacon-devices/edit/${id}`)}
+                        >
+                            <span className="material-symbols-outlined ms">edit</span> EDIT DETAILS
                         </button>
                     </div>
                 </div>

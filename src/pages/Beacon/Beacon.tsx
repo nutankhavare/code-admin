@@ -4,7 +4,8 @@ import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../Components/Table/Pagination';
 import Table, { type Column } from '../../Components/Table/Table';
-import DeleteModal from '../../Components/UI/DeleteModal';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
+import { Badge } from '../../Components/UI/Badge';
 import type { BeaconDevice } from './beacondevice.types';
 
 const mockBeacons: BeaconDevice[] = Array.from({ length: 16 }, (_, i) => ({
@@ -18,15 +19,9 @@ const mockBeacons: BeaconDevice[] = Array.from({ length: 16 }, (_, i) => ({
     status: (i % 5 === 0
         ? 'Offline'
         : i % 7 === 0
-          ? 'Low Battery'
-          : 'Online') as BeaconDevice['status'],
+            ? 'Low Battery'
+            : 'Online') as BeaconDevice['status'],
 }));
-
-const statusColors: Record<string, string> = {
-    Online: '#10b981',
-    Offline: '#ef4444',
-    'Low Battery': '#f59e0b',
-};
 
 const BeaconDevices: React.FC = () => {
     const navigate = useNavigate();
@@ -104,12 +99,12 @@ const BeaconDevices: React.FC = () => {
                                     Number(val) < 20
                                         ? '#ef4444'
                                         : Number(val) < 50
-                                          ? '#f59e0b'
-                                          : '#10b981',
+                                            ? '#f59e0b'
+                                            : '#10b981',
                             }}
                         />
                     </div>
-                    <span>{String(val)}%</span>
+                    <span style={{ fontSize: '12px', fontWeight: 600 }}>{String(val)}%</span>
                 </div>
             ),
         },
@@ -119,17 +114,11 @@ const BeaconDevices: React.FC = () => {
         {
             key: 'status',
             label: 'Status',
-            render: (val) => (
-                <span
-                    className="status-badge"
-                    style={{
-                        background: statusColors[String(val)] + '20',
-                        color: statusColors[String(val)],
-                    }}
-                >
-                    {String(val)}
-                </span>
-            ),
+            render: (val) => {
+                const variant =
+                    val === 'Online' ? 'success' : val === 'Low Battery' ? 'warning' : 'error';
+                return <Badge variant={variant}>{String(val)}</Badge>;
+            },
         },
 
         {
@@ -175,80 +164,82 @@ const BeaconDevices: React.FC = () => {
     ];
 
     return (
-        <div className="page-container">
+        <div className="page">
             {deleteTarget && (
-                <DeleteModal
-                    itemName={deleteTarget.name}
-                    itemLabel="beacon device"
+                <ConfirmationModal
+                    title="Delete Beacon Device?"
+                    message={`Are you sure you want to delete the beacon device "${deleteTarget.name}"? This action cannot be undone.`}
+                    confirmLabel="Delete"
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => setDeleteTarget(null)}
+                    type="delete"
                 />
             )}
 
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">BEACON DEVICES</span>
+            <div className="page-header">
+                <div className="breadcrumb">
+                    MASTERS <span>/ BEACON DEVICES</span>
                 </div>
-
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="header-actions">
                     <button
-                        className="btn btn--outline"
+                        className="btn btn-secondary"
                         onClick={() => fileInputRef.current?.click()}
                     >
                         Import
                     </button>
-
-                    <button className="btn btn--outline" onClick={exportCSV}>
+                    <button className="btn btn-secondary" onClick={exportCSV}>
                         Export
                     </button>
-
                     <button
-                        className="btn btn--header-add"
+                        className="btn btn-primary"
                         onClick={() => navigate('/masters/beacon-devices/add')}
                     >
                         <Plus size={16} /> Add Device
                     </button>
                 </div>
-
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
             </div>
 
-            <div className="card">
-                <div className="table-toolbar">
-                    <input
-                        className="search-input"
-                        placeholder="Search devices..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setPage(1);
-                        }}
+            <div className="page-body">
+                <div className="card">
+                    <div className="filter-bar">
+                        <input
+                            className="search-input"
+                            placeholder="Search devices..."
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+
+                        <select
+                            className="filter-select"
+                            value={statusFilter}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value);
+                                setPage(1);
+                            }}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Online">Online</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Low Battery">Low Battery</option>
+                        </select>
+                    </div>
+
+                    <div className="table-card">
+                        <Table columns={columns} data={paginated} />
+                    </div>
+
+                    <Pagination
+                        currentPage={page}
+                        totalPages={Math.ceil(filtered.length / perPage)}
+                        onPageChange={setPage}
+                        totalItems={filtered.length}
+                        itemsPerPage={perPage}
                     />
-
-                    <select
-                        className="filter-select"
-                        value={statusFilter}
-                        onChange={(e) => {
-                            setStatusFilter(e.target.value);
-                            setPage(1);
-                        }}
-                    >
-                        <option value="All">All Status</option>
-                        <option value="Online">Online</option>
-                        <option value="Offline">Offline</option>
-                        <option value="Low Battery">Low Battery</option>
-                    </select>
                 </div>
-
-                <Table columns={columns} data={paginated} />
-
-                <Pagination
-                    currentPage={page}
-                    totalPages={Math.ceil(filtered.length / perPage)}
-                    onPageChange={setPage}
-                    totalItems={filtered.length}
-                    itemsPerPage={perPage}
-                />
             </div>
         </div>
     );

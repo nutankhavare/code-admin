@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import './Plan.css';
-import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import DeleteModal from '../../Components/UI/DeleteModal';
+import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
+import { Badge } from '../../Components/UI/Badge';
+import './Plan.css';
 
 interface Plan {
     id: number;
@@ -88,203 +89,207 @@ const Plans: React.FC = () => {
 
     const handleDeleteConfirm = () => {
         if (deleteTarget) {
-            setPlans(plans.filter((p) => p.id !== deleteTarget.id));
+            setPlans(plans.filter((p: Plan) => p.id !== deleteTarget.id));
             setDeleteTarget(null);
         }
     };
 
     const toggleStatus = (id: number) => {
         setPlans(
-            plans.map((p) =>
+            plans.map((p: Plan) =>
                 p.id === id ? { ...p, status: p.status === 'Active' ? 'Inactive' : 'Active' } : p
             )
         );
     };
 
     return (
-        <div className="page-container">
+        <div className="page">
             {deleteTarget && (
-                <DeleteModal
-                    itemName={deleteTarget.name}
-                    itemLabel="plan"
+                <ConfirmationModal
+                    title="Delete Plan?"
+                    message={`Are you sure you want to delete the plan "${deleteTarget.name}"? This action cannot be undone.`}
+                    confirmLabel="Delete"
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => setDeleteTarget(null)}
+                    type="delete"
                 />
             )}
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">PLAN MANAGEMENT</span>
+
+            <div className="page-header">
+                <div className="breadcrumb">
+                    PLAN MANAGEMENT <span>/ {view === 'cards' ? 'CARD VIEW' : 'TABLE VIEW'}</span>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="header-actions">
                     <button
-                        className={`btn ${view === 'cards' ? 'btn--primary' : 'btn--outline'}`}
+                        className={`btn ${view === 'cards' ? 'btn-primary' : 'btn-secondary'}`}
                         onClick={() => setView('cards')}
                     >
                         Cards
                     </button>
 
                     <button
-                        className={`btn ${view === 'table' ? 'btn--primary' : 'btn--outline'}`}
+                        className={`btn ${view === 'table' ? 'btn-primary' : 'btn-secondary'}`}
                         onClick={() => setView('table')}
                     >
                         Table
                     </button>
 
-                    <button className="btn btn--header-add" onClick={() => navigate('/Plan/add')}>
+                    <button className="btn btn-primary" onClick={() => navigate('/Plan/add')}>
                         <Plus size={16} /> Add Plan
                     </button>
                 </div>
             </div>
 
-            {/* CARD VIEW */}
-            {view === 'cards' ? (
-                <div className="plans-grid">
-                    {plans.map((plan, i) => (
-                        <div key={plan.id} className="plan-card">
-                            <div
-                                className="plan-card-header"
-                                style={{ background: planGradients[i % planGradients.length] }}
-                            >
-                                <div className="plan-name">{plan.name}</div>
+            <div className="page-body">
 
-                                <div className="plan-price">
-                                    {plan.price === 0 ? (
-                                        'Free'
-                                    ) : (
-                                        <>
-                                            ₹{plan.price.toLocaleString()}
-                                            <span>/mo</span>
-                                        </>
-                                    )}
+                {/* CARD VIEW */}
+                {view === 'cards' ? (
+                    <div className="plans-grid">
+                        {plans.map((plan: Plan, i: number) => (
+                            <div key={plan.id} className="plan-card">
+                                <div
+                                    className="plan-card-header"
+                                    style={{ background: planGradients[i % planGradients.length] }}
+                                >
+                                    <div className="plan-name">{plan.name}</div>
+
+                                    <div className="plan-price">
+                                        {plan.price === 0 ? (
+                                            'Free'
+                                        ) : (
+                                            <>
+                                                ₹{plan.price.toLocaleString()}
+                                                <span>/mo</span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="plan-users">Up to {plan.users} users</div>
                                 </div>
 
-                                <div className="plan-users">Up to {plan.users} users</div>
-                            </div>
+                                <div className="plan-card-body">
+                                    <div className="plan-subscribers">
+                                        <strong>{plan.subscribers}</strong> active subscribers
+                                    </div>
 
-                            <div className="plan-card-body">
-                                <div className="plan-subscribers">
-                                    <strong>{plan.subscribers}</strong> active subscribers
-                                </div>
+                                    <ul className="plan-features">
+                                        {plan.features.map((f: string) => (
+                                            <li key={f}>
+                                                <span className="check">✓</span>
+                                                {f}
+                                            </li>
+                                        ))}
+                                    </ul>
 
-                                <ul className="plan-features">
-                                    {plan.features.map((f) => (
-                                        <li key={f}>
-                                            <span className="check">✓</span>
-                                            {f}
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <div className="plan-actions">
-                                    <button
-                                        className="btn btn--outline btn--sm"
-                                        title="Edit"
-                                        onClick={() => navigate(`/Plan/edit/${plan.id}`)}
-                                    >
-                                        <Pencil size={14} /> Edit
-                                    </button>
-
-                                    <button
-                                        className="btn btn--outline btn--sm"
-                                        title="View"
-                                        onClick={() => navigate(`/Plan/${plan.id}`)}
-                                    >
-                                        <Eye size={14} /> View
-                                    </button>
-
-                                    <button
-                                        className="btn btn--danger btn--sm"
-                                        title="Delete"
-                                        onClick={() => setDeleteTarget(plan)}
-                                    >
-                                        <Trash2 size={14} /> Delete
-                                    </button>
-
-                                    <button
-                                        className="btn btn--secondary btn--sm"
-                                        onClick={() => toggleStatus(plan.id)}
-                                    >
-                                        {plan.status === 'Active' ? 'Disable' : 'Enable'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                /* TABLE VIEW */
-                <div className="card">
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Plan</th>
-                                <th>Price</th>
-                                <th>Users</th>
-                                <th>Subscribers</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {plans.map((plan) => (
-                                <tr key={plan.id}>
-                                    <td>
-                                        <strong>{plan.name}</strong>
-                                    </td>
-
-                                    <td>{plan.price === 0 ? 'Free' : `₹${plan.price}/mo`}</td>
-
-                                    <td>Up to {plan.users}</td>
-
-                                    <td>{plan.subscribers}</td>
-
-                                    <td>
-                                        <span
-                                            className="status-badge"
-                                            style={{
-                                                background: '#10b98120',
-                                                color: '#10b981',
-                                            }}
+                                    <div className="plan-actions">
+                                        <button
+                                            className="btn btn-secondary btn-sm"
+                                            title="Edit"
+                                            onClick={() => navigate(`/Plan/edit/${plan.id}`)}
                                         >
-                                            {plan.status}
-                                        </span>
-                                    </td>
+                                            <Pencil size={14} /> Edit
+                                        </button>
 
-                                    <td>
-                                        <div className="table-actions">
-                                            <button
-                                                className="action-btn action-btn--view"
-                                                title="View"
-                                                onClick={() => navigate(`/Plan/${plan.id}`)}
-                                            >
-                                                <Eye size={15} />
-                                            </button>
+                                        <button
+                                            className="btn btn-secondary btn-sm"
+                                            title="View"
+                                            onClick={() => navigate(`/Plan/${plan.id}`)}
+                                        >
+                                            <Eye size={14} /> View
+                                        </button>
 
-                                            <button
-                                                className="action-btn action-btn--edit"
-                                                title="Edit"
-                                                onClick={() => navigate(`/Plan/edit/${plan.id}`)}
-                                            >
-                                                <Pencil size={15} />
-                                            </button>
+                                        <button
+                                            className="btn btn-secondary btn-sm"
+                                            style={{ color: 'var(--danger)' }}
+                                            title="Delete"
+                                            onClick={() => setDeleteTarget(plan)}
+                                        >
+                                            <Trash2 size={14} /> Delete
+                                        </button>
 
-                                            <button
-                                                className="action-btn action-btn--delete"
-                                                title="Delete"
-                                                onClick={() => setDeleteTarget(plan)}
-                                            >
-                                                <Trash2 size={15} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                        <button
+                                            className="btn btn-secondary btn-sm"
+                                            onClick={() => toggleStatus(plan.id)}
+                                        >
+                                            {plan.status === 'Active' ? 'Disable' : 'Enable'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="card">
+                        <div className="table-card">
+                            <table className="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Plan</th>
+                                        <th>Price</th>
+                                        <th>Users</th>
+                                        <th>Subscribers</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {plans.map((plan: Plan) => (
+                                        <tr key={plan.id}>
+                                            <td>
+                                                <strong>{plan.name}</strong>
+                                            </td>
+
+                                            <td>{plan.price === 0 ? 'Free' : `₹${plan.price}/mo`}</td>
+
+                                            <td>Up to {plan.users}</td>
+
+                                            <td>{plan.subscribers}</td>
+
+                                            <td>
+                                                <Badge
+                                                    variant={plan.status === 'Active' ? 'success' : 'error'}
+                                                >
+                                                    {plan.status}
+                                                </Badge>
+                                            </td>
+
+                                            <td>
+                                                <div className="table-actions">
+                                                    <button
+                                                        className="act-btn act-view"
+                                                        title="View"
+                                                        onClick={() => navigate(`/Plan/${plan.id}`)}
+                                                    >
+                                                        <Eye size={15} />
+                                                    </button>
+
+                                                    <button
+                                                        className="act-btn act-edit"
+                                                        title="Edit"
+                                                        onClick={() => navigate(`/Plan/edit/${plan.id}`)}
+                                                    >
+                                                        <Pencil size={15} />
+                                                    </button>
+
+                                                    <button
+                                                        className="act-btn act-delete"
+                                                        title="Delete"
+                                                        onClick={() => setDeleteTarget(plan)}
+                                                    >
+                                                        <Trash2 size={15} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

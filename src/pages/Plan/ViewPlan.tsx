@@ -1,126 +1,160 @@
 import React from 'react';
-import { ChevronLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Badge } from '../../Components/UI/Badge';
 import './Plan.css';
+
+/* ── StaffCreate style helpers ────────────────────────── */
+const SectionHeader = ({ icon, title }: { icon: string; title: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, paddingBottom: 12, borderBottom: '1.5px solid var(--border)' }}>
+        <span className="material-symbols-outlined ms" style={{ color: 'var(--primary)', fontSize: 24 }}>{icon}</span>
+        <span style={{ fontWeight: 900, fontSize: 13, letterSpacing: '0.02em', color: 'var(--text)' }}>{title}</span>
+    </div>
+);
+
+const Card = ({ children }: { children: React.ReactNode }) => (
+    <div className="card" style={{ marginBottom: 24, padding: 32, borderRadius: 16, border: '1.5px solid var(--border)', background: '#fff' }}>
+        {children}
+    </div>
+);
+
+const Body = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ padding: '0 8px', ...style }}>{children}</div>
+);
+
+const Grid = ({ cols, children, style }: { cols: string; children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ display: 'grid', gridTemplateColumns: cols, gap: '24px 32px', ...style }}>{children}</div>
+);
+
+const Label = ({ children }: { children: React.ReactNode }) => (
+    <div className="form-label" style={{ marginBottom: 8, fontWeight: 700, fontSize: 11, color: 'var(--text-muted)' }}>{children}</div>
+);
+
+const ViewField = ({ label, value }: { label: string; value: string | React.ReactNode }) => (
+    <div className="form-group">
+        <Label>{label}</Label>
+        <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)', padding: '8px 0' }}>{value}</div>
+    </div>
+);
 
 const ViewPlan: React.FC = () => {
     const navigate = useNavigate();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id } = useParams();
 
     const plan = {
-        id: 1,
+        id: id || '1',
         name: 'Starter Plan',
         priceMonthly: '999',
         priceYearly: '9999',
         status: 'Active',
         trialDays: '7',
-        description: 'Starter subscription plan',
+        description: 'Starter subscription plan provides essentials for small businesses.',
         features: ['Basic Tracking', 'Email Support', '5 GPS Devices', 'Basic Reports'],
     };
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button className="breadcrumb-link" onClick={() => navigate('/Plan')}>
-                        Plans
-                    </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">{plan.name}</span>
+            {/* ── HEADER & BREADCRUMBS ── */}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            payments
+                        </span>
+                        View Subscription Plan
+                    </div>
+                    <div className="breadcrumb">
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                            onClick={() => navigate('/Plan')}
+                        >
+                            PLAN MANAGEMENT
+                        </span>
+                        <span>/</span> {plan.name.toUpperCase()}
+                    </div>
                 </div>
-                <button className="btn btn--back" onClick={() => navigate('/Plan')}>
-                    <ChevronLeft size={16} /> Back
-                </button>
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <button className="btn btn-secondary" onClick={() => navigate('/Plan')}>
+                        <span className="material-symbols-outlined ms">arrow_back</span> BACK
+                    </button>
+                    <button className="btn btn-primary" onClick={() => navigate(`/Plan/edit/${plan.id}`)}>
+                        <span className="material-symbols-outlined ms">edit</span> EDIT PLAN
+                    </button>
+                </div>
             </div>
 
-            <div className="rp-form-wrapper">
-                <div className="rp-form-card">
-                    {/* HEADER */}
-                    <div className="rp-form-header">
-                        <span className="rp-form-icon">👁️</span>
-                        <span>VIEW PLAN</span>
-                    </div>
+            {/* ── PAGE BODY ── */}
+            <div className="page-body">
+                <div style={{ maxWidth: 860, width: '100%', margin: '0 auto', paddingBottom: 40 }}>
 
-                    {/* PLAN INFORMATION */}
-                    <div className="rp-section">
-                        <div className="rp-section-title">
-                            <span className="rp-section-icon" style={{ color: '#ef4444' }}>
-                                📄
-                            </span>
-                            PLAN INFORMATION
-                        </div>
+                    {/* ── PLAN INFORMATION ── */}
+                    <Card>
+                        <SectionHeader icon="description" title="PLAN INFORMATION" />
+                        <Body>
+                            <Grid cols="1fr 1fr">
+                                <ViewField label="PLAN NAME" value={<span style={{ color: 'var(--primary)', fontWeight: 800 }}>{plan.name}</span>} />
+                                <ViewField
+                                    label="STATUS"
+                                    value={
+                                        <Badge variant={plan.status === 'Active' ? 'success' : 'error'}>
+                                            {plan.status}
+                                        </Badge>
+                                    }
+                                />
+                                <ViewField label="MONTHLY PRICE" value={`₹${plan.priceMonthly}`} />
+                                <ViewField label="YEARLY PRICE" value={`₹${plan.priceYearly}`} />
+                                <ViewField label="TRIAL PERIOD" value={`${plan.trialDays} Days`} />
+                            </Grid>
 
-                        <div className="rp-section-body">
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">PLAN NAME</div>
-                                <div className="rp-view-value">
-                                    <span className="rp-role-chip">💳 {plan.name}</span>
-                                </div>
+                            <div style={{ marginTop: 24 }}>
+                                <ViewField label="DESCRIPTION" value={plan.description} />
                             </div>
+                        </Body>
+                    </Card>
 
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">MONTHLY PRICE</div>
-                                <div className="rp-view-value">₹{plan.priceMonthly}</div>
-                            </div>
-
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">YEARLY PRICE</div>
-                                <div className="rp-view-value">₹{plan.priceYearly}</div>
-                            </div>
-
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">STATUS</div>
-                                <div className="rp-view-value">{plan.status}</div>
-                            </div>
-
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">TRIAL DAYS</div>
-                                <div className="rp-view-value">{plan.trialDays}</div>
-                            </div>
-
-                            <div className="rp-view-row">
-                                <div className="rp-view-label">DESCRIPTION</div>
-                                <div className="rp-view-value">{plan.description}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* FEATURES */}
-                    <div className="rp-section">
-                        <div className="rp-section-title">
-                            <span className="rp-section-icon" style={{ color: '#f59e0b' }}>
-                                ⭐
-                            </span>
-                            PLAN FEATURES
-                        </div>
-
-                        <div className="rp-section-body">
+                    {/* ── PLAN FEATURES ── */}
+                    <Card>
+                        <SectionHeader icon="star" title="PLAN FEATURES" />
+                        <Body>
                             {plan.features.length === 0 ? (
-                                <p
-                                    style={{
-                                        color: 'var(--text-secondary)',
-                                        fontSize: '0.875rem',
-                                    }}
-                                >
-                                    No features added.
-                                </p>
+                                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>No features defined for this plan.</div>
                             ) : (
-                                <div className="rp-perms-view-grid">
+                                <Grid cols="1fr 1fr" style={{ gap: 16 }}>
                                     {plan.features.map((feature) => (
-                                        <div key={feature} className="rp-perm-tag">
-                                            ✓ {feature}
+                                        <div
+                                            key={feature}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 10,
+                                                padding: '12px 16px',
+                                                background: '#f8fafc',
+                                                borderRadius: 12,
+                                                border: '1.5px solid var(--border)'
+                                            }}
+                                        >
+                                            <span className="material-symbols-outlined" style={{ color: '#10B981', fontSize: 20 }}>check_circle</span>
+                                            <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)' }}>{feature}</span>
                                         </div>
                                     ))}
-                                </div>
+                                </Grid>
                             )}
-                        </div>
-                    </div>
+                        </Body>
+                    </Card>
 
-                    {/* FOOTER */}
-                    <div className="rp-form-footer">
-                        <button className="btn rp-cancel-btn" onClick={() => navigate('/Plan')}>
-                            ← BACK
+                    {/* ── FOOTER ── */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => navigate('/Plan')}
+                        >
+                            RETURN TO LIST
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            style={{ minWidth: 160 }}
+                            onClick={() => navigate(`/Plan/edit/${plan.id}`)}
+                        >
+                            <span className="material-symbols-outlined ms">edit</span> EDIT PLAN
                         </button>
                     </div>
                 </div>

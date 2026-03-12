@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import type { Supplier } from "../../types/supplier"
-import { Eye, Pencil, Trash2, Plus } from "lucide-react"
 import './Supplier.css'
 
 const dummySuppliers: Supplier[] = [
@@ -34,30 +33,39 @@ const dummySuppliers: Supplier[] = [
 ]
 
 export default function SupplierManagementIndex() {
-
-    const navigate = useNavigate()
-
-    const [search] = useState("")
-    const [suppliers, setSuppliers] = useState(dummySuppliers)
+    const navigate = useNavigate();
+    const [search] = useState("");
+    const [suppliers, setSuppliers] = useState(dummySuppliers);
 
     const filtered = suppliers.filter((s) =>
         s.name.toLowerCase().includes(search.toLowerCase())
-    )
+    );
 
     const deleteSupplier = (id: number) => {
-        setSuppliers(suppliers.filter((s) => s.id !== id))
-    }
+        if (window.confirm("Are you sure you want to delete this supplier?")) {
+            setSuppliers(suppliers.filter((s) => s.id !== id));
+        }
+    };
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">SUPPLIER MANAGEMENT</span>
+            {/* ── HEADER & BREADCRUMBS ── */}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            storefront
+                        </span>
+                        Supplier Management
+                    </div>
+                    <div className="breadcrumb">
+                        ADMIN <span>/</span> SUPPLIER MANAGEMENT
+                    </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn btn--header-add" onClick={() => navigate('/suppliers/create')}>
-                        <Plus size={16} /> Onboard Supplier
+                <div style={{ display: 'flex', gap: '12px' }}>
+                    <button className="btn btn-primary" onClick={() => navigate('/suppliers/create')}>
+                        <span className="material-symbols-outlined ms">add</span> ONBOARD SUPPLIER
                     </button>
                 </div>
             </div>
@@ -70,7 +78,7 @@ export default function SupplierManagementIndex() {
                             <th>Supplier Name</th>
                             <th>Location</th>
                             <th>Devices Provided</th>
-                            <th>Actions</th>
+                            <th style={{ textAlign: 'right', paddingRight: '24px' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,32 +97,34 @@ export default function SupplierManagementIndex() {
                                             })
                                         }
                                         className="btn btn--outline btn--sm"
+                                        style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                                     >
+                                        <span className="material-symbols-outlined ms" style={{ fontSize: '14px' }}>devices</span>
                                         {supplier.devices.length} Devices
                                     </button>
                                 </td>
                                 <td>
-                                    <div className="table-actions">
+                                    <div className="table-actions" style={{ justifyContent: 'flex-end', paddingRight: '12px' }}>
                                         <button
                                             className="action-btn action-btn--view"
                                             title="View"
                                             onClick={() => alert("View Supplier")}
                                         >
-                                            <Eye size={15} />
+                                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>visibility</span>
                                         </button>
                                         <button
                                             className="action-btn action-btn--edit"
                                             title="Edit"
                                             onClick={() => navigate(`/suppliers/create?id=${supplier.id}`)}
                                         >
-                                            <Pencil size={15} />
+                                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>edit</span>
                                         </button>
                                         <button
                                             className="action-btn action-btn--delete"
                                             title="Delete"
                                             onClick={() => deleteSupplier(supplier.id)}
                                         >
-                                            <Trash2 size={15} />
+                                            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
                                         </button>
                                     </div>
                                 </td>
@@ -124,5 +134,5 @@ export default function SupplierManagementIndex() {
                 </table>
             </div>
         </div>
-    )
+    );
 }

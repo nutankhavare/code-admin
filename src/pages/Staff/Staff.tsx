@@ -4,15 +4,16 @@ import { ChevronDown } from "lucide-react";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import Pagination from "../../Components/Table/Pagination";
+import ConfirmationModal from "../../Components/UI/ConfirmationModal";
 import {
     type Staff,
     INITIAL_STAFF,
     staffStatusVariant,
     getAvatarColor,
     getInitials,
-} from "./staffData";
-import type { ModalName } from "../../types";
-import { Badge, Pagination } from "../../ui";
+} from "./StaffData";
+import { Badge } from "../../Components/UI/Badge";
 
 /* ═══════════════════════════════════════════════════
    VIEW DETAIL OVERLAY
@@ -374,142 +375,6 @@ const ViewOverlay = ({
 };
 
 /* ═══════════════════════════════════════════════════
-   DELETE CONFIRMATION OVERLAY
-   ═══════════════════════════════════════════════════ */
-const DeleteOverlay = ({
-    staff,
-    onConfirm,
-    onCancel,
-}: {
-    staff: Staff;
-    onConfirm: () => void;
-    onCancel: () => void;
-}) => (
-    <div
-        style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 1000,
-            background: "rgba(0,0,0,.45)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 24,
-        }}
-        onClick={onCancel}
-    >
-        <div
-            style={{
-                background: "white",
-                borderRadius: 16,
-                width: "100%",
-                maxWidth: 420,
-                padding: "36px 32px 28px",
-                textAlign: "center",
-                boxShadow: "0 20px 60px rgba(0,0,0,.15)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-        >
-            <div
-                style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: "50%",
-                    background: "#FEE2E2",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    margin: "0 auto 20px",
-                }}
-            >
-                <span
-                    className="material-symbols-outlined"
-                    style={{ fontSize: 36, color: "#DC2626" }}
-                >
-                    delete_forever
-                </span>
-            </div>
-            <div
-                style={{
-                    fontSize: 18,
-                    fontWeight: 900,
-                    color: "#DC2626",
-                    marginBottom: 8,
-                }}
-            >
-                Delete Employee?
-            </div>
-            <div
-                style={{
-                    fontSize: 13,
-                    color: "#64748B",
-                    marginBottom: 6,
-                    lineHeight: 1.6,
-                }}
-            >
-                You are about to permanently delete
-            </div>
-            <div
-                style={{
-                    fontSize: 15,
-                    fontWeight: 800,
-                    color: "var(--text)",
-                    marginBottom: 4,
-                }}
-            >
-                {staff.firstName} {staff.lastName}
-            </div>
-            <div
-                style={{
-                    fontSize: 12,
-                    color: "var(--muted)",
-                    marginBottom: 24,
-                }}
-            >
-                ID: #{staff.id} · {staff.designation}
-            </div>
-            <div
-                style={{
-                    background: "#FEF2F2",
-                    borderRadius: 8,
-                    padding: "10px 14px",
-                    marginBottom: 24,
-                    border: "1px solid #FECACA",
-                }}
-            >
-                <span style={{ fontSize: 11, fontWeight: 700, color: "#DC2626" }}>
-                    ⚠ This action cannot be undone. All data associated with this employee
-                    will be permanently removed.
-                </span>
-            </div>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-                <button
-                    className="btn btn-secondary"
-                    onClick={onCancel}
-                    style={{ minWidth: 120 }}
-                >
-                    Cancel
-                </button>
-                <button
-                    className="btn"
-                    onClick={onConfirm}
-                    style={{
-                        minWidth: 120,
-                        background: "#DC2626",
-                        color: "white",
-                        border: "none",
-                        fontWeight: 800,
-                    }}
-                >
-                    <span className="material-symbols-outlined ms">delete</span>
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-);
-
-/* ═══════════════════════════════════════════════════
    IMPORT EXCEL OVERLAY (functional)
    ═══════════════════════════════════════════════════ */
 const ImportOverlay = ({
@@ -533,10 +398,10 @@ const ImportOverlay = ({
                 const data = new Uint8Array(e.target!.result as ArrayBuffer);
                 const wb = XLSX.read(data, { type: "array" });
                 const ws = wb.Sheets[wb.SheetNames[0]];
-                const json: Record<string, string>[] = XLSX.utils.sheet_to_json(ws, { defval: "" });
+                const json: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, { defval: "" });
 
                 const rows: Staff[] = json.map((r, i) => {
-                    const firstName = (r["First Name"] || r["Name"] || r["firstName"] || "").toString().split(" ")[0] || `Staff${i}`;
+                    const firstName = (r["First Name"] || r["Name"] || r["firstName"] || "").toString().split(" ")[0] || `Staff ${i + 1}`;
                     const lastName = (r["Last Name"] || r["lastName"] || (r["Name"] || "").toString().split(" ").slice(1).join(" ") || "").toString();
                     return {
                         id: r["ID"] || r["id"] || `IMP-${Date.now()}-${i}`,
@@ -735,7 +600,7 @@ const ExportOverlay = ({
     fileName,
 }: {
     onClose: () => void;
-    buildPdf: (opts: { logo?: string; companyName: string; subtitle: string; footerText: string }) => InstanceType<typeof jsPDF>;
+    buildPdf: (opts: { logo?: string; companyName: string; subtitle: string; footerText: string }) => jsPDF;
     title?: string;
     defaultTitle?: string;
     defaultSubtitle?: string;
@@ -909,7 +774,7 @@ const ExportOverlay = ({
                                 ) : (
                                     <div style={{ textAlign: "center", padding: 20 }}>
                                         <span className="material-symbols-outlined" style={{ fontSize: 48, color: "#CBD5E1", display: "block", marginBottom: 8 }}>description</span>
-                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#94A3B8" }}>Click "Generate Preview" to see your PDF</div>
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: "#94A3B8" }}>Click \"Generate Preview\" to see your PDF</div>
                                         <div style={{ fontSize: 11, color: "#CBD5E1", marginTop: 4 }}>Customize branding options first</div>
                                     </div>
                                 )}
@@ -957,11 +822,7 @@ const ExportOverlay = ({
 /* ═══════════════════════════════════════════════════
    STAFF PAGE
    ═══════════════════════════════════════════════════ */
-export const StaffPage = ({
-    openModal: _openModal,
-}: {
-    openModal: (m: ModalName) => void;
-}) => {
+export const StaffPage = () => {
     const navigate = useNavigate();
 
     /* ── State ── */
@@ -969,12 +830,11 @@ export const StaffPage = ({
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const [roleFilter, setRoleFilter] = useState("All");
-    const [viewStaff, setViewStaff] = useState<{
-        s: Staff;
-        idx: number;
-    } | null>(null);
+    const [viewStaff, setViewStaff] = useState<{ s: Staff; idx: number } | null>(null);
     const [deleteStaff, setDeleteStaff] = useState<Staff | null>(null);
     const [showImport, setShowImport] = useState(false);
+    const [showExport, setShowExport] = useState(false);
+    const [exportIndividualStaff, setExportIndividualStaff] = useState<Staff | null>(null);
 
     /* ── Filtering ── */
     const filtered = staffList.filter((s) => {
@@ -986,10 +846,8 @@ export const StaffPage = ({
             s.id.toLowerCase().includes(q) ||
             s.designation.toLowerCase().includes(q) ||
             s.department.toLowerCase().includes(q);
-        const matchStatus =
-            statusFilter === "All" || s.status === statusFilter;
-        const matchRole =
-            roleFilter === "All" || s.roles.some((r) => r === roleFilter);
+        const matchStatus = statusFilter === "All" || s.status === statusFilter;
+        const matchRole = roleFilter === "All" || s.roles.some((r) => r === roleFilter);
         return matchSearch && matchStatus && matchRole;
     });
 
@@ -1015,7 +873,6 @@ export const StaffPage = ({
     const buildPdf = useCallback((opts: { logo?: string; companyName: string; subtitle: string; footerText: string }) => {
         const doc = new jsPDF({ orientation: "landscape" });
         const pw = doc.internal.pageSize.getWidth();
-        let startY = 10;
 
         // Header background
         doc.setFillColor(124, 58, 237);
@@ -1023,7 +880,9 @@ export const StaffPage = ({
 
         // Logo (if provided)
         if (opts.logo) {
-            try { doc.addImage(opts.logo, "PNG", 10, 5, 28, 28); startY = 10; } catch { /* ignore bad image */ }
+            try {
+                doc.addImage(opts.logo, "PNG", 10, 5, 28, 28);
+            } catch { /* ignore bad image */ }
         }
         const textX = opts.logo ? 44 : 14;
 
@@ -1041,11 +900,9 @@ export const StaffPage = ({
         doc.setFontSize(8);
         doc.text(`${filtered.length} employee records`, textX, 32);
 
-        startY = 44;
-
         // Table
         autoTable(doc, {
-            startY,
+            startY: 44,
             head: [["ID", "Name", "Designation", "Department", "Email", "Phone", "Employment", "Joining Date", "Status"]],
             body: filtered.map((s) => [
                 s.id, `${s.firstName} ${s.lastName}`, s.designation, s.department,
@@ -1069,9 +926,6 @@ export const StaffPage = ({
         return doc;
     }, [filtered]);
 
-    const [showExport, setShowExport] = useState(false);
-    const [exportIndividualStaff, setExportIndividualStaff] = useState<Staff | null>(null);
-
     /* ── Build Individual PDF (with branding) ── */
     const buildIndividualPdf = useCallback((s: Staff) => (opts: { logo?: string; companyName: string; subtitle: string; footerText: string }) => {
         const doc = new jsPDF();
@@ -1084,7 +938,9 @@ export const StaffPage = ({
 
         // Logo
         if (opts.logo) {
-            try { doc.addImage(opts.logo, "PNG", 10, 7, 30, 30); } catch { /* skip */ }
+            try {
+                doc.addImage(opts.logo, "PNG", 10, 7, 30, 30);
+            } catch { /* skip */ }
         }
         const textX = opts.logo ? 46 : 14;
 
@@ -1124,7 +980,9 @@ export const StaffPage = ({
         section("Bank Details");
         row("Bank Name", s.bankName); row("Account No.", s.accountNumber); row("IFSC Code", s.ifsc);
 
-        if (s.remarks) { y += 4; section("Remarks"); doc.setFontSize(9); doc.setTextColor(80); doc.text(s.remarks, 14, y, { maxWidth: 180 }); }
+        if (s.remarks) {
+            y += 4; section("Remarks"); doc.setFontSize(9); doc.setTextColor(80); doc.text(s.remarks, 14, y, { maxWidth: 180 });
+        }
 
         // Footer
         const ph = doc.internal.pageSize.getHeight();
@@ -1142,23 +1000,13 @@ export const StaffPage = ({
             <div className="page-header">
                 <div>
                     <div className="page-title">
-                        <span
-                            className="material-symbols-outlined ms"
-                            style={{ fontSize: 18 }}
-                        >
-                            group
-                        </span>
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>group</span>
                         Staff Management
                     </div>
-                    <div className="breadcrumb">
-                        Admin <span>/</span> Staff Management
-                    </div>
+                    <div className="breadcrumb">Admin <span>/</span> Staff Management</div>
                 </div>
                 <div className="header-actions">
-                    <button
-                        className="btn btn-success"
-                        onClick={() => setShowImport(true)}
-                    >
+                    <button className="btn btn-success" onClick={() => setShowImport(true)}>
                         <span className="material-symbols-outlined ms">upload_file</span>
                         Import Excel
                     </button>
@@ -1166,10 +1014,7 @@ export const StaffPage = ({
                         <span className="material-symbols-outlined ms">download</span>
                         Export PDF
                     </button>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => navigate("/staff/create")}
-                    >
+                    <button className="btn btn-primary" onClick={() => navigate("/staff/create")}>
                         <span className="material-symbols-outlined ms">person_add</span>
                         Add Employee
                     </button>
@@ -1177,61 +1022,22 @@ export const StaffPage = ({
             </div>
 
             <div className="page-body">
-                {/* ── Stat cards (dynamic) ── */}
+                {/* ── Stat cards ── */}
                 <div className="stat-grid stat-grid-4">
                     {[
-                        {
-                            bg: "#EDE9FE",
-                            ic: "#7C3AED",
-                            icon: "group",
-                            label: "Total Staff",
-                            val: String(totalStaff),
-                            trend: `${activeCount} active`,
-                            tc: "trend-up",
-                        },
-                        {
-                            bg: "#DCFCE7",
-                            ic: "#059669",
-                            icon: "check_circle",
-                            label: "Active",
-                            val: String(activeCount),
-                            trend: "",
-                            tc: "",
-                        },
-                        {
-                            bg: "#FEF3C7",
-                            ic: "#D97706",
-                            icon: "beach_access",
-                            label: "On Leave",
-                            val: String(onLeaveCount),
-                            trend: "",
-                            tc: "",
-                        },
-                        {
-                            bg: "#FEE2E2",
-                            ic: "#DC2626",
-                            icon: "block",
-                            label: "Inactive",
-                            val: String(inactiveCount),
-                            trend: "",
-                            tc: "",
-                        },
+                        { bg: "#EDE9FE", ic: "#7C3AED", icon: "group", label: "Total Staff", val: String(totalStaff), trend: `${activeCount} active`, tc: "trend-up" },
+                        { bg: "#DCFCE7", ic: "#059669", icon: "check_circle", label: "Active", val: String(activeCount), trend: "", tc: "" },
+                        { bg: "#FEF3C7", ic: "#D97706", icon: "beach_access", label: "On Leave", val: String(onLeaveCount), trend: "", tc: "" },
+                        { bg: "#FEE2E2", ic: "#DC2626", icon: "block", label: "Inactive", val: String(inactiveCount), trend: "", tc: "" },
                     ].map((s) => (
                         <div key={s.label} className="stat-card">
                             <div className="stat-icon" style={{ background: s.bg }}>
-                                <span
-                                    className="material-symbols-outlined ms"
-                                    style={{ color: s.ic }}
-                                >
-                                    {s.icon}
-                                </span>
+                                <span className="material-symbols-outlined ms" style={{ color: s.ic }}>{s.icon}</span>
                             </div>
                             <div>
                                 <div className="stat-label">{s.label}</div>
                                 <div className="stat-value">{s.val}</div>
-                                {s.trend && (
-                                    <div className={`stat-trend ${s.tc}`}>{s.trend}</div>
-                                )}
+                                {s.trend && <div className={`stat-trend ${s.tc}`}>{s.trend}</div>}
                             </div>
                         </div>
                     ))}
@@ -1239,80 +1045,28 @@ export const StaffPage = ({
 
                 {/* ── Search + filter bar ── */}
                 <div className="filter-bar">
-                    {/* Search */}
                     <div style={{ position: "relative", flex: 1, minWidth: 180 }}>
-                        <span
-                            className="material-symbols-outlined"
-                            style={{
-                                position: "absolute",
-                                left: 10,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                fontSize: 18,
-                                color: "var(--muted)",
-                                pointerEvents: "none",
-                            }}
-                        >
-                            search
-                        </span>
-                        <input
-                            className="search-input"
-                            style={{ width: "100%", paddingLeft: 36 }}
-                            placeholder="Search by name, email, role or ID…"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                        <span className="material-symbols-outlined" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 18, color: "var(--muted)", pointerEvents: "none" }}>search</span>
+                        <input className="search-input" style={{ width: "100%", paddingLeft: 36 }} placeholder="Search by name, email, role or ID…" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
-                    {/* Role filter */}
                     <div style={{ position: "relative", flexShrink: 0 }}>
-                        <select
-                            className="form-select"
-                            style={{ width: 150, paddingRight: 32 }}
-                            value={roleFilter}
-                            onChange={(e) => setRoleFilter(e.target.value)}
-                        >
+                        <select className="form-select" style={{ width: 150, paddingRight: 32 }} value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
                             <option value="All">All Roles</option>
                             <option value="Manager">Manager</option>
                             <option value="Coordinator">Coordinator</option>
                             <option value="Fleet Operator">Fleet Operator</option>
                             <option value="Support">Support</option>
                         </select>
-                        <ChevronDown
-                            size={16}
-                            style={{
-                                position: "absolute",
-                                right: 10,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "var(--muted)",
-                                pointerEvents: "none",
-                            }}
-                        />
+                        <ChevronDown size={16} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: "var(--muted)", pointerEvents: "none" }} />
                     </div>
-                    {/* Status filter */}
                     <div style={{ position: "relative", flexShrink: 0 }}>
-                        <select
-                            className="form-select"
-                            style={{ width: 140, paddingRight: 32 }}
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                        >
+                        <select className="form-select" style={{ width: 140, paddingRight: 32 }} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
                             <option value="All">All Status</option>
                             <option value="Active">Active</option>
                             <option value="On Leave">On Leave</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        <ChevronDown
-                            size={16}
-                            style={{
-                                position: "absolute",
-                                right: 10,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                color: "var(--muted)",
-                                pointerEvents: "none",
-                            }}
-                        />
+                        <ChevronDown size={16} style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", color: "var(--muted)", pointerEvents: "none" }} />
                     </div>
                 </div>
 
@@ -1332,32 +1086,9 @@ export const StaffPage = ({
                         <tbody>
                             {filtered.length === 0 ? (
                                 <tr>
-                                    <td
-                                        colSpan={6}
-                                        style={{
-                                            textAlign: "center",
-                                            padding: "40px 0",
-                                            color: "var(--muted)",
-                                            fontSize: 13,
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        <span
-                                            className="material-symbols-outlined"
-                                            style={{
-                                                fontSize: 40,
-                                                display: "block",
-                                                marginBottom: 8,
-                                                color: "#CBD5E1",
-                                            }}
-                                        >
-                                            search_off
-                                        </span>
-                                        No employees found
-                                        {search ? ` matching "${search}"` : ""}
-                                        {statusFilter !== "All"
-                                            ? ` with status "${statusFilter}"`
-                                            : ""}
+                                    <td colSpan={6} style={{ textAlign: "center", padding: "40px 0", color: "var(--muted)", fontSize: 13, fontWeight: 600 }}>
+                                        <span className="material-symbols-outlined" style={{ fontSize: 40, display: "block", marginBottom: 8, color: "#CBD5E1" }}>search_off</span>
+                                        No employees found {search ? ` matching "${search}"` : ""}
                                     </td>
                                 </tr>
                             ) : (
@@ -1368,107 +1099,29 @@ export const StaffPage = ({
                                     return (
                                         <tr key={s.id}>
                                             <td>
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: 9,
-                                                    }}
-                                                >
-                                                    <div
-                                                        className="avatar"
-                                                        style={{
-                                                            background: av.bg,
-                                                            color: av.cl,
-                                                            width: 36,
-                                                            height: 36,
-                                                            fontSize: 12,
-                                                        }}
-                                                    >
-                                                        {init}
-                                                    </div>
+                                                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                                                    <div className="avatar" style={{ background: av.bg, color: av.cl, width: 36, height: 36, fontSize: 12 }}>{init}</div>
                                                     <div>
-                                                        <div style={{ fontWeight: 800 }}>
-                                                            {s.firstName} {s.lastName}
-                                                        </div>
-                                                        <div
-                                                            style={{
-                                                                fontSize: 11,
-                                                                color: "var(--muted)",
-                                                            }}
-                                                        >
-                                                            ID: {s.id}
-                                                        </div>
+                                                        <div style={{ fontWeight: 800 }}>{s.firstName} {s.lastName}</div>
+                                                        <div style={{ fontSize: 11, color: "var(--muted)" }}>ID: {s.id}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <b>{s.designation}</b>
-                                            </td>
+                                            <td><b>{s.designation}</b></td>
                                             <td>
                                                 <div style={{ fontSize: 12 }}>
                                                     <div>{s.email}</div>
-                                                    <div style={{ color: "var(--muted)" }}>
-                                                        {s.phone}
-                                                    </div>
+                                                    <div style={{ color: "var(--muted)" }}>{s.phone}</div>
                                                 </div>
                                             </td>
-                                            <td
-                                                style={{
-                                                    fontSize: 12,
-                                                    color: "var(--muted)",
-                                                }}
-                                            >
-                                                {s.joiningDate}
-                                            </td>
-                                            <td>
-                                                <Badge variant={staffStatusVariant(s.status)}>
-                                                    {s.status}
-                                                </Badge>
-                                            </td>
+                                            <td style={{ fontSize: 12, color: "var(--muted)" }}>{s.joiningDate}</td>
+                                            <td><Badge variant={staffStatusVariant(s.status)}>{s.status}</Badge></td>
                                             <td>
                                                 <div className="actions-col">
-                                                    <button
-                                                        className="act-btn act-view"
-                                                        title="View Details"
-                                                        onClick={() =>
-                                                            setViewStaff({ s, idx: globalIdx })
-                                                        }
-                                                    >
-                                                        <span className="material-symbols-outlined ms">
-                                                            visibility
-                                                        </span>
-                                                    </button>
-                                                    <button
-                                                        className="act-btn act-edit"
-                                                        title="Edit Employee"
-                                                        onClick={() =>
-                                                            navigate(`/staff/edit/${s.id}`)
-                                                        }
-                                                    >
-                                                        <span className="material-symbols-outlined ms">
-                                                            edit
-                                                        </span>
-                                                    </button>
-                                                    <button
-                                                        className="act-btn"
-                                                        title="Export PDF"
-                                                        style={{ color: "#7C3AED" }}
-                                                        onClick={() => setExportIndividualStaff(s)}
-                                                    >
-                                                        <span className="material-symbols-outlined ms">
-                                                            picture_as_pdf
-                                                        </span>
-                                                    </button>
-                                                    <button
-                                                        className="act-btn act-delete"
-                                                        title="Delete Employee"
-                                                        onClick={() => setDeleteStaff(s)}
-                                                    >
-                                                        <span className="material-symbols-outlined ms">
-                                                            delete
-                                                        </span>
-                                                    </button>
+                                                    <button className="act-btn act-view" title="View Details" onClick={() => setViewStaff({ s, idx: globalIdx })}><span className="material-symbols-outlined ms">visibility</span></button>
+                                                    <button className="act-btn act-edit" title="Edit Employee" onClick={() => navigate(`/staff/edit/${s.id}`)}><span className="material-symbols-outlined ms">edit</span></button>
+                                                    <button className="act-btn" title="Export PDF" style={{ color: "#7C3AED" }} onClick={() => setExportIndividualStaff(s)}><span className="material-symbols-outlined ms">picture_as_pdf</span></button>
+                                                    <button className="act-btn act-delete" title="Delete Employee" onClick={() => setDeleteStaff(s)}><span className="material-symbols-outlined ms">delete</span></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1478,56 +1131,44 @@ export const StaffPage = ({
                         </tbody>
                     </table>
                     <Pagination
-                        info={`Showing ${filtered.length} of ${staffList.length} employees`}
-                        pages={[1, 2, 3]}
-                        current={1}
+                        totalItems={staffList.length}
+                        itemsPerPage={10}
+                        totalPages={Math.ceil(staffList.length / 10)}
+                        onPageChange={() => { }}
+                        currentPage={1}
                     />
                 </div>
             </div>
 
-            {/* ── View overlay ── */}
-            {viewStaff && (
-                <ViewOverlay
-                    staff={viewStaff.s}
-                    index={viewStaff.idx}
-                    onClose={() => setViewStaff(null)}
-                />
-            )}
+            {/* ── Overlays ── */}
+            {viewStaff && <ViewOverlay staff={viewStaff.s} index={viewStaff.idx} onClose={() => setViewStaff(null)} />}
 
-            {/* ── Delete confirmation ── */}
             {deleteStaff && (
-                <DeleteOverlay
-                    staff={deleteStaff}
-                    onConfirm={handleDelete}
+                <ConfirmationModal
                     onCancel={() => setDeleteStaff(null)}
+                    onConfirm={handleDelete}
+                    title="Delete Employee"
+                    message={`Are you sure you want to delete ${deleteStaff.firstName} ${deleteStaff.lastName}? This action cannot be undone.`}
+                    confirmLabel="Delete"
+                    type="delete"
                 />
             )}
 
-            {/* ── Import Excel overlay ── */}
-            {showImport && (
-                <ImportOverlay onClose={() => setShowImport(false)} onImport={handleImport} />
-            )}
+            {showImport && <ImportOverlay onClose={() => setShowImport(false)} onImport={handleImport} />}
+            {showExport && <ExportOverlay onClose={() => setShowExport(false)} buildPdf={buildPdf} />}
 
-            {/* ── Export PDF overlay (bulk) ── */}
-            {showExport && (
-                <ExportOverlay
-                    onClose={() => setShowExport(false)}
-                    buildPdf={buildPdf}
-                />
-            )}
-
-            {/* ── Export PDF overlay (individual) ── */}
             {exportIndividualStaff && (
                 <ExportOverlay
                     onClose={() => setExportIndividualStaff(null)}
                     buildPdf={buildIndividualPdf(exportIndividualStaff)}
                     title={`Export ${exportIndividualStaff.firstName} ${exportIndividualStaff.lastName}`}
                     defaultTitle={`${exportIndividualStaff.firstName} ${exportIndividualStaff.lastName}`}
-                    defaultSubtitle={`ID: ${exportIndividualStaff.id}  ·  ${exportIndividualStaff.designation}`}
+                    defaultSubtitle={`ID: ${exportIndividualStaff.id} · ${exportIndividualStaff.designation}`}
                     fileName={`${exportIndividualStaff.firstName}-${exportIndividualStaff.lastName}-${exportIndividualStaff.id}.pdf`}
                 />
             )}
         </>
     );
 };
+
 export default StaffPage;

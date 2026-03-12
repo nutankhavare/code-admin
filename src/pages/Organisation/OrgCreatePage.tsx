@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
-import { Building2, School, Car, Handshake, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import './Organisation.css';
 import { type OrgType, ORG_TYPE_LABELS } from './organisation.types';
 
@@ -15,38 +15,38 @@ const ORG_OPTIONS: {
     type: OrgType;
     label: string;
     description: string;
-    icon: React.ReactElement; // Using React.ReactElement for cloneElement compatibility
+    icon: string;
     color: string;
 }[] = [
-    {
-        type: 'OFFICE',
-        label: 'Office / Corporate',
-        description: 'Registered corporate office, company or business entity',
-        icon: <Building2 size={32} />,
-        color: '#6366f1',
-    },
-    {
-        type: 'INSTITUTION',
-        label: 'Institution / School',
-        description: 'Educational institution, school, college or university',
-        icon: <School size={32} />,
-        color: '#0ea5e9',
-    },
-    {
-        type: 'MOTOR_DRIVING_SCHOOL',
-        label: 'Motor Driving School',
-        description: 'Registered MDS with RTO license number',
-        icon: <Car size={32} />,
-        color: '#10b981',
-    },
-    {
-        type: 'VENDOR',
-        label: 'Vendor / Supplier',
-        description: 'Third-party vendor, supplier or service provider',
-        icon: <Handshake size={32} />,
-        color: '#f59e0b',
-    },
-];
+        {
+            type: 'OFFICE',
+            label: 'Office / Corporate',
+            description: 'Registered corporate office, company or business entity',
+            icon: 'corporate_fare',
+            color: '#6366f1',
+        },
+        {
+            type: 'INSTITUTION',
+            label: 'Institution / School',
+            description: 'Educational institution, school, college or university',
+            icon: 'school',
+            color: '#0ea5e9',
+        },
+        {
+            type: 'MOTOR_DRIVING_SCHOOL',
+            label: 'Motor Driving School',
+            description: 'Registered MDS with RTO license number',
+            icon: 'directions_car',
+            color: '#10b981',
+        },
+        {
+            type: 'VENDOR',
+            label: 'Vendor / Supplier',
+            description: 'Third-party vendor, supplier or service provider',
+            icon: 'storefront',
+            color: '#f59e0b',
+        },
+    ];
 
 const OrgCreatePage: React.FC = () => {
     const navigate = useNavigate();
@@ -72,19 +72,26 @@ const OrgCreatePage: React.FC = () => {
     if (step === 1) {
         return (
             <div className="page-container">
-                <div className="page-header-bar">
-                    <div className="breadcrumb-container">
-                        <button
-                            className="breadcrumb-link"
-                            onClick={() => navigate('/Organisation')}
-                        >
-                            ORGANISATIONS
-                        </button>
-                        <span className="breadcrumb-sep">/</span>
-                        <span className="breadcrumb-current">SELECT TYPE</span>
+                <div className="page-header">
+                    <div>
+                        <div className="page-title">
+                            <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                                add_business
+                            </span>
+                            Onboarding New Organisation
+                        </div>
+                        <div className="breadcrumb">
+                            <span
+                                style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                                onClick={() => navigate('/Organisation')}
+                            >
+                                ORGANISATIONS
+                            </span>
+                            <span>/</span> SELECT TYPE
+                        </div>
                     </div>
-                    <button className="btn btn--back" onClick={() => navigate('/Organisation')}>
-                        <ChevronLeft size={16} /> BACK
+                    <button className="btn btn-secondary" onClick={() => navigate('/Organisation')}>
+                        <span className="material-symbols-outlined ms">arrow_back</span> BACK
                     </button>
                 </div>
 
@@ -110,7 +117,7 @@ const OrgCreatePage: React.FC = () => {
                                     className="org-type-icon"
                                     style={{ color: opt.color, background: opt.color + '12' }}
                                 >
-                                    {opt.icon}
+                                    <span className="material-symbols-outlined ms" style={{ fontSize: 32 }}>{opt.icon}</span>
                                 </div>
                                 <div className="org-type-card-label">{opt.label}</div>
                                 <div className="org-type-card-desc">{opt.description}</div>
@@ -128,25 +135,38 @@ const OrgCreatePage: React.FC = () => {
     /* ──────────────────── STEP 2 ──────────────────────── */
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button className="breadcrumb-link" onClick={() => navigate('/Organisation')}>
-                        ORGANISATIONS
-                    </button>
-                    <span className="breadcrumb-sep">/</span>
-                    <button className="breadcrumb-link" onClick={() => setStep(1)}>
-                        SELECT TYPE
-                    </button>
-                    <span className="breadcrumb-sep">/</span>
-                    <span className="breadcrumb-current">CREATE {selectedOption?.label.toUpperCase()}</span>
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            add_business
+                        </span>
+                        NEW {selectedType ? ORG_TYPE_LABELS[selectedType].toUpperCase() : ''} ONBOARDING
+                    </div>
+                    <div className="breadcrumb">
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                            onClick={() => navigate('/Organisation')}
+                        >
+                            ORGANISATIONS
+                        </span>
+                        <span>/</span>
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                            onClick={() => setStep(1)}
+                        >
+                            SELECT TYPE
+                        </span>
+                        <span>/</span> CREATE {selectedOption?.label.toUpperCase()}
+                    </div>
                 </div>
-                <button className="btn btn--back" onClick={() => setStep(1)}>
-                    <ChevronLeft size={16} /> BACK
+                <button className="btn btn-secondary" onClick={() => setStep(1)}>
+                    <span className="material-symbols-outlined ms">arrow_back</span> BACK
                 </button>
             </div>
 
             <div className="org-form-wrapper" style={{ paddingBottom: '40px' }}>
-                <div className="org-form-card" style={{ maxWidth: 880 }}>
+                <div className="org-form-card" style={{ maxWidth: 880, margin: '0 auto' }}>
                     <div
                         className="org-form-header"
                         style={{
@@ -155,8 +175,8 @@ const OrgCreatePage: React.FC = () => {
                             background: '#f8fafc'
                         }}
                     >
-                        <span className="org-form-icon" style={{ 
-                            color: selectedOption?.color, 
+                        <span className="org-form-icon" style={{
+                            color: selectedOption?.color,
                             background: selectedOption?.color + '12',
                             width: '48px',
                             height: '48px',
@@ -165,7 +185,7 @@ const OrgCreatePage: React.FC = () => {
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            {selectedOption ? React.cloneElement(selectedOption.icon as any, { size: 24 }) : null}
+                            <span className="material-symbols-outlined ms" style={{ fontSize: 24 }}>{selectedOption?.icon}</span>
                         </span>
                         <div>
                             <div style={{ fontWeight: 900, fontSize: '14px', letterSpacing: '0.02em' }}>
@@ -186,23 +206,33 @@ const OrgCreatePage: React.FC = () => {
                                 {selectedType === 'VENDOR' && <VendorCreateForm />}
                             </div>
 
-                            <div className="org-form-footer" style={{ padding: '24px 32px' }}>
+                            <div
+                                className="org-form-footer"
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    gap: 12,
+                                    paddingBottom: 8,
+                                    borderTop: '1.5px solid var(--border)',
+                                    padding: '24px 32px'
+                                }}
+                            >
                                 <button
                                     type="button"
-                                    className="btn btn--outline"
+                                    className="btn btn-secondary"
                                     onClick={() => setStep(1)}
                                 >
-                                    Cancel
+                                    CANCEL
                                 </button>
                                 <button
                                     type="submit"
-                                    className="btn btn--primary"
+                                    className="btn btn-primary"
                                     style={{
+                                        minWidth: 200,
                                         background: selectedOption?.color || 'var(--primary)',
-                                        boxShadow: `0 8px 20px ${selectedOption?.color}40`,
                                     }}
                                 >
-                                    Complete Onboarding
+                                    <span className="material-symbols-outlined ms">save</span> COMPLETE ONBOARDING
                                 </button>
                             </div>
                         </form>

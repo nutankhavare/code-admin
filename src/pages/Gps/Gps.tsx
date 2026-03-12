@@ -4,8 +4,9 @@ import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../Components/Table/Pagination.tsx';
 import Table, { type Column } from '../../Components/Table/Table.tsx';
-import DeleteModal from '../../Components/UI/DeleteModal';
-import type { GpsDevice } from './gpsDevice.types.ts';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
+import { Badge } from '../../Components/UI/Badge';
+import type { GpsDevice } from './gpsdevice.types.ts';
 
 const mockGps: GpsDevice[] = Array.from({ length: 14 }, (_, i) => ({
     id: i + 1,
@@ -20,16 +21,10 @@ const mockGps: GpsDevice[] = Array.from({ length: 14 }, (_, i) => ({
     status: (i % 5 === 0
         ? 'Offline'
         : i % 3 === 0
-          ? 'Stationary'
-          : 'Moving') as GpsDevice['status'],
+            ? 'Stationary'
+            : 'Moving') as GpsDevice['status'],
     lastUpdate: new Date(Date.now() - i * 1800000).toLocaleString('en-IN'),
 }));
-
-const statusColors: Record<string, string> = {
-    Moving: '#10b981',
-    Stationary: '#f59e0b',
-    Offline: '#ef4444',
-};
 
 const GpsDevices: React.FC = () => {
     const navigate = useNavigate();
@@ -100,17 +95,10 @@ const GpsDevices: React.FC = () => {
         {
             key: 'status',
             label: 'Status',
-            render: (val) => (
-                <span
-                    className="status-badge"
-                    style={{
-                        background: statusColors[String(val)] + '20',
-                        color: statusColors[String(val)],
-                    }}
-                >
-                    {String(val)}
-                </span>
-            ),
+            render: (val) => {
+                const variant = val === 'Moving' ? 'success' : val === 'Stationary' ? 'warning' : 'error';
+                return <Badge variant={variant}>{String(val)}</Badge>;
+            },
         },
 
         { key: 'lastUpdate', label: 'Last Update' },
@@ -158,79 +146,82 @@ const GpsDevices: React.FC = () => {
     ];
 
     return (
-        <div className="page-container">
+        <div className="page">
             {deleteTarget && (
-                <DeleteModal
-                    itemName={deleteTarget.deviceId}
-                    itemLabel="GPS device"
+                <ConfirmationModal
+                    title="Delete GPS Device?"
+                    message={`Are you sure you want to delete the GPS device "${deleteTarget.deviceId}"? This action cannot be undone.`}
+                    confirmLabel="Delete"
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => setDeleteTarget(null)}
+                    type="delete"
                 />
             )}
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">GPS DEVICES</span>
-                </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="page-header">
+                <div className="breadcrumb">
+                    MASTERS <span>/ GPS DEVICES</span>
+                </div>
+                <div className="header-actions">
                     <button
-                        className="btn btn--outline"
+                        className="btn btn-secondary"
                         onClick={() => fileInputRef.current?.click()}
                     >
                         Import
                     </button>
-
-                    <button className="btn btn--outline" onClick={exportCSV}>
+                    <button className="btn btn-secondary" onClick={exportCSV}>
                         Export
                     </button>
-
                     <button
-                        className="btn btn--header-add"
+                        className="btn btn-primary"
                         onClick={() => navigate('/masters/gps-devices/add')}
                     >
                         <Plus size={16} /> Add GPS Device
                     </button>
                 </div>
-
                 <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
             </div>
 
-            <div className="card">
-                <div className="table-toolbar">
-                    <input
-                        className="search-input"
-                        placeholder="Search GPS devices..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setPage(1);
-                        }}
+            <div className="page-body">
+                <div className="card">
+                    <div className="filter-bar">
+                        <input
+                            className="search-input"
+                            placeholder="Search GPS devices..."
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+
+                        <select
+                            className="filter-select"
+                            value={statusFilter}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value);
+                                setPage(1);
+                            }}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Moving">Moving</option>
+                            <option value="Stationary">Stationary</option>
+                            <option value="Offline">Offline</option>
+                        </select>
+                    </div>
+
+                    <div className="table-card">
+                        <Table columns={columns} data={paginated} />
+                    </div>
+
+                    <Pagination
+                        currentPage={page}
+                        totalPages={Math.ceil(filtered.length / perPage)}
+                        onPageChange={setPage}
+                        totalItems={filtered.length}
+                        itemsPerPage={perPage}
                     />
-
-                    <select
-                        className="filter-select"
-                        value={statusFilter}
-                        onChange={(e) => {
-                            setStatusFilter(e.target.value);
-                            setPage(1);
-                        }}
-                    >
-                        <option value="All">All Status</option>
-                        <option value="Moving">Moving</option>
-                        <option value="Stationary">Stationary</option>
-                        <option value="Offline">Offline</option>
-                    </select>
                 </div>
-
-                <Table columns={columns} data={paginated} />
-
-                <Pagination
-                    currentPage={page}
-                    totalPages={Math.ceil(filtered.length / perPage)}
-                    onPageChange={setPage}
-                    totalItems={filtered.length}
-                    itemsPerPage={perPage}
-                />
             </div>
         </div>
     );

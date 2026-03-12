@@ -1,27 +1,36 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import type { Device } from "../../types/supplier"
-import { ChevronLeft } from "lucide-react"
 import './Supplier.css'
 
 export default function SupplierDevicesPage() {
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const location = useLocation()
-    const navigate = useNavigate()
-
-    const devices = location.state as Device[]
+    const devices = location.state as Device[];
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button className="breadcrumb-link" onClick={() => navigate('/suppliers')}>
-                        Suppliers
-                    </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">Supplier Devices</span>
+            {/* ── HEADER & BREADCRUMBS ── */}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            devices
+                        </span>
+                        Supplier Devices
+                    </div>
+                    <div className="breadcrumb">
+                        <span
+                            style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }}
+                            onClick={() => navigate('/suppliers')}
+                        >
+                            SUPPLIERS
+                        </span>
+                        <span>/</span> SUPPLIER DEVICES
+                    </div>
                 </div>
-                <button className="btn btn--back" onClick={() => navigate('/suppliers')}>
-                    <ChevronLeft size={16} /> Back
+                <button className="btn btn-secondary" onClick={() => navigate('/suppliers')}>
+                    <span className="material-symbols-outlined ms">arrow_back</span> BACK
                 </button>
             </div>
 
@@ -29,7 +38,7 @@ export default function SupplierDevicesPage() {
                 <table className="data-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th style={{ paddingLeft: '24px' }}>ID</th>
                             <th>Device Name</th>
                             <th>Type</th>
                         </tr>
@@ -37,7 +46,7 @@ export default function SupplierDevicesPage() {
                     <tbody>
                         {devices?.map((device) => (
                             <tr key={device.id}>
-                                <td>#{device.id}</td>
+                                <td style={{ paddingLeft: '24px' }}>#{device.id}</td>
                                 <td>
                                     <strong>{device.name}</strong>
                                 </td>
@@ -47,6 +56,11 @@ export default function SupplierDevicesPage() {
                                         style={{
                                             background: device.type.toLowerCase().includes('beacon') ? '#8b5cf620' : '#10b98120',
                                             color: device.type.toLowerCase().includes('beacon') ? '#7c3aed' : '#10b981',
+                                            fontSize: '10px',
+                                            fontWeight: 800,
+                                            textTransform: 'uppercase',
+                                            padding: '4px 10px',
+                                            borderRadius: '6px'
                                         }}
                                     >
                                         {device.type}
@@ -58,5 +72,5 @@ export default function SupplierDevicesPage() {
                 </table>
             </div>
         </div>
-    )
+    );
 }

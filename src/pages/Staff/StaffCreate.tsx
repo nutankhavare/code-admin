@@ -1,5 +1,7 @@
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { INITIAL_STAFF } from './StaffData';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
 
 /* ── Types ─────────────────────────────────────── */
 interface Form {
@@ -191,11 +193,45 @@ const Err = ({ msg }: { msg?: string }) =>
 /* ── Component ─────────────────────────────────── */
 export const StaffCreate = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const isEdit = !!id;
+
     const [form, setForm] = useState<Form>(INIT);
     const [errs, setErrs] = useState<Errs>({});
     const [saved, setSaved] = useState(false);
     const [preview, setPreview] = useState<string | null>(null);
+    const [showConfirm, setShowConfirm] = useState(false);
     const photoRef = useRef<HTMLInputElement>(null);
+
+    // Pre-fill if editing
+    useEffect(() => {
+        if (isEdit && id) {
+            const staff = INITIAL_STAFF.find(s => s.id === id);
+            if (staff) {
+                setForm({
+                    ...INIT,
+                    employeeId: staff.id,
+                    firstName: staff.firstName,
+                    lastName: staff.lastName,
+                    gender: staff.gender,
+                    joiningDate: staff.joiningDate,
+                    designation: staff.designation,
+                    officialEmail: staff.email,
+                    mobile: staff.phone,
+                    address1: staff.address,
+                    city: staff.city,
+                    state: staff.state,
+                    pinCode: staff.pinCode,
+                    bankName: staff.bankName,
+                    accountNumber: staff.accountNumber,
+                    ifsc: staff.ifsc,
+                    accountStatus: staff.status === 'On Leave' ? 'Active' : staff.status, // mapping simplified for demo
+                    roles: staff.roles,
+                    remarks: staff.remarks || '',
+                });
+            }
+        }
+    }, [isEdit, id]);
 
     /* field helpers */
     const f =
@@ -253,6 +289,15 @@ export const StaffCreate = () => {
             if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
+        if (isEdit) {
+            setShowConfirm(true);
+        } else {
+            setSaved(true);
+        }
+    };
+
+    const onConfirmUpdate = () => {
+        setShowConfirm(false);
         setSaved(true);
     };
 
@@ -318,10 +363,10 @@ export const StaffCreate = () => {
                                 marginBottom: 8,
                             }}
                         >
-                            Employee Created Successfully
+                            Employee {isEdit ? 'Updated' : 'Created'} Successfully
                         </div>
                         <div style={{ fontSize: 13, color: '#059669', marginBottom: 6 }}>
-                            {form.firstName} {form.lastName} has been added to the organization.
+                            {form.firstName} {form.lastName} has been {isEdit ? 'updated' : 'added to the organization'}.
                         </div>
                         <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 32 }}>
                             Status:{' '}
@@ -377,7 +422,7 @@ export const StaffCreate = () => {
                         <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
                             group
                         </span>
-                        Add New Employee
+                        {isEdit ? 'Edit Employee' : 'Add New Employee'}
                     </div>
                     <div className="breadcrumb">
                         <span
@@ -390,7 +435,7 @@ export const StaffCreate = () => {
                         >
                             Staff Management
                         </span>
-                        <span>/</span> Add New Employee
+                        <span>/</span> {isEdit ? 'Edit Employee' : 'Add New Employee'}
                     </div>
                 </div>
                 <button
@@ -1197,12 +1242,23 @@ export const StaffCreate = () => {
                             onClick={handleSave}
                             style={{ minWidth: 200 }}
                         >
-                            <span className="material-symbols-outlined ms">save</span> SAVE EMPLOYEE
+                            <span className="material-symbols-outlined ms">save</span> {isEdit ? 'UPDATE' : 'SAVE'} EMPLOYEE
                             RECORD
                         </button>
                     </div>
                 </div>
             </div>
+
+            {showConfirm && (
+                <ConfirmationModal
+                    onCancel={() => setShowConfirm(false)}
+                    onConfirm={onConfirmUpdate}
+                    title="Update Employee"
+                    message={`Are you sure you want to update ${form.firstName} ${form.lastName}'s record?`}
+                    confirmLabel="Update"
+                    type="update"
+                />
+            )}
         </>
     );
 };

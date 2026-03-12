@@ -1,7 +1,35 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Beacon.css';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
+
+/* ── StaffCreate style helpers ────────────────────────── */
+const SectionHeader = ({ icon, title }: { icon: string; title: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 20px', borderBottom: '1.5px solid var(--border)', background: 'var(--surface)' }}>
+        <span className="material-symbols-outlined" style={{ fontSize: 18, color: 'var(--primary)' }}>{icon}</span>
+        <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: '.07em', textTransform: 'uppercase' }}>{title}</span>
+    </div>
+);
+
+const Card = ({ children }: { children: React.ReactNode }) => (
+    <div style={{ background: 'white', border: '1.5px solid var(--border)', borderRadius: 12, marginBottom: 20, overflow: 'hidden' }}>
+        {children}
+    </div>
+);
+
+const Body = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ padding: '20px 22px', ...style }}>{children}</div>
+);
+
+const Grid = ({ cols, children, style }: { cols: string; children: React.ReactNode; style?: React.CSSProperties }) => (
+    <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 16, ...style }}>{children}</div>
+);
+
+const Label = ({ children }: { children: React.ReactNode }) => (
+    <label style={{ display: 'block', fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.06em', color: '#64748B', marginBottom: 5 }}>
+        {children}
+    </label>
+);
 
 const EditBeaconDevice: React.FC = () => {
     const navigate = useNavigate();
@@ -15,201 +43,164 @@ const EditBeaconDevice: React.FC = () => {
         battery: '80',
         status: 'Online',
         description: 'Beacon device used for indoor tracking',
+        deviceDoc: null as File | null,
     });
 
     const [error, setError] = useState('');
+    const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
         setError('');
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleSave = (e: any) => {
-        e.preventDefault();
+    const handleDoc = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setForm((v) => ({ ...v, deviceDoc: file }));
+        }
+    };
 
+    const handleSaveClick = (e: React.FormEvent) => {
+        e.preventDefault();
         if (!form.deviceId || !form.name || !form.macAddress) {
             setError('Device ID, Name and MAC Address are required');
             return;
         }
+        setShowUpdateConfirm(true);
+    };
 
-        // eslint-disable-next-line no-console
+    const handleConfirmSave = () => {
         console.log('Beacon Device Updated:', form);
-
+        setShowUpdateConfirm(false);
         navigate('/masters/beacon-devices');
     };
 
     const handleReset = () => {
         setForm({
-            deviceId: '',
-            name: '',
-            macAddress: '',
-            organisation: '',
-            battery: '',
+            deviceId: `BCN-${id}`,
+            name: `Beacon ${id}`,
+            macAddress: 'AA:BB:CC:DD:EE:FF',
+            organisation: 'TechCorp',
+            battery: '80',
             status: 'Online',
-            description: '',
+            description: 'Beacon device used for indoor tracking',
+            deviceDoc: null,
         });
         setError('');
     };
 
     return (
         <div className="page-container">
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <button
-                        className="breadcrumb-link"
-                        onClick={() => navigate('/masters/beacon-devices')}
-                    >
-                        Beacon Devices
-                    </button>
-                    <span className="breadcrumb-sep">›</span>
-                    <span className="breadcrumb-current">Edit: {form.deviceId}</span>
+            {showUpdateConfirm && (
+                <ConfirmationModal
+                    title="Update Beacon Device?"
+                    message={`Are you sure you want to save the changes for ${form.name}?`}
+                    confirmLabel="Update"
+                    onConfirm={handleConfirmSave}
+                    onCancel={() => setShowUpdateConfirm(false)}
+                    type="update"
+                />
+            )}
+
+            <div className="page-header" style={{ maxWidth: 800, margin: '0 auto 20px auto', width: '100%' }}>
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>sensors</span>
+                        Update Beacon Device
+                    </div>
+                    <div className="breadcrumb">
+                        <span style={{ cursor: 'pointer', color: 'var(--primary)', fontWeight: 700 }} onClick={() => navigate('/masters/beacon-devices')}>Beacon Management</span>
+                        <span>/</span> Update Beacon Device
+                    </div>
                 </div>
-                <button
-                    className="btn btn--back"
-                    onClick={() => navigate('/masters/beacon-devices')}
-                >
-                    <ChevronLeft size={16} /> Back
+                <button className="btn btn-secondary" onClick={() => navigate('/masters/beacon-devices')} style={{ flexShrink: 0 }}>
+                    <span className="material-symbols-outlined ms">arrow_back</span> Back to List
                 </button>
             </div>
 
-            <div className="bd-form-wrapper">
-                <div className="bd-form-card">
-                    <div className="bd-form-header">
-                        <span className="bd-form-icon">✏️</span>
-                        <span>EDIT BEACON DEVICE</span>
-                    </div>
+            <div className="page-body">
+                <div style={{ maxWidth: 800, width: '100%', margin: '0 auto', paddingBottom: 40 }}>
+                    <form onSubmit={handleSaveClick}>
+                        {/* 1. Device Information */}
+                        <Card>
+                            <SectionHeader icon="inventory" title="Device Information" />
+                            <Body>
+                                <Grid cols="repeat(3, 1fr)">
+                                    <div className="form-group">
+                                        <Label>Device ID *</Label>
+                                        <input className="form-input" name="deviceId" value={form.deviceId} onChange={handleChange} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <Label>Device Name *</Label>
+                                        <input className="form-input" name="name" value={form.name} onChange={handleChange} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <Label>MAC Address *</Label>
+                                        <input className="form-input" name="macAddress" value={form.macAddress} onChange={handleChange} required />
+                                    </div>
+                                </Grid>
+                            </Body>
+                        </Card>
 
-                    <form onSubmit={handleSave}>
-                        {/* DEVICE INFORMATION */}
-                        <div className="bd-section">
-                            <div className="bd-section-title">
-                                <span className="bd-section-icon" style={{ color: '#ef4444' }}>
-                                    📋
-                                </span>
-                                DEVICE INFORMATION
-                            </div>
-
-                            <div className="bd-section-body">
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        DEVICE ID <span style={{ color: '#ef4444' }}>*</span>
-                                    </label>
-                                    <input
-                                        className={`form-input ${error ? 'input-error' : ''}`}
-                                        name="deviceId"
-                                        value={form.deviceId}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        DEVICE NAME <span style={{ color: '#ef4444' }}>*</span>
-                                    </label>
-                                    <input
-                                        className="form-input"
-                                        name="name"
-                                        value={form.name}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        MAC ADDRESS <span style={{ color: '#ef4444' }}>*</span>
-                                    </label>
-                                    <input
-                                        className="form-input"
-                                        name="macAddress"
-                                        value={form.macAddress}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* DEVICE DETAILS */}
-                        <div className="bd-section">
-                            <div className="bd-section-title">
-                                <span className="bd-section-icon" style={{ color: '#f59e0b' }}>
-                                    ⚙️
-                                </span>
-                                DEVICE DETAILS
-                            </div>
-
-                            <div className="bd-section-body">
-                                <div className="form-group">
-                                    <label className="form-label">ORGANISATION</label>
-                                    <input
-                                        className="form-input"
-                                        name="organisation"
-                                        value={form.organisation}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">BATTERY LEVEL (%)</label>
-                                    <input
-                                        className="form-input"
-                                        type="number"
-                                        name="battery"
-                                        value={form.battery}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">STATUS</label>
-                                    <select
-                                        className="form-input"
-                                        name="status"
-                                        value={form.status}
-                                        onChange={handleChange}
-                                    >
+                        {/* 2. Device Details */}
+                        <Card>
+                            <SectionHeader icon="settings_suggest" title="Device Details" />
+                            <Body>
+                                <Grid cols="repeat(2, 1fr)">
+                                    <div className="form-group">
+                                        <Label>Organisation</Label>
+                                        <input className="form-input" name="organisation" value={form.organisation} onChange={handleChange} />
+                                    </div>
+                                    <div className="form-group">
+                                        <Label>Battery Level (%)</Label>
+                                        <input className="form-input" type="number" name="battery" value={form.battery} onChange={handleChange} />
+                                    </div>
+                                </Grid>
+                                <div className="form-group" style={{ marginTop: 20 }}>
+                                    <Label>Current Status</Label>
+                                    <select className="form-input" name="status" value={form.status} onChange={handleChange} style={{ maxWidth: 280 }}>
                                         <option>Online</option>
                                         <option>Offline</option>
                                         <option>Low Battery</option>
                                     </select>
                                 </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">DESCRIPTION</label>
-                                    <textarea
-                                        className="form-input"
-                                        name="description"
-                                        rows={3}
-                                        value={form.description}
-                                        onChange={handleChange}
-                                    />
+                                <div className="form-group" style={{ marginTop: 20 }}>
+                                    <Label>Description</Label>
+                                    <textarea className="form-input" name="description" rows={3} value={form.description} onChange={handleChange} />
                                 </div>
-                            </div>
-                        </div>
+                            </Body>
+                        </Card>
 
-                        {error && <div className="input-error-msg">{error}</div>}
+                        {/* 3. Documents */}
+                        <Card>
+                            <SectionHeader icon="folder_open" title="Documents" />
+                            <Body>
+                                <div style={{ maxWidth: 300 }}>
+                                    <Label>Installation Proof / Invoice</Label>
+                                    <label style={{
+                                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 96, borderRadius: 10, border: '2px dashed var(--border)', background: form.deviceDoc ? '#F5F3FF' : 'var(--surface)', cursor: 'pointer', gap: 6, borderColor: form.deviceDoc ? 'var(--primary)' : undefined
+                                    }}>
+                                        <span className="material-symbols-outlined" style={{ fontSize: 26, color: form.deviceDoc ? 'var(--primary)' : '#CBD5E1' }}>cloud_upload</span>
+                                        <span style={{ fontSize: 10, fontWeight: 700, color: form.deviceDoc ? 'var(--primary)' : '#94A3B8', textAlign: 'center', padding: '0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%' }}>
+                                            {form.deviceDoc ? form.deviceDoc.name : 'Click to Upload Document'}
+                                        </span>
+                                        <input type="file" style={{ display: 'none' }} onChange={handleDoc} accept=".pdf,.jpg,.jpeg,.png" />
+                                    </label>
+                                </div>
+                            </Body>
+                        </Card>
 
-                        {/* FOOTER */}
-                        <div className="bd-form-footer">
-                            <button
-                                type="button"
-                                className="btn bd-cancel-btn"
-                                onClick={() => navigate('/masters/beacon-devices')}
-                            >
-                                ❌ CANCEL
+                        {error && (
+                            <div style={{ color: '#DC2626', background: '#FEF2F2', padding: '12px 16px', borderRadius: 10, fontSize: 12, fontWeight: 700, marginBottom: 20 }}>⚠ {error}</div>
+                        )}
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                            <button type="button" className="btn btn-secondary" onClick={handleReset} style={{ border: '1.5px solid var(--border)' }}>
+                                <span className="material-symbols-outlined ms">restart_alt</span> RESET
                             </button>
-
-                            <button
-                                type="button"
-                                className="btn btn--outline"
-                                onClick={handleReset}
-                            >
-                                🔄 RESET
-                            </button>
-
-                            <button type="submit" className="btn bd-save-btn">
-                                💾 UPDATE DEVICE
+                            <button type="submit" className="btn btn-primary" style={{ minWidth: 160 }}>
+                                <span className="material-symbols-outlined ms">save</span> UPDATE DEVICE
                             </button>
                         </div>
                     </form>

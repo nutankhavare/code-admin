@@ -4,20 +4,11 @@ import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '../../Components/Table/Pagination';
 import Table, { type Column } from '../../Components/Table/Table';
-import DeleteModal from '../../Components/UI/DeleteModal';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
 import { type AppUser, initialUsers } from './appuser.types';
+import { Badge } from '../../Components/UI/Badge';
 
-const statusColors: Record<string, string> = {
-    Active: '#10b981',
-    Inactive: '#f59e0b',
-    Blocked: '#ef4444',
-};
 
-const orgTypeColors: Record<string, string> = {
-    Office: '#2563eb',
-    Institute: '#7c3aed',
-    'Motor Driving School': '#f97316',
-};
 
 const AppIndex: React.FC = () => {
     const navigate = useNavigate();
@@ -86,33 +77,23 @@ const AppIndex: React.FC = () => {
         {
             key: 'orgType',
             label: 'Org Type',
-            render: (val) => (
-                <span
-                    className="status-badge"
-                    style={{
-                        background: orgTypeColors[val as keyof typeof orgTypeColors] + '20',
-                        color: orgTypeColors[val as keyof typeof orgTypeColors],
-                        border: `1px solid ${orgTypeColors[val as keyof typeof orgTypeColors]}40`,
-                    }}
-                >
-                    {String(val)}
-                </span>
-            ),
+            render: (val) => {
+                const variantMap: Record<string, 'blue' | 'purple' | 'orange'> = {
+                    'Office': 'blue',
+                    'Institute': 'purple',
+                    'Motor Driving School': 'orange'
+                };
+                return <Badge variant={variantMap[val as string] || 'slate'}>{String(val)}</Badge>;
+            },
         },
 
         {
             key: 'device',
             label: 'Device',
             render: (val) => (
-                <span
-                    className="status-badge"
-                    style={{
-                        background: val === 'Android' ? '#10b98120' : '#7c3aed20',
-                        color: val === 'Android' ? '#10b981' : '#7c3aed',
-                    }}
-                >
+                <Badge variant={val === 'Android' ? 'green' : 'purple'}>
                     {String(val)}
-                </span>
+                </Badge>
             ),
         },
 
@@ -121,18 +102,14 @@ const AppIndex: React.FC = () => {
         {
             key: 'status',
             label: 'Status',
-            render: (val) => (
-                <span
-                    className="status-badge"
-                    style={{
-                        background: statusColors[val as AppUser['status']] + '20',
-                        color: statusColors[val as AppUser['status']],
-                        border: `1px solid ${statusColors[val as AppUser['status']]}40`,
-                    }}
-                >
-                    {String(val)}
-                </span>
-            ),
+            render: (val) => {
+                const variantMap: Record<string, 'green' | 'amber' | 'red'> = {
+                    'Active': 'green',
+                    'Inactive': 'amber',
+                    'Blocked': 'red'
+                };
+                return <Badge variant={variantMap[val as string] || 'slate'}>{String(val)}</Badge>;
+            },
         },
 
         {
@@ -169,58 +146,70 @@ const AppIndex: React.FC = () => {
     ];
 
     return (
-        <div className="page-container">
-            {deleteTarget && (
-                <DeleteModal
-                    itemName={deleteTarget.name}
-                    itemLabel="user"
-                    onConfirm={handleDeleteConfirm}
-                    onCancel={() => setDeleteTarget(null)}
-                />
-            )}
-
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">APP USERS</span>
+        <div className="page">
+            <div className="page-header">
+                <div className="breadcrumb">
+                    APP <span>/ USERS</span>
                 </div>
             </div>
 
-            <div className="card">
-                <div className="table-toolbar">
-                    <input
-                        className="search-input"
-                        placeholder="Search users..."
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setPage(1);
-                        }}
+            <div className="page-body">
+                {deleteTarget && (
+                    <ConfirmationModal
+                        title="Delete User?"
+                        message={`Are you sure you want to delete ${deleteTarget.name}? This action cannot be undone.`}
+                        confirmLabel="Delete"
+                        onConfirm={handleDeleteConfirm}
+                        onCancel={() => setDeleteTarget(null)}
+                        type="delete"
                     />
+                )}
 
-                    <select
-                        className="filter-select"
-                        value={statusFilter}
-                        onChange={(e) => {
-                            setStatusFilter(e.target.value);
-                            setPage(1);
-                        }}
-                    >
-                        <option value="All">All Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        <option value="Blocked">Blocked</option>
-                    </select>
+                <div className="card">
+                    <div className="filter-bar">
+                        <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+                            <input
+                                className="search-input"
+                                placeholder="Search users..."
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setPage(1);
+                                }}
+                                style={{ width: '100%' }}
+                            />
+                        </div>
+
+                        <select
+                            className="form-select"
+                            value={statusFilter}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value);
+                                setPage(1);
+                            }}
+                            style={{ width: 'auto' }}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Blocked">Blocked</option>
+                        </select>
+                    </div>
+
+                    <div className="table-card">
+                        <Table columns={columns} data={paginated} />
+                    </div>
+
+                    <div className="table-footer">
+                        <Pagination
+                            currentPage={page}
+                            totalPages={Math.ceil(filtered.length / perPage)}
+                            onPageChange={setPage}
+                            totalItems={filtered.length}
+                            itemsPerPage={perPage}
+                        />
+                    </div>
                 </div>
-
-                <Table columns={columns} data={paginated} />
-
-                <Pagination
-                    currentPage={page}
-                    totalPages={Math.ceil(filtered.length / perPage)}
-                    onPageChange={setPage}
-                    totalItems={filtered.length}
-                    itemsPerPage={perPage}
-                />
             </div>
         </div>
     );

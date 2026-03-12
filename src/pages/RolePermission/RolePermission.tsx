@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import DeleteRole from './DeleteRole';
+import ConfirmationModal from '../../Components/UI/ConfirmationModal';
 import './RolePermission.css';
 import type { Role } from './types';
+
 interface RolesPermissionsProps {
     roles: Role[];
     onDelete: (id: number) => void;
@@ -26,128 +26,150 @@ const RolesPermissions: React.FC<RolesPermissionsProps> = ({ roles, onDelete }) 
     return (
         <div className="page-container">
             {deleteTarget && (
-                <DeleteRole
-                    role={deleteTarget}
+                <ConfirmationModal
+                    title="Delete Role?"
+                    message={`Are you sure you want to delete the role "${deleteTarget.name}"? This action cannot be undone.`}
+                    confirmLabel="Delete"
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => setDeleteTarget(null)}
+                    type="delete"
                 />
             )}
 
-            <div className="page-header-bar">
-                <div className="breadcrumb-container">
-                    <span className="breadcrumb-current">ROLES & PERMISSIONS</span>
-                </div>
-                <button
-                    className="btn btn--header-add"
-                    onClick={() => navigate('/roles-permissions/add')}
-                >
-                    <Plus size={16} /> Add Role
-                </button>
-            </div>
-
-            <div className="rp-search-card card">
-                <div className="rp-search-header">
-                    <span className="rp-search-icon">🔍</span>
-                    <span>SEARCH ROLES</span>
-                </div>
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label">SEARCH BY NAME</label>
-                    <div style={{ position: 'relative' }}>
-                        <span
-                            style={{
-                                position: 'absolute',
-                                left: '0.75rem',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                color: '#9ca3af',
-                            }}
-                        >
-                            🔍
+            {/* ── HEADER ── */}
+            <div className="page-header">
+                <div>
+                    <div className="page-title">
+                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>
+                            verified_user
                         </span>
-                        <input
-                            className="form-input"
-                            style={{ paddingLeft: '2.25rem' }}
-                            placeholder="e.g. Manager, Admin..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                        Roles & Permissions
+                    </div>
+                    <div className="breadcrumb">
+                        ADMINISTRATION <span>/ ROLES & PERMISSIONS</span>
                     </div>
                 </div>
+                <div className="header-actions">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => navigate('/roles-permissions/add')}
+                    >
+                        <span className="material-symbols-outlined ms">add</span> ADD NEW ROLE
+                    </button>
+                </div>
             </div>
 
-            <div className="rp-table-card">
-                <table className="rp-table">
-                    <thead>
-                        <tr>
-                            <th>S.NO</th>
-                            <th>ROLE NAME</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filtered.length === 0 ? (
-                            <tr>
-                                <td
-                                    colSpan={3}
-                                    style={{
-                                        textAlign: 'center',
-                                        padding: '2rem',
-                                        color: 'var(--text-secondary)',
-                                    }}
-                                >
-                                    No roles found
-                                </td>
-                            </tr>
-                        ) : (
-                            filtered.map((role, index) => (
-                                <tr key={role.id}>
-                                    <td>{index + 1}</td>
-                                    <td>
-                                        <div
+            {/* ── PAGE BODY ── */}
+            <div className="page-body">
+                <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                    <div className="filter-bar" style={{ padding: '24px 32px', borderBottom: '1.5px solid var(--border)' }}>
+                        <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+                            <span className="material-symbols-outlined ms" style={{
+                                position: 'absolute',
+                                left: '16px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                color: 'var(--text-muted)',
+                                fontSize: '20px'
+                            }}>search</span>
+                            <input
+                                className="form-input"
+                                placeholder="Search roles by name..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                style={{ width: '100%', paddingLeft: '48px' }}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="table-card" style={{ border: 'none', borderRadius: 0 }}>
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '80px', textAlign: 'center' }}>#</th>
+                                    <th>ROLE NAME</th>
+                                    <th style={{ textAlign: 'right', paddingRight: '40px' }}>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filtered.length === 0 ? (
+                                    <tr>
+                                        <td
+                                            colSpan={3}
                                             style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '0.625rem',
+                                                textAlign: 'center',
+                                                padding: '60px',
+                                                color: 'var(--text-muted)',
+                                                fontSize: '14px',
+                                                fontWeight: 600
                                             }}
                                         >
-                                            <span className="rp-role-avatar">👤</span>
-                                            <strong>{role.name}</strong>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="rp-action-btns">
-                                            <button
-                                                className="action-btn action-btn--view"
-                                                title="View"
-                                                onClick={() =>
-                                                    navigate(`/roles-permissions/view/${role.id}`)
-                                                }
-                                            >
-                                                <Eye size={15} />
-                                            </button>
-                                            <button
-                                                className="action-btn action-btn--edit"
-                                                title="Edit"
-                                                onClick={() =>
-                                                    navigate(`/roles-permissions/edit/${role.id}`)
-                                                }
-                                            >
-                                                <Pencil size={15} />
-                                            </button>
-                                            <button
-                                                className="action-btn action-btn--delete"
-                                                title="Delete"
-                                                onClick={() => setDeleteTarget(role)}
-                                            >
-                                                <Trash2 size={15} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                                <span className="material-symbols-outlined ms" style={{ fontSize: 40, opacity: 0.5 }}>search_off</span>
+                                                No roles found matching your search.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filtered.map((role, index) => (
+                                        <tr key={role.id}>
+                                            <td style={{ textAlign: 'center', fontWeight: 700, color: 'var(--text-muted)' }}>{index + 1}</td>
+                                            <td>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                                    <div style={{
+                                                        width: 40,
+                                                        height: 40,
+                                                        borderRadius: 12,
+                                                        background: 'var(--primary-light)',
+                                                        color: 'var(--primary)',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center'
+                                                    }}>
+                                                        <span className="material-symbols-outlined ms" style={{ fontSize: 20 }}>shield</span>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ fontWeight: 800, color: 'var(--text)', fontSize: 13, letterSpacing: '0.01em' }}>
+                                                            {role.name}
+                                                        </div>
+                                                        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
+                                                            {role.permissions.length} Permissions assigned
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style={{ paddingRight: '32px' }}>
+                                                <div className="table-actions" style={{ justifyContent: 'flex-end', gap: 8 }}>
+                                                    <button
+                                                        className="action-btn action-btn--view"
+                                                        title="View"
+                                                        onClick={() => navigate(`/roles-permissions/view/${role.id}`)}
+                                                    >
+                                                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>visibility</span>
+                                                    </button>
+                                                    <button
+                                                        className="action-btn action-btn--edit"
+                                                        title="Edit"
+                                                        onClick={() => navigate(`/roles-permissions/edit/${role.id}`)}
+                                                    >
+                                                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>edit</span>
+                                                    </button>
+                                                    <button
+                                                        className="action-btn action-btn--delete"
+                                                        title="Delete"
+                                                        onClick={() => setDeleteTarget(role)}
+                                                    >
+                                                        <span className="material-symbols-outlined ms" style={{ fontSize: 18 }}>delete</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );

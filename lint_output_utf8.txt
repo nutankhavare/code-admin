@@ -1,0 +1,172 @@
+﻿bun : $ eslint . 
+--max-warnings 0
+At line:1 char:1
++ bun run lint > 
+lint_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ($ eslint . --   
+ max-warnings 0:Str    
+ing) [], RemoteExc    
+eption
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+[0m
+[4mC:\Users\lenovo\code-admin\scripts\generate_report.js[24m
+    [2m1:12[22m   [31merror[39m    A `require()` style import is forbidden                   [2m@typescript-eslint/no-require-imports[22m
+    [2m2:14[22m   [31merror[39m    A `require()` style import is forbidden                   [2m@typescript-eslint/no-require-imports[22m
+   [2m39:201[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m39:210[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m57:98[22m   [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m57:111[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m57:115[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m57:125[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m63:123[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m63:140[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m63:196[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m63:207[22m  [31merror[39m    Unnecessary escape character: \`                          [2mno-useless-escape[22m
+   [2m74:13[22m   [33mwarning[39m  Unexpected console statement                              [2mno-console[22m
+   [2m79:14[22m   [31merror[39m    This assigned value is not used in subsequent statements  [2mno-useless-assignment[22m
+  [2m108:1[22m    [33mwarning[39m  Unexpected console statement                              [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\scripts\update_validations.js[24m
+   [2m1:12[22m  [31merror[39m    A `require()` style import is forbidden             [2m@typescript-eslint/no-require-imports[22m
+   [2m2:14[22m  [31merror[39m    A `require()` style import is forbidden             [2m@typescript-eslint/no-require-imports[22m
+   [2m7:7[22m   [31merror[39m    'gstRegex' is assigned a value but never used       [2m@typescript-eslint/no-unused-vars[22m
+   [2m8:7[22m   [31merror[39m    'panRegex' is assigned a value but never used       [2m@typescript-eslint/no-unused-vars[22m
+   [2m9:7[22m   [31merror[39m    'pinCodeRegex' is assigned a value but never used   [2m@typescript-eslint/no-unused-vars[22m
+  [2m10:7[22m   [31merror[39m    'pinCodeRegex2' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m
+  [2m11:7[22m   [31merror[39m    'emailRegex' is assigned a value but never used     [2m@typescript-eslint/no-unused-vars[22m
+  [2m12:7[22m   [31merror[39m    'phoneRegex' is assigned a value but never used     [2m@typescript-eslint/no-unused-vars[22m
+  [2m51:5[22m   [33mwarning[39m  Unexpected console statement                        [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\scripts\update_validations.ts[24m
+  [2m45:5[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\AppUser\AppIndex.tsx[24m
+   [2m81:50[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m106:50[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\AppUser\EditUser.tsx[24m
+  [2m84:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Beacon\AddBeaconDevice.tsx[24m
+  [2m76:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Beacon\EditBeaconDevice.tsx[24m
+  [2m74:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Gps\AddGpsDevice.tsx[24m
+  [2m79:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Gps\EditGpsDevice.tsx[24m
+  [2m69:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\InstitutionCreateForm.tsx[24m
+    [2m1:17[22m  [31merror[39m  'useEffect' is defined but never used               [2m@typescript-eslint/no-unused-vars[22m
+   [2m69:11[22m  [31merror[39m  'selectedState' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m
+   [2m72:75[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+   [2m75:41[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m160:59[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m186:58[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m216:55[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m220:42[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\InstitutionEditForm.tsx[24m
+    [2m2:26[22m  [31merror[39m  'useWatch' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m
+   [2m57:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m60:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m124:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m150:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\MotorDrivingSchoolCreateForm.tsx[24m
+    [2m1:17[22m  [31merror[39m  'useEffect' is defined but never used               [2m@typescript-eslint/no-unused-vars[22m
+   [2m61:11[22m  [31merror[39m  'selectedState' is assigned a value but never used  [2m@typescript-eslint/no-unused-vars[22m
+   [2m64:75[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+   [2m67:41[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m152:59[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m178:58[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m208:55[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+  [2m212:42[22m  [31merror[39m  Unexpected any. Specify a different type            [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\MotorDrivingSchoolEditForm.tsx[24m
+    [2m2:26[22m  [31merror[39m  'useWatch' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m
+   [2m57:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m60:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m125:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m151:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\OfficeCreateForm.tsx[24m
+   [2m95:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m98:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m196:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m222:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m252:55[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m256:42[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\OfficeEditForm.tsx[24m
+    [2m2:26[22m  [31merror[39m  'useWatch' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m
+   [2m57:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m60:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m135:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m161:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\VendorCreateForm.tsx[24m
+    [2m1:17[22m  [31merror[39m  'useEffect' is defined but never used     [2m@typescript-eslint/no-unused-vars[22m
+    [2m2:26[22m  [31merror[39m  'useWatch' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m
+   [2m49:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m52:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m143:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m169:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m187:72[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m191:50[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\Forms\VendorEditForm.tsx[24m
+    [2m2:26[22m  [31merror[39m  'useWatch' is defined but never used      [2m@typescript-eslint/no-unused-vars[22m
+   [2m49:75[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+   [2m52:41[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m139:59[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m165:58[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\InstitutionEditPage.tsx[24m
+  [2m16:46[22m  [31merror[39m    Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m30:9[22m   [33mwarning[39m  Unexpected console statement              [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\MDSEditPage.tsx[24m
+  [2m16:46[22m  [31merror[39m    Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m30:9[22m   [33mwarning[39m  Unexpected console statement              [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\OfficeEditPage.tsx[24m
+  [2m16:46[22m  [31merror[39m    Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m30:9[22m   [33mwarning[39m  Unexpected console statement              [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\OrgCreatePage.tsx[24m
+  [2m65:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\OrgShowPage.tsx[24m
+  [2m46:13[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Organisation\VendorEditPage.tsx[24m
+  [2m16:46[22m  [31merror[39m    Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+  [2m30:9[22m   [33mwarning[39m  Unexpected console statement              [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Plan\AddPlan.tsx[24m
+  [2m92:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Plan\EditPlan.tsx[24m
+  [2m91:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Staff\Staff.tsx[24m
+  [2m401:44[22m  [31merror[39m  Unexpected any. Specify a different type  [2m@typescript-eslint/no-explicit-any[22m
+
+[4mC:\Users\lenovo\code-admin\src\pages\Supplier\SupCreate.tsx[24m
+  [2m70:9[22m  [33mwarning[39m  Unexpected console statement  [2mno-console[22m
+
+[31m[1mΓ£û 96 problems (78 errors, 18 warnings)[22m[39m
+[0m
+error: script "lint" 
+exited with code 1
